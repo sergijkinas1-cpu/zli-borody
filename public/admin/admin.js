@@ -182,7 +182,7 @@ function showLogin(err) {
   const e = $('#loginErr');
   const setup = (authCfg && authCfg.setup) || [];
   if (setup.length) {
-    const names = { GOOGLE_CLIENT_ID: 'Google Client ID для входу', DATABASE: 'база даних Upstash Redis', SESSION_SECRET: 'секретний ключ сесії SESSION_SECRET', NETWORK: 'зв\'язок із сервером' };
+    const names = { GOOGLE_CLIENT_ID: 'Google Client ID для входу', DATABASE: 'сховище даних Vercel Blob', SESSION_SECRET: 'секретний ключ сесії SESSION_SECRET', NETWORK: 'зв\'язок із сервером' };
     e.hidden = false;
     e.innerHTML = `Адмінку ще не до кінця налаштовано. Бракує ${setup.map((s) => names[s] || s).join(', ')}. Інструкція є у файлі ADMIN.md у репозиторії сайту`;
   } else if (err) { e.hidden = false; e.innerHTML = err; } else e.hidden = true;
@@ -308,7 +308,7 @@ function updateStatus() {
 let saveTimer = null, pvTimer = null;
 function changed(opts = {}) {
   updateStatus();
-  clearTimeout(saveTimer); saveTimer = setTimeout(() => saveDraft(), 1200);
+  clearTimeout(saveTimer); saveTimer = setTimeout(() => saveDraft(), 3000);
   clearTimeout(pvTimer); pvTimer = setTimeout(() => refreshPreview(), opts.now ? 0 : 450);
   clearTimeout(changed.side); changed.side = setTimeout(renderSide, 300);
 }

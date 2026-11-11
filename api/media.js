@@ -4,6 +4,8 @@ import { guarded, json } from '../lib/auth.js';
 import { addMedia, listMedia, removeMedia } from '../lib/store.js';
 import { slugify } from '../lib/sanitize.js';
 
+// Фото і відео лежать у публічному сховищі Blob, щоб відвідувачі отримували їх напряму з CDN
+const MEDIA_TOKEN = process.env.MEDIA_BLOB_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN || '';
 const MAX = 4.4 * 1024 * 1024;
 const TYPES = /^(image\/(jpeg|png|webp|gif|svg\+xml|avif)|video\/(mp4|webm|quicktime))$/;
 
@@ -21,9 +23,9 @@ export default {
       const base = slugify(orig.replace(/\.[^.]+$/, '')) || 'file';
       const name = `${base}-${Date.now().toString(36)}.${ext}`;
       let url;
-      if (process.env.BLOB_READ_WRITE_TOKEN) {
+      if (MEDIA_TOKEN) {
         const { put } = await import('@vercel/blob');
-        const r = await put(`media/${name}`, buf, { access: 'public', contentType: type, addRandomSuffix: true, cacheControlMaxAge: 31536000 });
+        const r = await put(`media/${name}`, buf, { access: 'public', contentType: type, addRandomSuffix: true, cacheControlMaxAge: 31536000, token: MEDIA_TOKEN });
         url = r.url;
       } else {
         const dir = path.join(process.cwd(), '.data', 'uploads');
@@ -38,8 +40,8 @@ export default {
     if (req.method === 'DELETE') {
       const u = new URL(req.url).searchParams.get('url');
       await removeMedia(u);
-      if (process.env.BLOB_READ_WRITE_TOKEN && /\.blob\.vercel-storage\.com\//.test(u || '')) {
-        try { const { del } = await import('@vercel/blob'); await del(u); } catch (e) { console.error(e); }
+      if (MEDIA_TOKEN && /\.blob\.vercel-storage\.com\//.test(u || '')) {
+        try { const { del } = await import('@vercel/blob'); await del(u, { token: MEDIA_TOKEN }); } catch (e) { console.error(e); }
       }
       return json({ ok: true });
     }
