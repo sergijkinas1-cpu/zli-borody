@@ -3,20 +3,77 @@
   "outputDirectory": "public",
   "buildCommand": "",
   "functions": {
-    "api/*.js": { "includeFiles": "lib/**" }
+    "api/*.js": {
+      "includeFiles": "lib/**"
+    }
   },
   "rewrites": [
-    { "source": "/", "destination": "/api/page?p=home" },
-    { "source": "/index.html", "destination": "/api/page?p=home" },
-    { "source": "/blog", "destination": "/api/page?p=blog" },
-    { "source": "/blog/", "destination": "/api/page?p=blog" },
-    { "source": "/blog/index.html", "destination": "/api/page?p=blog" },
-    { "source": "/blog/:slug.html", "destination": "/api/page?p=post&slug=:slug" },
-    { "source": "/blog/:slug", "destination": "/api/page?p=post&slug=:slug" },
-    { "source": "/admin", "destination": "/admin/index.html" }
+    {
+      "source": "/",
+      "destination": "/api/page?p=home"
+    },
+    {
+      "source": "/index.html",
+      "destination": "/api/page?p=home"
+    },
+    {
+      "source": "/blog",
+      "destination": "/api/page?p=blog"
+    },
+    {
+      "source": "/blog/",
+      "destination": "/api/page?p=blog"
+    },
+    {
+      "source": "/blog/index.html",
+      "destination": "/api/page?p=blog"
+    },
+    {
+      "source": "/blog/:slug.html",
+      "destination": "/api/page?p=post&slug=:slug"
+    },
+    {
+      "source": "/blog/:slug",
+      "destination": "/api/page?p=post&slug=:slug"
+    },
+    {
+      "source": "/admin",
+      "destination": "/admin/index.html"
+    }
   ],
   "headers": [
-    { "source": "/admin/(.*)", "headers": [{ "key": "Cache-Control", "value": "no-cache" }, { "key": "X-Robots-Tag", "value": "noindex" }, { "key": "X-Frame-Options", "value": "SAMEORIGIN" }] },
-    { "source": "/admin", "headers": [{ "key": "Cache-Control", "value": "no-cache" }, { "key": "X-Robots-Tag", "value": "noindex" }] }
+    {
+      "source": "/admin/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        }
+      ]
+    },
+    {
+      "source": "/admin",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    }
+  ],
+  "regions": [
+    "fra1"
   ]
 }
