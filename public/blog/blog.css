@@ -109,3 +109,4 @@ button{font:inherit;color:inherit;cursor:pointer}
   .posts{grid-template-columns:minmax(0,1fr)}
   .post-t{font-size:19px}
 }
+.empty{color:var(--sub);margin:24px 0 0;font-size:15px}
