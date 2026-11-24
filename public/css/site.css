@@ -58,7 +58,7 @@ a.lt:hover{color:#fff}
 .hdr{position:fixed;left:0;right:0;top:0;z-index:50;border-bottom:1px solid transparent;transition:background-color .35s,box-shadow .3s,border-color .35s,backdrop-filter .35s,-webkit-backdrop-filter .35s}
 .hdr.open{background:#0f0f0f;box-shadow:0 6px 18px rgba(0,0,0,.35)}
 /* При скролі хедер напівпрозорий, контент під ним розмивається і переливається */
-.hdr.scrolled:not(.open){background:rgba(15,15,15,.55);-webkit-backdrop-filter:blur(18px) saturate(170%);backdrop-filter:blur(18px) saturate(170%);border-bottom-color:rgba(255,255,255,.06);box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.hdr.scrolled:not(.open){background:rgba(17,17,17,.84);-webkit-backdrop-filter:blur(30px) saturate(115%);backdrop-filter:blur(30px) saturate(115%);border-bottom-color:rgba(255,255,255,.06);box-shadow:0 8px 24px rgba(0,0,0,.25)}
 .hdr .wrap{display:flex;align-items:center;gap:24px;height:96px;transition:height .3s var(--ease)}
 .hdr.scrolled .wrap{height:72px}
 .logo{font-family:var(--head);font-weight:600;font-size:22px;letter-spacing:.02em;text-transform:uppercase}

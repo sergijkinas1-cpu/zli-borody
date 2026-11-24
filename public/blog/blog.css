@@ -32,7 +32,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .nav .flip.active{color:var(--red)}
 
 /* шапка */
-.hdr{position:fixed;left:0;right:0;top:0;z-index:50;background:rgba(15,15,15,.55);-webkit-backdrop-filter:blur(18px) saturate(170%);backdrop-filter:blur(18px) saturate(170%);border-bottom:1px solid rgba(255,255,255,.06);box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.hdr{position:fixed;left:0;right:0;top:0;z-index:50;background:rgba(17,17,17,.84);-webkit-backdrop-filter:blur(30px) saturate(115%);backdrop-filter:blur(30px) saturate(115%);border-bottom:1px solid rgba(255,255,255,.06);box-shadow:0 8px 24px rgba(0,0,0,.25)}
 .hdr.open{background:#0f0f0f;-webkit-backdrop-filter:none;backdrop-filter:none}
 .hdr .wrap{display:flex;align-items:center;gap:24px;height:72px}
 .logo{font-family:var(--head);font-weight:600;font-size:22px;letter-spacing:.02em;text-transform:uppercase}
