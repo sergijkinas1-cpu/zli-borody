@@ -1,6 +1,6 @@
 import { verifyGoogle, makeSessionCookie, clearCookie, getUser, googleClientId, isDevLogin, json, sameOrigin } from '../lib/auth.js';
 import { isAdmin, touchAdmin, hasDb } from '../lib/store.js';
-import { isProd } from '../lib/env.js';
+import { isProd, onVercel } from '../lib/env.js';
 
 export default {
   async fetch(req) {
@@ -11,7 +11,7 @@ export default {
         const setup = [];
         if (!googleClientId() && !isDevLogin()) setup.push('GOOGLE_CLIENT_ID');
         if (!hasDb && isProd) setup.push('DATABASE');
-        if (!process.env.SESSION_SECRET && isProd) setup.push('SESSION_SECRET');
+        if (!process.env.SESSION_SECRET && onVercel) setup.push('SESSION_SECRET');
         return json({ clientId: googleClientId(), devLogin: isDevLogin(), user, setup });
       }
       if (req.method === 'POST') {
