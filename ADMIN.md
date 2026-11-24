@@ -34,7 +34,7 @@
 
 Сайт працює на Hostinger як Node.js вебзастосунок (тариф Unlimited або Cloud). Вхідний файл `server.js`, він сам роздає статичні файли з `public/` і повторює маршрути з `vercel.json`.
 
-- У hPanel Websites, Web App, імпорт з GitHub або завантаження zip. Пресет Other або Express, вхідний файл `server.js`, команда збірки не потрібна.
+- У hPanel Websites, Web App, імпорт з GitHub або завантаження zip. Пресет Other або Express, вхідний файл `app.cjs`, команда збірки не потрібна.
 - Змінні середовища `GOOGLE_CLIENT_ID` і `ADMIN_EMAILS`. `SESSION_SECRET` можна не задавати, сервер сам створить ключ у `~/zli-borody-data/session-secret`. Змінні Blob і Redis не задавати, тоді дані пишуться у файли.
 - Дані адмінки лежать у `~/zli-borody-data/cms`, фото і відео з медіатеки у `~/zli-borody-data/uploads`. Ця тека поза папкою застосунку, тому переживає кожен деплой. Інше місце можна задати змінною `DATA_DIR`.
 - Резервна копія це просто архів теки `~/zli-borody-data`.
