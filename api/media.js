@@ -3,10 +3,11 @@ import path from 'node:path';
 import { guarded, json } from '../lib/auth.js';
 import { addMedia, listMedia, removeMedia } from '../lib/store.js';
 import { slugify } from '../lib/sanitize.js';
+import { DATA_DIR } from '../lib/env.js';
 
-// Фото і відео лежать у публічному сховищі Blob, щоб відвідувачі отримували їх напряму з CDN
+// На Vercel фото і відео лежать у публічному Blob, на Hostinger у папці DATA_DIR/uploads на сервері
 const MEDIA_TOKEN = process.env.MEDIA_BLOB_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN || '';
-const MAX = 4.4 * 1024 * 1024;
+const MAX = (MEDIA_TOKEN ? 4.4 : 30) * 1024 * 1024;
 const TYPES = /^(image\/(jpeg|png|webp|gif|svg\+xml|avif)|video\/(mp4|webm|quicktime))$/;
 
 export default {
@@ -17,7 +18,7 @@ export default {
       if (!TYPES.test(type)) return json({ error: 'Такий формат не підтримується. Підійдуть JPG, PNG, WebP, SVG, MP4 або WebM' }, 400);
       const buf = Buffer.from(await req.arrayBuffer());
       if (!buf.length) return json({ error: 'Порожній файл' }, 400);
-      if (buf.length > MAX) return json({ error: 'Файл завеликий. Максимум 4 МБ' }, 413);
+      if (buf.length > MAX) return json({ error: `Файл завеликий. Максимум ${MEDIA_TOKEN ? 4 : 30} МБ` }, 413);
       const orig = decodeURIComponent(req.headers.get('x-filename') || 'file');
       const ext = (orig.match(/\.([a-z0-9]{2,5})$/i) || [, type.split('/')[1].replace('svg+xml', 'svg').replace('quicktime', 'mov').replace('jpeg', 'jpg')])[1].toLowerCase();
       const base = slugify(orig.replace(/\.[^.]+$/, '')) || 'file';
@@ -28,7 +29,7 @@ export default {
         const r = await put(`media/${name}`, buf, { access: 'public', contentType: type, addRandomSuffix: true, cacheControlMaxAge: 31536000, token: MEDIA_TOKEN });
         url = r.url;
       } else {
-        const dir = path.join(process.cwd(), '.data', 'uploads');
+        const dir = path.join(DATA_DIR, 'uploads');
         await fs.mkdir(dir, { recursive: true });
         await fs.writeFile(path.join(dir, name), buf);
         url = `/uploads/${name}`;
@@ -42,6 +43,8 @@ export default {
       await removeMedia(u);
       if (MEDIA_TOKEN && /\.blob\.vercel-storage\.com\//.test(u || '')) {
         try { const { del } = await import('@vercel/blob'); await del(u, { token: MEDIA_TOKEN }); } catch (e) { console.error(e); }
+      } else if (/^\/uploads\/[\w.-]+$/.test(u || '')) {
+        await fs.rm(path.join(DATA_DIR, u), { force: true });
       }
       return json({ ok: true });
     }

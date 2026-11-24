@@ -113,7 +113,7 @@ const SECTIONS = [
     ] },
     btnFields('hero'),
     { group: 'Фон', fields: [
-      { t: 'video', k: 'hero.video', label: 'Відео на фоні', hint: 'MP4 до 4 МБ, без звуку. Порожнє поле залишить лише фото' },
+      { t: 'video', k: 'hero.video', label: 'Відео на фоні', hint: 'MP4 до 30 МБ, без звуку. Порожнє поле залишить лише фото' },
       { t: 'image', k: 'hero.poster', label: 'Фото на фоні', hint: 'Показується, поки вантажиться відео, і на телефонах в режимі економії' },
     ] },
   ] },
@@ -567,7 +567,7 @@ async function shrink(file) {
 }
 async function uploadFile(file) {
   const f = await shrink(file);
-  if (f.size > 4.4 * 1024 * 1024) throw new Error(`Файл ${file.name} завеликий. Максимум 4 МБ`);
+  if (f.size > 30 * 1024 * 1024) throw new Error(`Файл ${file.name} завеликий. Максимум 30 МБ`);
   return api('/api/media', { method: 'POST', body: f, headers: { 'Content-Type': f.type || 'application/octet-stream', 'X-Filename': encodeURIComponent(f.name) } });
 }
 
@@ -829,7 +829,7 @@ async function restoreVersion(it) {
 
 /* ---------------- Медіатека ---------------- */
 async function renderMedia(box) {
-  box.insertAdjacentHTML('beforeend', `<div class="ed-h"><h2>Медіатека</h2></div><p class="ed-desc">${esc(SEC.media.desc)}. Великі фото автоматично зменшуються. Максимальний розмір файлу 4 МБ</p>
+  box.insertAdjacentHTML('beforeend', `<div class="ed-h"><h2>Медіатека</h2></div><p class="ed-desc">${esc(SEC.media.desc)}. Великі фото автоматично зменшуються. Максимальний розмір файлу 30 МБ</p>
     <div class="drop" id="drop">Перетягніть файли сюди або <button class="link-btn ul" type="button" id="pick">оберіть на комп'ютері</button></div><div class="media" id="mgrid" style="margin-top:14px"></div>`);
   const draw = async () => {
     let items;

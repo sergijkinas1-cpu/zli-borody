@@ -30,6 +30,16 @@
 | `MEDIA_BLOB_READ_WRITE_TOKEN` | Публічний Blob для фото і відео | підключити публічний Blob, потім перейменувати його змінну на цю назву |
 | `KV_REST_API_URL`, `KV_REST_API_TOKEN` | Необов'язково. Upstash Redis замість Blob для даних | додаються самі при підключенні Upstash |
 
+## Hostinger
+
+Сайт працює на Hostinger як Node.js вебзастосунок (тариф Unlimited або Cloud). Вхідний файл `server.js`, він сам роздає статичні файли з `public/` і повторює маршрути з `vercel.json`.
+
+- У hPanel Websites, Web App, імпорт з GitHub або завантаження zip. Пресет Other або Express, вхідний файл `server.js`, команда збірки не потрібна.
+- Змінні середовища `GOOGLE_CLIENT_ID`, `ADMIN_EMAILS`, `SESSION_SECRET`, `NODE_ENV=production`. Змінні Blob і Redis не задавати, тоді дані пишуться у файли.
+- Дані адмінки лежать у `~/zli-borody-data/cms`, фото і відео з медіатеки у `~/zli-borody-data/uploads`. Ця тека поза папкою застосунку, тому переживає кожен деплой. Інше місце можна задати змінною `DATA_DIR`.
+- Резервна копія це просто архів теки `~/zli-borody-data`.
+- У Google Cloud Console в Authorized JavaScript origins треба додати адресу сайту на Hostinger (і тимчасову, і основний домен).
+
 ## Перенесення на інший акаунт (GitHub і Vercel клієнта)
 
 1. Перенести репозиторій у GitHub клієнта (Settings, Transfer) або зробити копію.
@@ -55,4 +65,4 @@ npm install
 DEV_LOGIN=1 ADMIN_EMAILS=you@gmail.com npm run dev
 ```
 
-Відкрити http://localhost:3000/admin. Без змінних Redis дані пишуться у файл `.data/db.json`, фото у `.data/uploads`. Локальний вхід без Google працює тільки поза Vercel.
+Відкрити http://localhost:3000/admin. Без змінних Redis і Blob дані пишуться у файли в `.data/cms`, фото у `.data/uploads`. Локальний вхід без Google працює тільки поза Vercel.
