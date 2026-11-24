@@ -276,8 +276,8 @@ a.chip-s:hover{color:#fff}
   .btn{height:53px;font-size:15px}
   .cta-c{margin-top:20px}
   .cta-c .btn,.team-foot .btn,.hero .btn{width:100%}
-  .mq{height:76px;min-height:0}
-  .mq-t img{height:60px;min-height:0;margin-right:26px}
+  .mq{height:99px;min-height:0}
+  .mq-t img{height:78px;min-height:0;margin-right:34px}
 
   /* Переваги. Великі картки лягають віялом поверх заголовка */
   .why{height:300vh;padding:0;margin-bottom:var(--gap)}
@@ -325,19 +325,19 @@ a.chip-s:hover{color:#fff}
 
   /* Про нас */
   .about .wrap{gap:19px}
-  .ab-red{min-height:0;padding:49px 18px 44px}
-  .cn{width:16px;height:16px}
+  .ab-red{min-height:0;padding:62px 16px 58px}
+  .cn{width:19px;height:19px}
   .cn.tl,.cn.tr{top:12px}.cn.bl,.cn.br{bottom:12px}.cn.tl,.cn.bl{left:12px}.cn.tr,.cn.br{right:12px}
-  .ab-lbl{left:70px;right:70px;top:13px;font-size:5.5px}
-  .ab-red h2{font-size:calc((100vw - 30px) * .0765);line-height:1.3}
+  .ab-lbl{left:62px;right:62px;top:15px;font-size:6.5px}
+  .ab-red h2{font-size:calc((100vw - 30px) * .081);line-height:1.32}
   .ab-red h2 .l{white-space:nowrap}
   .ab-red h2 .in{--ind:1.8em}
   .ab-red h2 img{height:1.15em;aspect-ratio:87/30;vertical-align:-.12em}
-  .ab-mid{margin:40px -18px 46px;gap:12px}
-  .ab-face{width:42px;min-width:0}
-  .ab-bot h3{font-size:13.5px;margin-bottom:7px}
-  .ab-bot{max-width:272px}
-  .ab-bot p{font-size:10.5px;line-height:1.3}
+  .ab-mid{margin:56px -16px 62px;gap:14px}
+  .ab-face{width:52px;min-width:0}
+  .ab-bot h3{font-size:15.5px;margin-bottom:9px}
+  .ab-bot{max-width:310px}
+  .ab-bot p{font-size:12px;line-height:1.36}
   .ab-photo{aspect-ratio:1/1;position:relative}
   .ab-photo::after{content:"";position:absolute;left:34px;bottom:61px;width:57px;height:2px;background:#fff}
 
