@@ -1,6 +1,6 @@
 :root{
   --bg:#141414;--panel:#212121;--panel-hover:#2b2b2b;--ink:#fff;--sub:#cfcfcf;--muted:#7a7a7a;
-  --red:#d10616;--red-hover:#dc2131;
+  --red:#c02a25;--red-hover:#c9332e;
   --head:Oswald,"Arial Narrow",Impact,sans-serif;--font:Manrope,"Helvetica Neue",Arial,sans-serif;
   --ease:cubic-bezier(.22,.61,.36,1);
   --gut:max(20px,env(safe-area-inset-left,0px));--gutR:max(20px,env(safe-area-inset-right,0px));
@@ -26,7 +26,10 @@ button{font:inherit;color:inherit;cursor:pointer}
 .bt{position:relative;display:block;overflow:hidden;height:1.4em;line-height:1.4em}
 .bt > span{display:block;transition:transform .35s ease}
 .bt > span + span{position:absolute;left:0;top:100%}
-.btn:hover .bt > span{transform:translateY(-100%)}
+.btn:hover .bt > span,.flip:hover .bt > span{transform:translateY(-100%)}
+.flip{display:inline-block;vertical-align:top;cursor:pointer}
+.flip .bt{height:1.45em;line-height:1.45em}
+.nav .flip.active{color:var(--red)}
 
 /* шапка */
 .hdr{position:fixed;left:0;right:0;top:0;z-index:50;background:#0f0f0f;box-shadow:0 6px 18px rgba(0,0,0,.35)}
