@@ -285,11 +285,7 @@ a.chip-s:hover{color:#fff}
   .why-title{position:absolute;padding:0;font-size:calc(38 * var(--k,1px));line-height:1.12}
   .why-title .l{white-space:nowrap}
   .why-deck{position:absolute;inset:0;display:block;padding:0;pointer-events:none}
-  .wc{position:absolute;transition:none;height:calc(var(--cw) * 1.15);padding:calc(var(--cw) * .06)}
-  .wc .ph{height:calc(var(--cw) * .6)}
-  .wc h3{font-size:calc(var(--cw) * .072)}
-  .wc p{font-size:calc(var(--cw) * .047);line-height:1.35}
-  .wc video,.wc .draw-end{width:calc(var(--cw) * .5);height:calc(var(--cw) * .5)}
+  .wc{position:absolute;transition:none}
 
   /* Послуги. Спершу ліва колонка десктопа, потім права */
   .svc-grid{margin-top:38px;gap:11.5px}
