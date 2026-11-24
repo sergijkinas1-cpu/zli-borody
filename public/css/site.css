@@ -240,6 +240,8 @@ a.chip-s:hover{color:#fff}
   .find-city{align-self:flex-start;height:64px;font-size:44px;padding:0 28px}
   .find-card{width:auto;max-width:420px;min-width:0}
   .find-x{order:9}
+  .find-geo{position:relative;align-self:stretch;display:flex;justify-content:center}
+  .find-geo .find-city{position:absolute;right:0;top:14%}
   .ftr-box{grid-template-columns:1fr 1fr;grid-template-rows:auto;row-gap:30px;padding:30px 20px}
   .ftr-brand{grid-column:1/-1}
   .ftr-nav{grid-row:auto;grid-column:1/-1}
@@ -269,22 +271,92 @@ a.chip-s:hover{color:#fff}
 @media (max-width:560px){
   :root{--pad:12px}
   .wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-  .why-deck{grid-template-columns:minmax(0,1fr);justify-items:center;padding-inline:16px}
-  .wc{--cw:min(340px,calc(100vw - 48px))}
-  .work,.barber{flex-basis:78%}
-  .team-foot{flex-wrap:wrap}
-  .team-foot .btn{flex:1}
-  .ab-red{padding:26px 18px 16px}
-  .svc-n{font-size:18px}
-  .svc{gap:12px;padding:0 14px;min-height:78px}
-  .svc-i{width:46px;height:46px}
-  .ab-red{padding:54px 22px 30px;min-height:560px}
-  .ab-red h2 .l{white-space:normal}
-  .ab-red h2 .in{--ind:.6em}
-  .ab-lbl span:nth-child(n+2){display:none}
-  .ftr-cols{grid-template-columns:1fr}
-  .ftr-soc{flex-wrap:wrap}
-  .ftr-soc .chip{width:100%;margin-right:0}
+  .h2{font-size:29px;line-height:1.12}
+  .lead{font-size:16px;max-width:300px;margin-top:12px}
+  .btn{height:54px;font-size:16px}
+  .cta-c{margin-top:22px}
+  .cta-c .btn,.team-foot .btn{width:100%}
+
+  /* Переваги. Віяло поверх заголовка, потім сітка два на два */
+  .why{height:380vh;padding:0;margin-bottom:var(--gap)}
+  .why-stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+  .why-title{position:absolute;padding:0;font-size:calc(38 * var(--k,1px));line-height:1.12}
+  .why-title .l{white-space:nowrap}
+  .why-deck{position:absolute;inset:0;display:block;padding:0;pointer-events:none}
+  .wc{position:absolute;transition:none;height:calc(var(--cw) * 1.15);padding:calc(var(--cw) * .06)}
+  .wc .ph{height:calc(var(--cw) * .6)}
+  .wc h3{font-size:calc(var(--cw) * .072)}
+  .wc p{font-size:calc(var(--cw) * .047);line-height:1.35}
+  .wc video,.wc .draw-end{width:calc(var(--cw) * .5);height:calc(var(--cw) * .5)}
+
+  /* Послуги. Спершу ліва колонка десктопа, потім права */
+  .svc-grid{margin-top:30px;gap:11px}
+  .svc:nth-child(even){order:1}
+  .svc{gap:10px;min-height:52px;padding:0 9px 0 14px}
+  .svc-n{font-size:min(15px,4vw);line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .svc-p{font-size:12px}
+  .svc-i{width:32px;height:32px}
+  .svc-i svg{width:18px;height:18px}
+
+  /* Каруселі */
+  .car-view{margin-top:32px}
+  .car-track{gap:14px}
+  .work,.barber{flex-basis:calc(100% - 43px)}
+  .work img{aspect-ratio:300/456}
+  .barber img{aspect-ratio:302/385}
+  .barber .cap{height:auto;padding:18px 20px 20px}
+  .barber h3{font-size:19px}
+  .barber p{font-size:12px;margin-top:8px}
+  .team-foot,.team-foot.center{flex-direction:column;align-items:stretch;gap:14px;margin-top:20px}
+  .arrows{justify-content:center;gap:16px}
+  .car-btn{width:56px;height:56px}
+
+  /* Де нас знайти */
+  .find .wrap{padding-left:0;padding-right:0}
+  .find-box{padding:26px 16px 16px;gap:0}
+  .find-t{font-size:52px;line-height:1.02}
+  .find-x{order:0;margin-top:14px;max-width:none;font-size:14px;color:#3a3a3a}
+  .find-geo{position:relative;margin-top:30px;align-self:stretch}
+  .find-map{width:94%;margin:0 auto}
+  .find-pin{width:30px}
+  .find-city{position:absolute;right:4px;top:14%;height:40px;min-width:0;padding:0 14px;font-size:28px}
+  .find-card{max-width:none;margin-top:22px;padding:16px 15px 15px;grid-template-columns:auto auto;justify-content:space-between;gap:14px 12px}
+  .find-col{font-size:13px;white-space:nowrap}
+  .find-card .btn{height:46px;font-size:13px}
+
+  /* Про нас */
+  .ab-red{min-height:0;padding:56px 18px 26px}
+  .cn{width:22px;height:22px}
+  .cn.tl,.cn.tr{top:14px}.cn.bl,.cn.br{bottom:14px}.cn.tl,.cn.bl{left:14px}.cn.tr,.cn.br{right:14px}
+  .ab-lbl{left:46px;right:46px;top:18px;font-size:6.5px}
+  .ab-red h2{font-size:calc((100vw - 32px) * .07);line-height:1.22}
+  .ab-red h2 .l{white-space:nowrap}
+  .ab-red h2 .in{--ind:1.7em}
+  .ab-mid{margin:44px 0 40px;gap:14px}
+  .ab-face{width:40px;min-width:0}
+  .ab-bot h3{font-size:15px;margin-bottom:8px}
+  .ab-bot p{font-size:12.5px;line-height:1.38}
+  .ab-photo{aspect-ratio:347/384}
+
+  /* Футер */
+  .ftr .wrap{padding-left:0;padding-right:0}
+  .ftr-box{display:grid;grid-template-columns:1fr 1fr;column-gap:14px;row-gap:0;padding:30px 16px 26px}
+  .ftr-right{display:contents}
+  .ftr-brand{grid-column:1/-1;grid-row:auto;font-size:17px;margin-bottom:26px}
+  .ftr .chip{font-size:18px;padding:5px 9px;gap:8px}
+  .ftr .chip svg{width:17px;height:17px}
+  .ftr-nav{grid-column:1;grid-row:auto}
+  .ftr-nav ul{margin-top:16px;gap:4px;font-size:15px}
+  .ftr-cols{grid-column:2;grid-template-columns:1fr;gap:22px;align-self:start}
+  .ftr-cols p{margin-top:12px;font-size:15px;line-height:1.75}
+  .ftr-soc{grid-column:1/-1;flex-wrap:wrap;gap:8px;margin:28px 0 0}
+  .ftr-soc .chip{height:auto;margin-right:100%}
+  .soc{width:44px;height:44px}
+  .ftr-btn{grid-column:1/-1;margin-top:20px}
+  .ftr-map{order:5;grid-column:1/-1;position:relative;left:auto;right:auto;top:auto;width:240px;margin:36px auto 0;opacity:1}
+  .ftr-map b{left:10%;font-size:30px}
+  .ftr-legal{order:6;grid-column:1/-1;grid-row:auto;margin-top:28px;gap:10px}
+  .chip-s{min-height:40px;font-size:11.5px;padding:0 10px}
 }
 @media (prefers-reduced-motion:reduce){
   .mq-t{animation-duration:120s}
