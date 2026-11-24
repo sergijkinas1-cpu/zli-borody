@@ -153,7 +153,7 @@ a.lt:hover{color:#fff}
 .find-x{position:absolute;left:calc(20 * var(--u));bottom:calc(30 * var(--u));margin:0;max-width:330px;font-size:14px;line-height:1.45;color:#232323}
 .find-map{position:absolute;left:calc(531 * var(--u));top:calc(30 * var(--u));width:calc(623 * var(--u));aspect-ratio:1012/905;display:block}
 .find-map img{width:100%;height:100%}
-.find-pin{position:absolute;width:calc(34 * var(--u));min-width:24px;height:auto;aspect-ratio:1;color:var(--red);transform:translate(-50%,-92%);filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))}
+.find-pin{position:absolute;width:calc(34 * var(--u));min-width:24px;height:auto;aspect-ratio:1;color:var(--red);transform:translate(-50%,-100%);filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))}
 .find-city{position:absolute;left:calc(925 * var(--u));top:calc(130 * var(--u));min-width:calc(205 * var(--u));padding:0 calc(36 * var(--u));height:calc(76 * var(--u));display:grid;place-items:center;background:var(--red);color:#fff;font-family:var(--head);font-weight:600;text-transform:uppercase;font-size:clamp(40px,calc(58 * var(--u)),58px);line-height:1}
 .find-card{position:absolute;left:calc(1008 * var(--u));top:calc(206 * var(--u));width:calc(331 * var(--u));min-width:300px;background:#212121;color:#fff;padding:18px 20px 20px;display:grid;grid-template-columns:1fr auto;gap:14px 16px;box-shadow:0 20px 40px -20px rgba(0,0,0,.5)}
 .find-col{display:grid;justify-items:start;gap:10px;font-size:13px;color:#cfcfcf}
@@ -192,12 +192,14 @@ a.lt:hover{color:#fff}
 /* ---------- Футер ---------- */
 .ftr{padding:var(--gap) 0 20px}
 .ftr-box{position:relative;overflow:hidden;background:var(--panel);border-radius:3px;min-height:calc(455 * var(--u));padding:calc(36 * var(--u)) 20px 30px calc(38 * var(--u));display:grid;grid-template-columns:calc(240 * var(--u)) minmax(0,1fr) minmax(440px,calc(470 * var(--u)));grid-template-rows:1fr auto;column-gap:20px}
-.ftr-map{position:absolute;left:calc(500 * var(--u));top:calc(24 * var(--u));width:calc(335 * var(--u));aspect-ratio:1000/893;pointer-events:none}
+.ftr-map{position:absolute;left:calc(500 * var(--u));top:calc(24 * var(--u));width:calc(335 * var(--u));aspect-ratio:1000/893;display:block}
+.ftr-map .ftr-sil{transition:filter .25s}
+.ftr-map:hover .ftr-sil{filter:brightness(1.25)}
 .ftr-sil{position:absolute;inset:0;width:100%;height:100%}
-.ftr-pin{position:absolute;left:28%;top:22%;width:30px;height:30px;color:var(--red)}
-.ftr-map b{position:absolute;left:0;right:0;top:44%;text-align:center;font-family:var(--head);font-weight:600;font-size:calc(42 * var(--u));text-transform:uppercase;color:#2c2c2c}
+.ftr-pin{position:absolute;left:45.1%;top:54%;width:30px;height:30px;color:var(--red);transform:translate(-50%,-100%)}
+.ftr-map b{position:absolute;left:0;right:0;top:57%;text-align:center;font-family:var(--head);font-weight:600;font-size:calc(42 * var(--u));text-transform:uppercase;color:#2c2c2c}
 .ftr-brand{grid-row:1;grid-column:1;align-self:start;position:relative;font-family:var(--head);font-weight:600;font-size:18px;text-transform:uppercase}
-.ftr-nav{grid-row:1;grid-column:2;position:relative;align-self:start}
+.ftr-nav{grid-row:1;grid-column:2;position:relative;align-self:start;justify-self:start}
 .ftr .chip{font-family:var(--head);font-weight:600;text-transform:uppercase;font-size:clamp(20px,calc(23 * var(--u)),23px);padding:6px 10px;gap:10px}
 .ftr .chip svg{width:20px;height:20px}
 .ftr-nav ul{list-style:none;margin:22px 0 0;padding:0;display:grid;gap:10px;justify-items:start;font-size:17px;color:#e4e4e4}
@@ -213,7 +215,7 @@ a.lt:hover{color:#fff}
 .soc.on:hover{background:var(--red-hover)}
 .soc svg{width:22px;height:22px}
 .ftr-btn{width:100%}
-.ftr-legal{grid-row:2;grid-column:1/3;align-self:end;position:relative;display:flex;flex-wrap:wrap;gap:12px}
+.ftr-legal{grid-row:2;grid-column:1/3;align-self:end;justify-self:start;position:relative;display:flex;flex-wrap:wrap;gap:12px}
 .chip-s{display:inline-flex;align-items:center;min-height:48px;padding:0 10px;background:var(--chip);border-radius:2px;font-size:13px;color:#e4e4e4;transition:background-color .25s}
 .chip-s:hover{background:var(--chip-hover);color:#fff}
 

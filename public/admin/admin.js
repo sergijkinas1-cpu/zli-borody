@@ -77,7 +77,7 @@ function set(obj, path, v) { const ks = path.split('.'); const last = ks.pop(); 
 /* ---------------- Схема розділів ---------------- */
 const SITE_LINKS = [
   ['#top', 'Початок головної'], ['#advantages', 'Блок «Переваги» на головній'], ['#services', 'Блок «Наші послуги»'], ['#works', 'Блок «Наші роботи»'], ['#team', 'Блок «Команда»'], ['#contacts', 'Блок «Де нас знайти»'], ['#about', 'Блок «Про нас»'],
-  ['/', 'Головна сторінка'], ['/blog', 'Блог'],
+  ['/', 'Головна сторінка'], ['/blog', 'Блог'], ['/privacy', 'Політика конфіденційності'], ['/oferta', 'Договір оферти'],
 ];
 const btnFields = (base) => ({ group: 'Кнопка запису', hint: 'Порожні поля беруть текст і посилання з розділу «Контакти і запис»', fields: [
   { t: 'text', k: base + '.btnLabel', label: 'Текст кнопки', ph: () => S.content.settings.bookingLabel },
@@ -207,6 +207,13 @@ const SECTIONS = [
       { t: 'number', k: 'blog.perPage', label: 'Статей на одній сторінці', min: 1, max: 48 },
     ] },
     { group: 'SEO', fields: [{ t: 'text', k: 'blog.seoTitle', label: 'Заголовок сторінки', max: 60 }, { t: 'textarea', k: 'blog.seoDescription', label: 'Опис для пошуку', max: 160, cls: 'short' }] },
+  ] },
+  { h: 'Юридичні сторінки' },
+  { id: 'privacy', title: 'Політика конфіденційності', desc: 'Сторінка /privacy, посилання на неї стоїть у футері', path: '/privacy', keys: ['legal.privacyTitle', 'legal.privacyBody'], groups: [
+    { fields: [{ t: 'heading', k: 'legal.privacyTitle', label: 'Заголовок', noColor: true }, { t: 'rich', k: 'legal.privacyBody', label: 'Текст' }] },
+  ] },
+  { id: 'offer', title: 'Договір оферти', desc: 'Сторінка /oferta, посилання на неї стоїть у футері', path: '/oferta', keys: ['legal.offerTitle', 'legal.offerBody'], groups: [
+    { fields: [{ t: 'heading', k: 'legal.offerTitle', label: 'Заголовок', noColor: true }, { t: 'rich', k: 'legal.offerBody', label: 'Текст' }] },
   ] },
   { h: 'Керування' },
   { id: 'history', title: 'Історія змін', desc: 'Кожна публікація зберігається. Будь-яку версію можна переглянути і повернути на сайт', custom: renderHistory },

@@ -9,7 +9,8 @@ export default {
     const origin = `https://${req.headers.get('x-forwarded-host') || u.host}`;
     const p = u.searchParams.get('p') || 'home';
     const path = p === 'blog' ? '/blog' + (u.searchParams.get('page') ? `?page=${u.searchParams.get('page')}` : '')
-      : p === 'post' ? '/blog/' + (u.searchParams.get('slug') || '') : '/';
+      : p === 'post' ? '/blog/' + (u.searchParams.get('slug') || '')
+      : p === 'privacy' ? '/privacy' : p === 'oferta' ? '/oferta' : '/';
     try {
       const { content } = await getPublished();
       const { status, html } = renderPath(content, path, { origin });

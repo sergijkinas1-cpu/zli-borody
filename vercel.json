@@ -9,6 +9,14 @@
   },
   "rewrites": [
     {
+      "source": "/privacy",
+      "destination": "/api/page?p=privacy"
+    },
+    {
+      "source": "/oferta",
+      "destination": "/api/page?p=oferta"
+    },
+    {
       "source": "/",
       "destination": "/api/page?p=home"
     },
