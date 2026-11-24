@@ -76,7 +76,7 @@ function set(obj, path, v) { const ks = path.split('.'); const last = ks.pop(); 
 
 /* ---------------- Схема розділів ---------------- */
 const SITE_LINKS = [
-  ['#advantages', 'Блок «Переваги» на головній'], ['#works', 'Блок «Наші роботи»'], ['#team', 'Блок «Команда»'], ['#about', 'Блок «Про нас»'],
+  ['#top', 'Початок головної'], ['#advantages', 'Блок «Переваги» на головній'], ['#services', 'Блок «Наші послуги»'], ['#works', 'Блок «Наші роботи»'], ['#team', 'Блок «Команда»'], ['#contacts', 'Блок «Де нас знайти»'], ['#about', 'Блок «Про нас»'],
   ['/', 'Головна сторінка'], ['/blog', 'Блог'],
 ];
 const btnFields = (base) => ({ group: 'Кнопка запису', hint: 'Порожні поля беруть текст і посилання з розділу «Контакти і запис»', fields: [
@@ -127,6 +127,14 @@ const SECTIONS = [
       ...(i < 2 ? [{ t: 'image', k: 'image', label: 'Фото', hint: 'На сайті фото стає чорно-білим' }] : [{ t: 'note', text: 'У цій картці анімований малюнок, він не змінюється' }]),
     ] }] },
   ] },
+  { id: 'services', title: 'Наші послуги', desc: 'Список послуг з цінами. Кожна плашка веде на запис', path: '/', anchor: 'services', keys: ['services'], groups: [
+    { fields: [{ t: 'heading', k: 'services.title', label: 'Заголовок', hint: HEAD_HINT }, { t: 'textarea', k: 'services.lead', label: 'Підзаголовок', cls: 'short' }] },
+    { fields: [{ t: 'list', k: 'services.items', label: 'Послуги', title: (it) => [it.name, it.price].filter(Boolean).join(' · ') || 'Нова послуга', add: 'Додати послугу', blank: { name: 'Нова послуга', price: 'від 500 грн', url: '' }, fields: [
+      { row: [{ t: 'text', k: 'name', label: 'Назва' }, { t: 'text', k: 'price', label: 'Ціна', hint: 'Наприклад, від 500 грн' }] },
+      { t: 'link', k: 'url', label: 'Посилання на запис цієї послуги', hint: 'Порожнє поле веде на загальний запис', ph: () => S.content.services.btnUrl || S.content.settings.bookingUrl },
+    ] }] },
+    btnFields('services'),
+  ] },
   { id: 'works', title: 'Наші роботи', desc: 'Карусель з фото стрижок', path: '/', anchor: 'works', keys: ['works'], groups: [
     { fields: [{ t: 'heading', k: 'works.title', label: 'Заголовок', hint: HEAD_HINT }, { t: 'textarea', k: 'works.lead', label: 'Підзаголовок', cls: 'short' }] },
     { fields: [{ t: 'list', k: 'works.items', label: 'Фото робіт', pic: 'image', title: (it, i) => it.alt || `Фото ${i + 1}`, add: 'Додати фото', blank: { image: '', alt: '' }, fields: [
@@ -141,16 +149,55 @@ const SECTIONS = [
       { t: 'image', k: 'photo', label: 'Фото', hint: 'Вертикальне, приблизно 4 на 5' },
       { row: [{ t: 'text', k: 'name', label: 'Ім\'я' }, { t: 'text', k: 'role', label: 'Посада' }] },
     ] }] },
-    btnFields('team'),
   ] },
-  { id: 'about', title: 'Про нас', desc: 'Червоний блок з текстом і великим фото залу', path: '/', anchor: 'about', keys: ['about'], groups: [
-    { group: 'Заголовок', hint: 'Другий рядок плавно від\'їжджає вправо при прокрутці, а після третього стоїть маленьке фото', fields: [
+  { id: 'findUs', title: 'Де нас знайти', desc: 'Світлий блок з картою Львова, адресою і телефоном', path: '/', anchor: 'contacts', keys: ['findUs'], groups: [
+    { fields: [{ t: 'heading', k: 'findUs.title', label: 'Заголовок', hint: HEAD_HINT }, { t: 'textarea', k: 'findUs.text', label: 'Текст унизу зліва', cls: 'short' }] },
+    { group: 'Плашка з містом і контактами', fields: [
+      { t: 'text', k: 'findUs.city', label: 'Червона плашка з містом' },
+      { row: [{ t: 'text', k: 'findUs.addressLabel', label: 'Підпис адреси' }, { t: 'text', k: 'findUs.address', label: 'Адреса' }] },
+      { row: [{ t: 'text', k: 'findUs.phoneLabel', label: 'Підпис телефону' }, { t: 'text', k: 'findUs.phone', label: 'Телефон' }] },
+      { t: 'url', k: 'findUs.mapUrl', label: 'Посилання на Google Карти', hint: 'Відкривається, коли натискають на карту або адресу' },
+    ] },
+    { group: 'Мітка на карті', hint: 'Положення мітки у відсотках від лівого і верхнього краю карти', fields: [
+      { row: [{ t: 'number', k: 'findUs.pinX', label: 'Зліва, %', min: 0, max: 100 }, { t: 'number', k: 'findUs.pinY', label: 'Згори, %', min: 0, max: 100 }] },
+    ] },
+    btnFields('findUs'),
+  ] },
+  { id: 'about', title: 'Про нас', desc: 'Червоний блок з заголовком, логотипом і великим фото залу', path: '/', anchor: 'about', keys: ['about'], groups: [
+    { fields: [{ t: 'text', k: 'about.label', label: 'Дрібний напис угорі', hint: 'Повторюється тричі вздовж верхнього краю' }] },
+    { group: 'Заголовок', hint: 'Слово між зірочками стоїть на білій плашці, наприклад *Злі Бороди*. Другий рядок виїжджає зліва направо при прокрутці, а після третього стоїть маленьке фото', fields: [
       { t: 'text', k: 'about.line1', label: 'Перший рядок' }, { t: 'text', k: 'about.line2', label: 'Другий рядок' }, { t: 'text', k: 'about.line3', label: 'Третій рядок' },
       { t: 'image', k: 'about.inlineImage', label: 'Маленьке фото в заголовку' },
     ] },
-    { fields: [{ t: 'textarea', k: 'about.text', label: 'Текст', cls: 'tall', hint: 'Порожній рядок між абзацами починає новий абзац' }] },
-    btnFields('about'),
-    { fields: [{ t: 'text', k: 'about.tag', label: 'Біла плашка внизу' }, { t: 'image', k: 'about.photo', label: 'Велике фото' }, { t: 'text', k: 'about.photoAlt', label: 'Опис великого фото' }] },
+    { group: 'Низ блоку', fields: [{ t: 'text', k: 'about.subtitle', label: 'Підзаголовок' }, { t: 'textarea', k: 'about.text', label: 'Текст', cls: 'tall', hint: 'Порожній рядок між абзацами починає новий абзац' }] },
+    { fields: [{ t: 'image', k: 'about.photo', label: 'Велике фото', hint: 'На сайті фото стає чорно-білим' }, { t: 'text', k: 'about.photoAlt', label: 'Опис великого фото' }] },
+  ] },
+  { id: 'footer', title: 'Футер', desc: 'Нижній блок з навігацією, контактами, соцмережами і юридичними посиланнями', path: '/', anchor: 'footer', keys: ['footer'], groups: [
+    { fields: [{ row: [{ t: 'text', k: 'footer.brand', label: 'Назва зліва' }, { t: 'text', k: 'footer.city', label: 'Напис на силуеті карти' }] }] },
+    { group: 'Навігація', fields: [
+      { t: 'text', k: 'footer.navTitle', label: 'Заголовок' },
+      { t: 'list', k: 'footer.nav', label: 'Пункти', title: (it) => it.label, add: 'Додати пункт', blank: { label: 'Новий пункт', href: '/' }, fields: [
+        { t: 'text', k: 'label', label: 'Назва' }, { t: 'link', k: 'href', label: 'Куди веде' },
+      ] },
+    ] },
+    { group: 'Адреса і контакти', fields: [
+      { row: [{ t: 'text', k: 'footer.addressTitle', label: 'Заголовок адреси' }, { t: 'text', k: 'footer.contactsTitle', label: 'Заголовок контактів' }] },
+      { row: [{ t: 'text', k: 'footer.address', label: 'Адреса' }, { t: 'text', k: 'footer.hours', label: 'Графік роботи' }] },
+      { row: [{ t: 'text', k: 'footer.phone', label: 'Телефон' }, { t: 'text', k: 'footer.email', label: 'Пошта' }] },
+    ] },
+    { group: 'Соцмережі', hint: 'Вставте посилання на сторінки. Порожня кнопка нікуди не веде', fields: [
+      { t: 'text', k: 'footer.socialTitle', label: 'Заголовок' },
+      { row: [{ t: 'url', k: 'footer.instagram', label: 'Instagram' }, { t: 'url', k: 'footer.telegram', label: 'Telegram' }] },
+      { row: [{ t: 'url', k: 'footer.viber', label: 'Viber' }, { t: 'url', k: 'footer.tiktok', label: 'TikTok' }] },
+      { t: 'url', k: 'footer.facebook', label: 'Facebook' },
+    ] },
+    { group: 'Нижній рядок', fields: [
+      { t: 'text', k: 'footer.copyright', label: 'Копірайт' },
+      { t: 'list', k: 'footer.links', label: 'Плашки з посиланнями', title: (it) => it.label, add: 'Додати плашку', blank: { label: 'Нова плашка', href: '' }, fields: [
+        { t: 'text', k: 'label', label: 'Текст' }, { t: 'link', k: 'href', label: 'Посилання', hint: 'Порожнє поле залишає просто напис' },
+      ] },
+    ] },
+    btnFields('footer'),
   ] },
   { h: 'Блог' },
   { id: 'posts', title: 'Статті', desc: 'Створюйте, редагуйте і публікуйте статті', path: '/blog', keys: ['posts'], custom: renderPosts },
