@@ -6,13 +6,13 @@ import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { DATA_DIR } from './lib/env.js';
 
-if (!process.argv.includes('--dev')) process.env.NODE_ENV ||= 'production';
+// Без await на верхньому рівні, бо Hostinger (LiteSpeed) підвантажує цей файл через require()
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC = path.join(ROOT, 'public');
-const { DATA_DIR } = await import('./lib/env.js');
 const PORT = Number(process.env.PORT) || 3000;
-const cfg = JSON.parse(await fsp.readFile(path.join(ROOT, 'vercel.json'), 'utf8'));
+const cfg = JSON.parse(fs.readFileSync(path.join(ROOT, 'vercel.json'), 'utf8'));
 
 const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.json': 'application/json', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.gif': 'image/gif', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.avif': 'image/avif', '.ico': 'image/x-icon', '.mp4': 'video/mp4', '.webm': 'video/webm', '.mov': 'video/quicktime', '.txt': 'text/plain; charset=utf-8', '.xml': 'application/xml', '.woff2': 'font/woff2', '.woff': 'font/woff' };
 
