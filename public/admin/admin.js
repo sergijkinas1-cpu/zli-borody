@@ -80,35 +80,36 @@ const SITE_LINKS = [
   ['/', 'Головна сторінка'], ['/blog', 'Блог'], ['/privacy', 'Політика конфіденційності'], ['/oferta', 'Договір оферти'],
 ];
 const btnFields = (base) => ({ group: 'Кнопка запису', hint: 'Порожні поля беруть текст і посилання з розділу «Контакти і запис»', fields: [
-  { t: 'text', k: base + '.btnLabel', label: 'Текст кнопки', ph: () => S.content.settings.bookingLabel },
+  { t: 'text', k: base + '.btnLabel', label: 'Текст кнопки', max: 24, ph: () => S.content.settings.bookingLabel },
   { t: 'link', k: base + '.btnUrl', label: 'Посилання кнопки', ph: () => S.content.settings.bookingUrl },
 ] });
+const vis = (v) => String(v ?? '').replace(/[*~\n]/g, '');
 const HEAD_HINT = 'Виділіть слово і натисніть «Червоним», щоб виділити його кольором. Enter переносить рядок';
 
 const SECTIONS = [
   { h: 'Загальне' },
   { id: 'settings', title: 'Контакти і запис', desc: 'Логотип, телефон і головна кнопка запису, яка стоїть у шапці і в усіх блоках', path: '/', anchor: 'hdr', keys: ['settings.brand1', 'settings.brand2', 'settings.phone', 'settings.bookingLabel', 'settings.bookingUrl'], groups: [
-    { group: 'Логотип', fields: [{ row: [{ t: 'text', k: 'settings.brand1', label: 'Перше слово' }, { t: 'text', k: 'settings.brand2', label: 'Червоне слово' }] }] },
-    { group: 'Контакти', fields: [{ t: 'text', k: 'settings.phone', label: 'Телефон у шапці', hint: 'Відвідувач натискає на номер, і він копіюється' }] },
-    { group: 'Запис онлайн', fields: [{ t: 'text', k: 'settings.bookingLabel', label: 'Текст кнопки' }, { t: 'url', k: 'settings.bookingUrl', label: 'Посилання на сервіс запису' }] },
+    { group: 'Логотип', fields: [{ row: [{ t: 'text', k: 'settings.brand1', label: 'Перше слово', max: 8 }, { t: 'text', k: 'settings.brand2', label: 'Червоне слово', max: 10 }] }] },
+    { group: 'Контакти', fields: [{ t: 'text', k: 'settings.phone', label: 'Телефон у шапці', max: 20, hint: 'Відвідувач натискає на номер, і він копіюється' }] },
+    { group: 'Запис онлайн', fields: [{ t: 'text', k: 'settings.bookingLabel', label: 'Текст кнопки', max: 24 }, { t: 'url', k: 'settings.bookingUrl', label: 'Посилання на сервіс запису' }] },
   ] },
   { id: 'menu', title: 'Меню', desc: 'Пункти навігації в шапці сайту', path: '/', anchor: 'hdr', keys: ['settings.nav'], groups: [
-    { fields: [{ t: 'list', k: 'settings.nav', label: 'Пункти меню', title: (it) => it.label, add: 'Додати пункт', blank: { label: 'Новий пункт', href: '/' }, fields: [
-      { t: 'text', k: 'label', label: 'Назва' }, { t: 'link', k: 'href', label: 'Куди веде', hint: 'Оберіть блок або сторінку зі списку чи вставте будь-яке посилання' },
+    { fields: [{ t: 'list', k: 'settings.nav', label: 'Пункти меню', max: 8, title: (it) => it.label, add: 'Додати пункт', blank: { label: 'Новий пункт', href: '/' }, fields: [
+      { t: 'text', k: 'label', label: 'Назва', max: 14 }, { t: 'link', k: 'href', label: 'Куди веде', hint: 'Оберіть блок або сторінку зі списку чи вставте будь-яке посилання' },
     ] }] },
   ] },
   { id: 'seo', title: 'SEO і соцмережі', desc: 'Як головна сторінка виглядає в Google і коли нею діляться в месенджерах', path: '/', keys: ['settings.seoTitle', 'settings.seoDescription', 'settings.ogImage'], groups: [
     { fields: [
-      { t: 'text', k: 'settings.seoTitle', label: 'Заголовок сторінки', max: 60 },
-      { t: 'textarea', k: 'settings.seoDescription', label: 'Опис для пошуку', max: 160, cls: 'short' },
+      { t: 'text', k: 'settings.seoTitle', label: 'Заголовок сторінки', max: 60, soft: true },
+      { t: 'textarea', k: 'settings.seoDescription', label: 'Опис для пошуку', max: 160, soft: true, cls: 'short' },
       { t: 'image', k: 'settings.ogImage', label: 'Картинка для соцмереж', hint: 'Найкраще 1200 на 630 пікселів' },
     ] },
   ] },
   { h: 'Головна сторінка' },
   { id: 'hero', title: 'Перший екран', desc: 'Відео на фоні, головний заголовок і кнопка', path: '/', anchor: 'top', keys: ['hero'], groups: [
     { fields: [
-      { t: 'heading', k: 'hero.title', label: 'Заголовок', hint: HEAD_HINT },
-      { t: 'textarea', k: 'hero.text', label: 'Підзаголовок', cls: 'short' },
+      { t: 'heading', k: 'hero.title', label: 'Заголовок', max: 24, lines: 2, line: 12, hint: HEAD_HINT },
+      { t: 'textarea', k: 'hero.text', label: 'Підзаголовок', max: 110, lines: 2, cls: 'short' },
     ] },
     btnFields('hero'),
     { group: 'Фон', fields: [
@@ -119,24 +120,25 @@ const SECTIONS = [
   { id: 'marquee', title: 'Бігуча стрічка', desc: 'Червона стрічка під першим екраном', path: '/', anchor: 'mq', keys: ['marquee'], groups: [
     { fields: [{ t: 'image', k: 'marquee.image', label: 'Елемент стрічки', hint: 'PNG з прозорим фоном. Картинка повторюється по колу' }] },
   ] },
-  { id: 'why', title: 'Переваги', desc: 'Блок із чотирма червоними картками, що розлітаються при прокрутці', path: '/', anchor: 'advantages', keys: ['why'], groups: [
-    { fields: [{ t: 'heading', k: 'why.title', label: 'Заголовок', dim: true, hint: 'Виділіть слово і натисніть «Червоним» або «Сірим». Enter переносить рядок' }] },
+  { id: 'why', title: 'Переваги', desc: 'Чотири картки складені віялом, а при прокрутці розлітаються в ряд. У ряду чергуються фото і анімація', path: '/', anchor: 'advantages', keys: ['why'], groups: [
+    { fields: [{ t: 'heading', k: 'why.title', label: 'Заголовок', max: 44, lines: 2, line: 24, dim: true, hint: 'Виділіть слово і натисніть «Червоним» або «Сірим». Enter переносить рядок' }] },
     { fields: [{ t: 'list', k: 'why.cards', label: 'Картки', fixed: true, title: (it) => plain(it.title), fields: (it, i) => [
-      { t: 'heading', k: 'title', label: 'Заголовок картки', noColor: true, hint: 'Enter переносить рядок' },
-      { t: 'textarea', k: 'text', label: 'Текст', cls: 'short' },
+      { t: 'heading', k: 'title', label: 'Заголовок картки', max: 44, lines: 2, line: 24, noColor: true, hint: 'Enter переносить рядок' },
+      { t: 'textarea', k: 'text', label: 'Текст', max: 120, lines: 1, cls: 'short' },
+      { t: 'note', text: `У ряду ця картка стоїть ${['третьою', 'першою', 'четвертою', 'другою'][i]}` },
       ...(i < 2 ? [{ t: 'image', k: 'image', label: 'Фото', hint: 'На сайті фото стає чорно-білим' }] : [{ t: 'note', text: 'У цій картці анімований малюнок, він не змінюється' }]),
     ] }] },
   ] },
   { id: 'services', title: 'Наші послуги', desc: 'Список послуг з цінами. Кожна плашка веде на запис', path: '/', anchor: 'services', keys: ['services'], groups: [
-    { fields: [{ t: 'heading', k: 'services.title', label: 'Заголовок', hint: HEAD_HINT }, { t: 'textarea', k: 'services.lead', label: 'Підзаголовок', cls: 'short' }] },
-    { fields: [{ t: 'list', k: 'services.items', label: 'Послуги', title: (it) => [it.name, it.price].filter(Boolean).join(' · ') || 'Нова послуга', add: 'Додати послугу', blank: { name: 'Нова послуга', price: 'від 500 грн', url: '' }, fields: [
-      { row: [{ t: 'text', k: 'name', label: 'Назва' }, { t: 'text', k: 'price', label: 'Ціна', hint: 'Наприклад, від 500 грн' }] },
+    { fields: [{ t: 'heading', k: 'services.title', label: 'Заголовок', max: 30, lines: 2, line: 18, hint: HEAD_HINT }, { t: 'textarea', k: 'services.lead', label: 'Підзаголовок', max: 110, lines: 2, cls: 'short' }] },
+    { fields: [{ t: 'list', k: 'services.items', label: 'Послуги', max: 12, title: (it) => [it.name, it.price].filter(Boolean).join(' · ') || 'Нова послуга', add: 'Додати послугу', blank: { name: 'Нова послуга', price: 'від 500 грн', url: '' }, fields: [
+      { row: [{ t: 'text', k: 'name', label: 'Назва', max: 28 }, { t: 'text', k: 'price', label: 'Ціна', max: 14, hint: 'Наприклад, від 500 грн' }] },
       { t: 'link', k: 'url', label: 'Посилання на запис цієї послуги', hint: 'Порожнє поле веде на загальний запис', ph: () => S.content.services.btnUrl || S.content.settings.bookingUrl },
     ] }] },
     btnFields('services'),
   ] },
   { id: 'works', title: 'Наші роботи', desc: 'Карусель з фото стрижок', path: '/', anchor: 'works', keys: ['works'], groups: [
-    { fields: [{ t: 'heading', k: 'works.title', label: 'Заголовок', hint: HEAD_HINT }, { t: 'textarea', k: 'works.lead', label: 'Підзаголовок', cls: 'short' }] },
+    { fields: [{ t: 'heading', k: 'works.title', label: 'Заголовок', max: 30, lines: 2, line: 18, hint: HEAD_HINT }, { t: 'textarea', k: 'works.lead', label: 'Підзаголовок', max: 110, lines: 2, cls: 'short' }] },
     { fields: [{ t: 'list', k: 'works.items', label: 'Фото робіт', pic: 'image', title: (it, i) => it.alt || `Фото ${i + 1}`, add: 'Додати фото', blank: { image: '', alt: '' }, fields: [
       { t: 'image', k: 'image', label: 'Фото', hint: 'Вертикальне, приблизно 3 на 4' },
       { t: 'text', k: 'alt', label: 'Опис фото', hint: 'Коротко, що на фото. Потрібно для Google і незрячих відвідувачів' },
@@ -144,57 +146,57 @@ const SECTIONS = [
     btnFields('works'),
   ] },
   { id: 'team', title: 'Команда', desc: 'Карусель з барберами', path: '/', anchor: 'team', keys: ['team'], groups: [
-    { fields: [{ t: 'heading', k: 'team.title', label: 'Заголовок', hint: HEAD_HINT }, { t: 'textarea', k: 'team.lead', label: 'Підзаголовок', cls: 'short' }] },
+    { fields: [{ t: 'heading', k: 'team.title', label: 'Заголовок', max: 44, lines: 2, line: 26, hint: HEAD_HINT }, { t: 'textarea', k: 'team.lead', label: 'Підзаголовок', max: 110, lines: 2, cls: 'short' }] },
     { fields: [{ t: 'list', k: 'team.items', label: 'Барбери', pic: 'photo', title: (it) => it.name || 'Новий барбер', add: 'Додати барбера', blank: { photo: '', name: '', role: '' }, fields: [
       { t: 'image', k: 'photo', label: 'Фото', hint: 'Вертикальне, приблизно 4 на 5' },
-      { row: [{ t: 'text', k: 'name', label: 'Ім\'я' }, { t: 'text', k: 'role', label: 'Посада' }] },
+      { row: [{ t: 'text', k: 'name', label: 'Ім\'я', max: 22 }, { t: 'text', k: 'role', label: 'Посада', max: 18 }] },
     ] }] },
   ] },
   { id: 'findUs', title: 'Де нас знайти', desc: 'Світлий блок з картою Львова, адресою і телефоном', path: '/', anchor: 'contacts', keys: ['findUs'], groups: [
-    { fields: [{ t: 'heading', k: 'findUs.title', label: 'Заголовок', hint: HEAD_HINT }, { t: 'textarea', k: 'findUs.text', label: 'Текст унизу зліва', cls: 'short' }] },
+    { fields: [{ t: 'heading', k: 'findUs.title', label: 'Заголовок', max: 20, lines: 2, line: 10, hint: HEAD_HINT }, { t: 'textarea', k: 'findUs.text', label: 'Текст унизу зліва', max: 160, lines: 1, cls: 'short' }] },
     { group: 'Плашка з містом і контактами', fields: [
-      { t: 'text', k: 'findUs.city', label: 'Червона плашка з містом' },
-      { row: [{ t: 'text', k: 'findUs.addressLabel', label: 'Підпис адреси' }, { t: 'text', k: 'findUs.address', label: 'Адреса' }] },
-      { row: [{ t: 'text', k: 'findUs.phoneLabel', label: 'Підпис телефону' }, { t: 'text', k: 'findUs.phone', label: 'Телефон' }] },
+      { t: 'text', k: 'findUs.city', label: 'Червона плашка з містом', max: 10 },
+      { row: [{ t: 'text', k: 'findUs.addressLabel', label: 'Підпис адреси', max: 12 }, { t: 'text', k: 'findUs.address', label: 'Адреса', max: 32 }] },
+      { row: [{ t: 'text', k: 'findUs.phoneLabel', label: 'Підпис телефону', max: 12 }, { t: 'text', k: 'findUs.phone', label: 'Телефон', max: 20 }] },
       { t: 'url', k: 'findUs.mapUrl', label: 'Посилання на Google Карти', hint: 'Відкривається, коли натискають на карту або адресу' },
     ] },
-    { group: 'Мітка на карті', hint: 'Положення мітки у відсотках від лівого і верхнього краю карти', fields: [
+    { group: 'Мітка на карті', hint: 'Положення мітки у відсотках від лівого і верхнього краю карти. Мітка змінюється одночасно тут і на карті у футері', fields: [
       { row: [{ t: 'number', k: 'findUs.pinX', label: 'Зліва, %', min: 0, max: 100 }, { t: 'number', k: 'findUs.pinY', label: 'Згори, %', min: 0, max: 100 }] },
     ] },
     btnFields('findUs'),
   ] },
-  { id: 'about', title: 'Про нас', desc: 'Червоний блок з заголовком, логотипом і великим фото залу', path: '/', anchor: 'about', keys: ['about'], groups: [
-    { fields: [{ t: 'text', k: 'about.label', label: 'Дрібний напис угорі', hint: 'Повторюється тричі вздовж верхнього краю' }] },
+  { id: 'about', title: 'Про нас', desc: 'Червоний блок із зернистою текстурою, заголовком, логотипом і великим фото залу', path: '/', anchor: 'about', keys: ['about'], groups: [
+    { fields: [{ t: 'text', k: 'about.label', label: 'Дрібний напис угорі', max: 24, hint: 'Повторюється тричі вздовж верхнього краю' }] },
     { group: 'Заголовок', hint: 'Слово між зірочками стоїть на білій плашці, наприклад *Злі Бороди*. Другий рядок виїжджає зліва направо при прокрутці, а після третього стоїть маленьке фото', fields: [
-      { t: 'text', k: 'about.line1', label: 'Перший рядок' }, { t: 'text', k: 'about.line2', label: 'Другий рядок' }, { t: 'text', k: 'about.line3', label: 'Третій рядок' },
+      { t: 'text', k: 'about.line1', label: 'Перший рядок', max: 26 }, { t: 'text', k: 'about.line2', label: 'Другий рядок', max: 18 }, { t: 'text', k: 'about.line3', label: 'Третій рядок', max: 12 },
       { t: 'image', k: 'about.inlineImage', label: 'Маленьке фото в заголовку' },
     ] },
-    { group: 'Низ блоку', fields: [{ t: 'text', k: 'about.subtitle', label: 'Підзаголовок' }, { t: 'textarea', k: 'about.text', label: 'Текст', cls: 'tall', hint: 'Порожній рядок між абзацами починає новий абзац' }] },
+    { group: 'Низ блоку', fields: [{ t: 'text', k: 'about.subtitle', label: 'Підзаголовок', max: 30 }, { t: 'textarea', k: 'about.text', label: 'Текст', max: 300, cls: 'tall', hint: 'Порожній рядок між абзацами починає новий абзац' }] },
     { fields: [{ t: 'image', k: 'about.photo', label: 'Велике фото', hint: 'На сайті фото стає чорно-білим' }, { t: 'text', k: 'about.photoAlt', label: 'Опис великого фото' }] },
   ] },
   { id: 'footer', title: 'Футер', desc: 'Нижній блок з навігацією, контактами, соцмережами і юридичними посиланнями', path: '/', anchor: 'footer', keys: ['footer'], groups: [
-    { fields: [{ row: [{ t: 'text', k: 'footer.brand', label: 'Назва зліва' }, { t: 'text', k: 'footer.city', label: 'Напис на силуеті карти' }] }] },
+    { fields: [{ row: [{ t: 'text', k: 'footer.brand', label: 'Назва зліва', max: 14 }, { t: 'text', k: 'footer.city', label: 'Напис на силуеті карти', max: 8 }] }] },
     { group: 'Навігація', fields: [
-      { t: 'text', k: 'footer.navTitle', label: 'Заголовок' },
-      { t: 'list', k: 'footer.nav', label: 'Пункти', title: (it) => it.label, add: 'Додати пункт', blank: { label: 'Новий пункт', href: '/' }, fields: [
-        { t: 'text', k: 'label', label: 'Назва' }, { t: 'link', k: 'href', label: 'Куди веде' },
+      { t: 'text', k: 'footer.navTitle', label: 'Заголовок', max: 12 },
+      { t: 'list', k: 'footer.nav', label: 'Пункти', max: 8, title: (it) => it.label, add: 'Додати пункт', blank: { label: 'Новий пункт', href: '/' }, fields: [
+        { t: 'text', k: 'label', label: 'Назва', max: 16 }, { t: 'link', k: 'href', label: 'Куди веде' },
       ] },
     ] },
     { group: 'Адреса і контакти', fields: [
-      { row: [{ t: 'text', k: 'footer.addressTitle', label: 'Заголовок адреси' }, { t: 'text', k: 'footer.contactsTitle', label: 'Заголовок контактів' }] },
-      { row: [{ t: 'text', k: 'footer.address', label: 'Адреса' }, { t: 'text', k: 'footer.hours', label: 'Графік роботи' }] },
-      { row: [{ t: 'text', k: 'footer.phone', label: 'Телефон' }, { t: 'text', k: 'footer.email', label: 'Пошта' }] },
+      { row: [{ t: 'text', k: 'footer.addressTitle', label: 'Заголовок адреси', max: 10 }, { t: 'text', k: 'footer.contactsTitle', label: 'Заголовок контактів', max: 10 }] },
+      { row: [{ t: 'text', k: 'footer.address', label: 'Адреса', max: 32 }, { t: 'text', k: 'footer.hours', label: 'Графік роботи', max: 24 }] },
+      { row: [{ t: 'text', k: 'footer.phone', label: 'Телефон', max: 20 }, { t: 'text', k: 'footer.email', label: 'Пошта', max: 32 }] },
     ] },
     { group: 'Соцмережі', hint: 'Вставте посилання на сторінки. Порожня кнопка нікуди не веде', fields: [
-      { t: 'text', k: 'footer.socialTitle', label: 'Заголовок' },
+      { t: 'text', k: 'footer.socialTitle', label: 'Заголовок', max: 12 },
       { row: [{ t: 'url', k: 'footer.instagram', label: 'Instagram' }, { t: 'url', k: 'footer.telegram', label: 'Telegram' }] },
       { row: [{ t: 'url', k: 'footer.viber', label: 'Viber' }, { t: 'url', k: 'footer.tiktok', label: 'TikTok' }] },
       { t: 'url', k: 'footer.facebook', label: 'Facebook' },
     ] },
     { group: 'Нижній рядок', fields: [
-      { t: 'text', k: 'footer.copyright', label: 'Копірайт' },
-      { t: 'list', k: 'footer.links', label: 'Плашки з посиланнями', title: (it) => it.label, add: 'Додати плашку', blank: { label: 'Нова плашка', href: '' }, fields: [
-        { t: 'text', k: 'label', label: 'Текст' }, { t: 'link', k: 'href', label: 'Посилання', hint: 'Порожнє поле залишає просто напис' },
+      { t: 'text', k: 'footer.copyright', label: 'Копірайт', max: 40 },
+      { t: 'list', k: 'footer.links', label: 'Плашки з посиланнями', max: 5, title: (it) => it.label, add: 'Додати плашку', blank: { label: 'Нова плашка', href: '' }, fields: [
+        { t: 'text', k: 'label', label: 'Текст', max: 30 }, { t: 'link', k: 'href', label: 'Посилання', hint: 'Порожнє поле залишає просто напис' },
       ] },
     ] },
     btnFields('footer'),
@@ -203,17 +205,17 @@ const SECTIONS = [
   { id: 'posts', title: 'Статті', desc: 'Створюйте, редагуйте і публікуйте статті', path: '/blog', keys: ['posts'], custom: renderPosts },
   { id: 'blog', title: 'Сторінка блогу', desc: 'Заголовок і налаштування сторінки зі списком статей', path: '/blog', keys: ['blog'], groups: [
     { fields: [
-      { t: 'heading', k: 'blog.title', label: 'Заголовок', hint: HEAD_HINT },
+      { t: 'heading', k: 'blog.title', label: 'Заголовок', max: 34, lines: 2, line: 22, hint: HEAD_HINT },
       { t: 'number', k: 'blog.perPage', label: 'Статей на одній сторінці', min: 1, max: 48 },
     ] },
-    { group: 'SEO', fields: [{ t: 'text', k: 'blog.seoTitle', label: 'Заголовок сторінки', max: 60 }, { t: 'textarea', k: 'blog.seoDescription', label: 'Опис для пошуку', max: 160, cls: 'short' }] },
+    { group: 'SEO', fields: [{ t: 'text', k: 'blog.seoTitle', label: 'Заголовок сторінки', max: 60, soft: true }, { t: 'textarea', k: 'blog.seoDescription', label: 'Опис для пошуку', max: 160, soft: true, cls: 'short' }] },
   ] },
   { h: 'Юридичні сторінки' },
   { id: 'privacy', title: 'Політика конфіденційності', desc: 'Сторінка /privacy, посилання на неї стоїть у футері', path: '/privacy', keys: ['legal.privacyTitle', 'legal.privacyBody'], groups: [
-    { fields: [{ t: 'heading', k: 'legal.privacyTitle', label: 'Заголовок', noColor: true }, { t: 'rich', k: 'legal.privacyBody', label: 'Текст' }] },
+    { fields: [{ t: 'heading', k: 'legal.privacyTitle', label: 'Заголовок', max: 60, lines: 2, noColor: true }, { t: 'rich', k: 'legal.privacyBody', label: 'Текст' }] },
   ] },
   { id: 'offer', title: 'Договір оферти', desc: 'Сторінка /oferta, посилання на неї стоїть у футері', path: '/oferta', keys: ['legal.offerTitle', 'legal.offerBody'], groups: [
-    { fields: [{ t: 'heading', k: 'legal.offerTitle', label: 'Заголовок', noColor: true }, { t: 'rich', k: 'legal.offerBody', label: 'Текст' }] },
+    { fields: [{ t: 'heading', k: 'legal.offerTitle', label: 'Заголовок', max: 60, lines: 2, noColor: true }, { t: 'rich', k: 'legal.offerBody', label: 'Текст' }] },
   ] },
   { h: 'Керування' },
   { id: 'history', title: 'Історія змін', desc: 'Кожна публікація зберігається. Будь-яку версію можна переглянути і повернути на сайт', custom: renderHistory },
@@ -437,17 +439,43 @@ function renderField(f, root) {
   const w = document.createElement('div');
   w.className = 'f';
   const id = 'f' + ++uid;
-  const val = get(root, f.k);
+  const val = f.k ? get(root, f.k) : '';
   const hint = f.hint ? `<div class="hint">${esc(f.hint)}</div>` : '';
   const ph = typeof f.ph === 'function' ? f.ph() : f.ph || '';
-  const count = f.max ? `<span class="count" data-count>${String(val || '').length} з ${f.max}</span>` : '';
-  const upd = (v) => { set(root, f.k, v); if (f.max) { const c = $('[data-count]', w); c.textContent = `${String(v).length} з ${f.max}`; c.classList.toggle('over', String(v).length > f.max); } if (f.onInput) f.onInput(v); changed(); };
+  const lim = f.max && f.t !== 'number';
+  const count = lim ? `<span class="count" data-count>${vis(val).length} з ${f.max}</span>` : '';
+  const upd = (v) => { set(root, f.k, v); if (lim) { const c = $('[data-count]', w); c.textContent = `${vis(v).length} з ${f.max}`; c.classList.toggle('over', vis(v).length > f.max); } if (f.onInput) f.onInput(v); changed(); };
+  // Жорстке обмеження. Довший текст або зайвий рядок не приймаються, щоб не зламати композицію
+  const fits = (v, prev) => {
+    if (f.soft) return true;
+    const n = vis(v).length, ln = String(v).split('\n').length;
+    const okLen = !lim || n <= f.max || n <= vis(prev).length;
+    const okLines = !f.lines || ln <= f.lines || ln <= String(prev).split('\n').length;
+    const longest = (x) => Math.max(...String(x).split('\n').map((l) => vis(l).length));
+    const okLine = !f.line || longest(v) <= f.line || longest(v) <= longest(prev);
+    return okLen && okLines && okLine;
+  };
+  const guard = (el) => {
+    let last = el.value;
+    el.addEventListener('beforeinput', () => { last = el.value; });
+    el.addEventListener('input', (e) => {
+      if (fits(el.value, last)) { last = el.value; return; }
+      const tooMany = f.lines && String(el.value).split('\n').length > f.lines;
+      const tooLong = f.line && String(el.value).split('\n').some((l) => vis(l).length > f.line);
+      const pos = Math.max(0, el.selectionStart - (el.value.length - last.length));
+      el.value = last; try { el.setSelectionRange(pos, pos); } catch {}
+      e.stopImmediatePropagation();
+      const now = Date.now();
+      if (now - (guard.t || 0) > 2500) { guard.t = now; toast(tooMany ? `Тут не більше ${f.lines === 1 ? 'одного рядка' : f.lines + ' рядків'}, щоб не зламати дизайн` : tooLong ? `В одному рядку не більше ${f.line} символів. Перенесіть частину на новий рядок через Enter` : `Тут не більше ${f.max} символів, щоб не зламати дизайн`); }
+    }, true);
+  };
   switch (f.t) {
     case 'note': w.innerHTML = `<div class="hint">${esc(f.text)}</div>`; break;
     case 'text': case 'url': case 'link': case 'number': case 'date': {
       const type = f.t === 'number' ? 'number' : f.t === 'date' ? 'date' : 'text';
       w.innerHTML = `<label for="${id}">${esc(f.label)}${count}</label><input class="in" id="${id}" type="${type}" value="${esc(val)}" placeholder="${esc(ph)}"${f.t === 'link' ? ' list="siteLinks"' : ''}${f.min ? ` min="${f.min}"` : ''}${f.max && f.t === 'number' ? ` max="${f.max}"` : ''}${f.t !== 'text' ? ' spellcheck="false"' : ''}>${hint}`;
       const i = $('input', w);
+      if (lim) guard(i);
       i.addEventListener('input', () => upd(f.t === 'number' ? Number(i.value) || 0 : i.value));
       if (f.t === 'url' || f.t === 'link') i.addEventListener('change', () => { const v = i.value.trim(); if (v && !/^(https?:|mailto:|tel:|#|\/)/i.test(v) && /\./.test(v)) { i.value = 'https://' + v; upd(i.value); } });
       break;
@@ -456,6 +484,7 @@ function renderField(f, root) {
       const tools = f.t === 'heading' && !f.noColor ? `<div class="mini-tools"><button type="button" class="chip red" data-wrap="*">Червоним</button>${f.dim ? '<button type="button" class="chip dim" data-wrap="~">Сірим</button>' : ''}<button type="button" class="chip" data-clear>Прибрати колір</button></div>` : '';
       w.innerHTML = `<label for="${id}">${esc(f.label)}${count}</label><textarea class="in ${f.cls || (f.t === 'heading' ? 'short' : '')}" id="${id}" placeholder="${esc(ph)}" rows="${f.t === 'heading' ? 2 : 3}">${esc(val)}</textarea>${tools}${hint}`;
       const ta = $('textarea', w);
+      if (lim || f.lines || f.line) guard(ta);
       const fit = () => { ta.style.height = 'auto'; ta.style.height = Math.max(ta.scrollHeight + 2, f.t === 'heading' ? 64 : 84) + 'px'; };
       ta.addEventListener('input', () => { fit(); upd(ta.value); });
       requestAnimationFrame(fit);
@@ -569,7 +598,8 @@ function listField(f, root) {
   const key = S.section + ':' + f.k;
   const draw = () => {
     const items = arr();
-    box.innerHTML = `<div class="lbl">${esc(f.label)} <span class="count">${items.length}</span></div><div class="list"></div>${f.fixed ? '' : `<button type="button" class="btn btn-sm btn-line add">+ ${esc(f.add || 'Додати')}</button>`}`;
+    const full = f.max && items.length >= f.max;
+    box.innerHTML = `<div class="lbl">${esc(f.label)} <span class="count">${items.length}${f.max ? ' з ' + f.max : ''}</span></div><div class="list"></div>${f.fixed || full ? '' : `<button type="button" class="btn btn-sm btn-line add">+ ${esc(f.add || 'Додати')}</button>`}`;
     const list = $('.list', box);
     items.forEach((it, i) => {
       const open = S.open[key + ':' + i];
@@ -577,7 +607,7 @@ function listField(f, root) {
       el.className = 'item' + (open ? ' open' : '');
       const pic = f.pic && it[f.pic] ? `<span class="pic" style="background-image:url('${esc(it[f.pic])}')"></span>` : '';
       el.innerHTML = `<div class="item-h"><span class="num">${i + 1}</span>${pic}<span class="ttl">${esc(f.title(it, i) || 'Без назви')}</span>
-        ${f.fixed ? '' : `<button type="button" class="icon-btn" data-a="up" title="Вище" ${i ? '' : 'disabled'}>${ICON.up}</button><button type="button" class="icon-btn" data-a="down" title="Нижче" ${i < items.length - 1 ? '' : 'disabled'}>${ICON.down}</button><button type="button" class="icon-btn" data-a="dup" title="Дублювати">${ICON.dup}</button><button type="button" class="icon-btn danger" data-a="del" title="Видалити">${ICON.del}</button>`}${ICON.chev}</div><div class="item-b"></div>`;
+        ${f.fixed ? '' : `<button type="button" class="icon-btn" data-a="up" title="Вище" ${i ? '' : 'disabled'}>${ICON.up}</button><button type="button" class="icon-btn" data-a="down" title="Нижче" ${i < items.length - 1 ? '' : 'disabled'}>${ICON.down}</button>${full ? '' : `<button type="button" class="icon-btn" data-a="dup" title="Дублювати">${ICON.dup}</button>`}<button type="button" class="icon-btn danger" data-a="del" title="Видалити">${ICON.del}</button>`}${ICON.chev}</div><div class="item-b"></div>`;
       const body = $('.item-b', el);
       const fields = typeof f.fields === 'function' ? f.fields(it, i) : f.fields;
       const renderBody = () => { body.innerHTML = ''; fields.forEach((x) => body.append(renderField({ ...x, onInput: () => { $('.ttl', el).textContent = f.title(it, i) || 'Без назви'; if (f.pic) { const p = $('.pic', el); if (p) p.style.backgroundImage = `url('${it[f.pic]}')`; } } }, it))); };
@@ -738,8 +768,8 @@ function renderPost(box, p) {
       { t: 'text', k: 'ctaLabel', label: 'Текст кнопки', ph: S.content.settings.bookingLabel }, { t: 'link', k: 'ctaUrl', label: 'Посилання кнопки', ph: S.content.settings.bookingUrl },
     ] },
     { group: 'SEO', fields: [
-      { t: 'text', k: 'seoTitle', label: 'Заголовок для Google', max: 60, ph: plain(p.title) },
-      { t: 'textarea', k: 'seoDescription', label: 'Опис для Google', max: 160, cls: 'short' },
+      { t: 'text', k: 'seoTitle', label: 'Заголовок для Google', max: 60, soft: true, ph: plain(p.title) },
+      { t: 'textarea', k: 'seoDescription', label: 'Опис для Google', max: 160, soft: true, cls: 'short' },
     ] },
   ];
   for (const g of groups) box.append(renderGroup(g, p));
