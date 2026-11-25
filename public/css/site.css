@@ -284,18 +284,14 @@ a.chip-s:hover{color:#fff}
   /* Переваги. Великі картки лягають віялом поверх заголовка */
   .why{height:260vh;padding:0}
   .why-stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
-  .why-title{position:absolute;padding:0;font-size:calc(36.1 * var(--k,1px));line-height:1.2}
+  .why-title{position:absolute;padding:0;font-size:calc(38 * var(--k,1px));line-height:1.12}
   .why-title .l{white-space:nowrap}
   .why-deck{position:absolute;inset:0;display:block;padding:0;pointer-events:none}
-  /* Картки точно як у Figma. Картка 179 на 198.7 при ширині макета 393, --f це один піксель макета */
-  .wc{--f:calc(var(--cw) / 179);position:absolute;transition:none;will-change:transform;backface-visibility:hidden;height:calc(var(--f) * 198.7);padding:calc(var(--f) * 10) calc(var(--f) * 10) calc(var(--f) * 11)}
-  .wc .ph{height:calc(var(--f) * 126)}
-  .wc h3{font-size:calc(var(--f) * 10.55);line-height:1.327;letter-spacing:.005em}
-  .wc p{font-size:calc(var(--f) * 6.7);line-height:1.343;margin-top:calc(var(--f) * 5)}
-  .wc.art h3{margin-top:calc(var(--f) * -1.8)}
-  .wc.art p{margin-top:auto;max-width:calc(var(--f) * 140)}
-  .wc video,.wc .draw-end{left:calc(50% - var(--f));top:49.6%;width:calc(var(--f) * 97);height:calc(var(--f) * 97)}
-  .wc [src*=face]{left:calc(50% - var(--f) * 1.2);top:51.4%;width:calc(var(--f) * 104.5);height:calc(var(--f) * 104.5)}
+  .wc{position:absolute;transition:none;will-change:transform;backface-visibility:hidden;height:calc(var(--cw) * 1.15);padding:calc(var(--cw) * .06)}
+  .wc .ph{height:calc(var(--cw) * .6)}
+  .wc h3{font-size:calc(var(--cw) * .072)}
+  .wc p{font-size:calc(var(--cw) * .047);line-height:1.35}
+  .wc video,.wc .draw-end{width:calc(var(--cw) * .5);height:calc(var(--cw) * .5)}
 
   /* Послуги. Спершу ліва колонка десктопа, потім права */
   .svc-grid{margin-top:38px;gap:11.5px}
