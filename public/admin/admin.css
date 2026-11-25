@@ -1,7 +1,7 @@
 :root{
   --bg:#141414;--side:#0f0f0f;--panel:#1c1c1c;--field:#212121;--field-hover:#262626;--line:#2c2c2c;--line-2:#383838;
   --ink:#fff;--sub:#cfcfcf;--muted:#8a8a8a;--dim:#5c5c5c;
-  --red:#d10616;--red-hover:#dc2131;--ok:#3fae6a;
+  --red:#e20011;--red-hover:#e8222f;--ok:#3fae6a;
   --head:Oswald,"Arial Narrow",Impact,sans-serif;--font:Manrope,"Helvetica Neue",Arial,sans-serif;
   --ease:cubic-bezier(.22,.61,.36,1);
   --top:64px;
@@ -46,7 +46,7 @@ img{display:block;max-width:100%}
 .login-box{background:var(--panel);border-radius:6px;padding:32px 28px;display:grid;gap:18px;justify-items:center}
 .login-box h1{font-family:var(--head);font-weight:500;text-transform:uppercase;font-size:24px;margin:0}
 .login-box p{margin:0;color:var(--sub)}
-.login-err{background:rgba(209,6,22,.12);border:1px solid rgba(209,6,22,.45);color:#ffb3b8;border-radius:4px;padding:12px 14px;font-size:13px;text-align:left;width:100%}
+.login-err{background:rgba(226,0,17,.12);border:1px solid rgba(226,0,17,.45);color:#ffb3b8;border-radius:4px;padding:12px 14px;font-size:13px;text-align:left;width:100%}
 .login-note{color:var(--muted);font-size:12px;margin-top:22px}
 .setup{text-align:left;width:100%;font-size:13px;color:var(--sub);display:grid;gap:8px}
 .setup code{background:#0d0d0d;padding:2px 6px;border-radius:3px;font-size:12px;color:#fff}
@@ -167,7 +167,7 @@ textarea.in.short{min-height:64px}
 .pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600;letter-spacing:.02em}
 .pill.pub{background:rgba(63,174,106,.15);color:#6fd394}
 .pill.drf{background:#2a2a2a;color:#b5b5b5}
-.pill.red{background:rgba(209,6,22,.16);color:#ff7a84}
+.pill.red{background:rgba(226,0,17,.16);color:#ff7a84}
 .pcard .ord{display:grid;gap:2px}
 
 /* Редактор статті */
