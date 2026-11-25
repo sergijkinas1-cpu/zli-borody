@@ -1,5 +1,6 @@
 import { getPublished } from '../lib/store.js';
 import { renderPath } from '../lib/pages.js';
+import { renderSitemap, renderRobots } from '../lib/render.js';
 import { pageHeaders } from '../lib/cache.js';
 import { DEFAULTS, normalize } from '../lib/store.js';
 
@@ -8,6 +9,12 @@ export default {
     const u = new URL(req.url);
     const origin = `https://${req.headers.get('x-forwarded-host') || u.host}`;
     const p = u.searchParams.get('p') || 'home';
+    if (p === 'robots') return new Response(renderRobots(origin), { headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'public, max-age=3600' } });
+    if (p === 'sitemap') {
+      let content;
+      try { ({ content } = await getPublished()); } catch { content = normalize(DEFAULTS); }
+      return new Response(renderSitemap(content, origin), { headers: { 'Content-Type': 'application/xml; charset=utf-8', 'Cache-Control': 'public, max-age=3600' } });
+    }
     const path = p === 'blog' ? '/blog' + (u.searchParams.get('page') ? `?page=${u.searchParams.get('page')}` : '')
       : p === 'post' ? '/blog/' + (u.searchParams.get('slug') || '')
       : p === 'privacy' ? '/privacy' : p === 'oferta' ? '/oferta' : '/';

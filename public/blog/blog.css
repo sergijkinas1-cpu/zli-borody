@@ -114,3 +114,12 @@ button{font:inherit;color:inherit;cursor:pointer}
   .post-t{font-size:19px}
 }
 .empty{color:var(--sub);margin:24px 0 0;font-size:15px}
+
+/* Під статтею. Інші статті і посилання на розділи сайту */
+.more{margin-top:110px}
+.more-t{font-family:var(--head);font-weight:600;text-transform:uppercase;font-size:clamp(30px,3vw,44px);line-height:1.1;margin:0}
+.more-p{margin-top:32px}
+.more-n{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
+.more-l{display:inline-flex;align-items:center;height:44px;padding:0 18px;background:var(--panel);color:#fff;text-decoration:none;font-size:14px;font-weight:500;transition:background-color .2s}
+.more-l:hover{background:var(--red)}
+@media (max-width:560px){.more{margin-top:80px}.more-l{flex:1 1 calc(50% - 4px);justify-content:center;padding:0 10px}}

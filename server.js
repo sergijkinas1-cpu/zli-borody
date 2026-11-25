@@ -5,6 +5,7 @@ import http from 'node:http';
 import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
+import zlib from 'node:zlib';
 import { fileURLToPath } from 'node:url';
 import { DATA_DIR } from './lib/env.js';
 
@@ -43,6 +44,16 @@ function inside(base, p) {
 }
 async function isFile(f) { try { const st = await fsp.stat(f); return st.isFile() ? st : null; } catch { return null; } }
 
+// Текст (HTML, CSS, JS, SVG, XML) стискається, так сторінка приходить у 3–5 разів меншою
+const COMPRESSIBLE = /^(text\/|application\/(json|xml|javascript)|image\/svg)/;
+function encoder(req, type) {
+  if (!COMPRESSIBLE.test(type || '')) return null;
+  const ae = String(req.headers['accept-encoding'] || '');
+  if (/\bbr\b/.test(ae)) return ['br', () => zlib.createBrotliCompress({ params: { [zlib.constants.BROTLI_PARAM_QUALITY]: 5 } })];
+  if (/\bgzip\b/.test(ae)) return ['gzip', () => zlib.createGzip({ level: 6 })];
+  return null;
+}
+
 function sendFile(req, res, f, st, headers) {
   const type = TYPES[path.extname(f).toLowerCase()] || 'application/octet-stream';
   const base = { 'Content-Type': type, 'Accept-Ranges': 'bytes', 'Last-Modified': st.mtime.toUTCString(), ...headers };
@@ -61,6 +72,12 @@ function sendFile(req, res, f, st, headers) {
     if (req.method === 'HEAD') return res.end();
     return fs.createReadStream(f, { start, end }).pipe(res);
   }
+  const enc = encoder(req, type);
+  if (enc && st.size > 1024) {
+    res.writeHead(200, { ...base, 'Content-Encoding': enc[0], Vary: 'Accept-Encoding' });
+    if (req.method === 'HEAD') return res.end();
+    return fs.createReadStream(f).pipe(enc[1]()).pipe(res);
+  }
   res.writeHead(200, { ...base, 'Content-Length': st.size });
   if (req.method === 'HEAD') return res.end();
   fs.createReadStream(f).pipe(res);
@@ -77,7 +94,8 @@ async function api(name) {
   return mods.get(name);
 }
 
-const cacheFor = (p) => p.startsWith('/admin') ? 'no-cache' : /\.(jpe?g|png|webp|avif|gif|svg|mp4|webm|woff2?)$/i.test(p) ? 'public, max-age=604800' : 'public, max-age=300';
+// Шрифти і файли з ?v= у назві не змінюються, їх браузер тримає рік. Фото 30 днів
+const cacheFor = (p, q = '') => p.startsWith('/admin') ? 'no-cache' : (/^\/fonts\//.test(p) || /[?&]v=/.test(q)) ? 'public, max-age=31536000, immutable' : /\.(jpe?g|png|webp|avif|gif|svg|mp4|webm)$/i.test(p) ? 'public, max-age=2592000' : 'public, max-age=300';
 
 http.createServer(async (req, res) => {
   try {
@@ -96,7 +114,7 @@ http.createServer(async (req, res) => {
       }
       const f = inside(PUBLIC, p);
       const st = f && await isFile(f);
-      if (st) return sendFile(req, res, f, st, { 'Cache-Control': cacheFor(p), ...extraHeaders(p) });
+      if (st) return sendFile(req, res, f, st, { 'Cache-Control': cacheFor(p, u.search), ...extraHeaders(p) });
     }
 
     const rw = rewrite(p);
@@ -125,8 +143,16 @@ http.createServer(async (req, res) => {
     const setCookie = r.headers.getSetCookie?.();
     if (setCookie?.length) out['set-cookie'] = setCookie;
     Object.assign(out, extraHeaders(p));
+    const body = Buffer.from(await r.arrayBuffer());
+    const enc = body.length > 1024 && !out['content-encoding'] && encoder(req, out['content-type']);
+    if (enc) {
+      delete out['content-length'];
+      res.writeHead(r.status, { ...out, 'Content-Encoding': enc[0], Vary: 'Accept-Encoding' });
+      if (req.method === 'HEAD') return res.end();
+      const z = enc[1](); z.pipe(res); return z.end(body);
+    }
     res.writeHead(r.status, out);
-    res.end(req.method === 'HEAD' ? undefined : Buffer.from(await r.arrayBuffer()));
+    res.end(req.method === 'HEAD' ? undefined : body);
   } catch (e) {
     console.error(e);
     if (!res.headersSent) res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });

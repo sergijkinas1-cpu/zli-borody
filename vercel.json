@@ -9,6 +9,14 @@
   },
   "rewrites": [
     {
+      "source": "/sitemap.xml",
+      "destination": "/api/page?p=sitemap"
+    },
+    {
+      "source": "/robots.txt",
+      "destination": "/api/page?p=robots"
+    },
+    {
       "source": "/privacy",
       "destination": "/api/page?p=privacy"
     },
@@ -77,6 +85,24 @@
         {
           "key": "X-Robots-Tag",
           "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/fonts/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(img|blog/img)/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=2592000"
         }
       ]
     }
