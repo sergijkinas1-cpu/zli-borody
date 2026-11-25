@@ -76,7 +76,7 @@ a.lt:hover{color:#fff}
 .hdr.open .burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
 
 /* ---------- Головний екран ---------- */
-.hero{position:relative;min-height:100vh;min-height:var(--vh0,100svh);display:flex;align-items:center;background:#0d0d0d url(/hero-poster.jpg) center/cover;overflow:hidden}
+.hero{position:relative;min-height:100vh;min-height:100svh;display:flex;align-items:center;background:#0d0d0d url(/hero-poster.jpg) center/cover;overflow:hidden}
 .hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,8,8,.88),rgba(8,8,8,.55) 45%,rgba(8,8,8,.2)),linear-gradient(0deg,var(--bg),transparent 30%)}
 .hero .wrap{position:relative;z-index:1;width:100%;padding-top:140px;padding-bottom:110px}
@@ -290,6 +290,7 @@ a.chip-s:hover{color:#fff}
   .mq-u b{font-family:var(--head);font-weight:500;font-size:17px;line-height:1;text-transform:uppercase;color:#fff;white-space:nowrap;letter-spacing:.01em}
 
   /* Переваги. Великі картки лягають віялом поверх заголовка */
+  .hero{min-height:var(--vh0,100svh)}
   .why{height:calc(var(--vh0,100vh) * 2.6);padding:0;margin-top:40px}
   .why-stage{position:sticky;top:0;height:100vh;height:var(--vh0,100svh);overflow:hidden;overflow:clip visible}
   .why-title{position:absolute;padding:0;font-size:calc(38 * var(--k,1px));line-height:1.12}
@@ -300,6 +301,12 @@ a.chip-s:hover{color:#fff}
   .wc h3{font-size:calc(var(--cw) * .072)}
   .wc p{font-size:calc(var(--cw) * .047);line-height:1.35}
   .wc video,.wc .draw-end{width:calc(var(--cw) * .5);height:calc(var(--cw) * .5)}
+  /* Анімація займає весь простір між заголовком і описом, однакові відступи зверху і знизу. Пунктир обрізано по рамці */
+  .wc .dr{position:relative;flex:1 1 auto;min-height:0;margin:calc(var(--cw) * .045) 0}
+  .wc .dr video,.wc .dr .draw-end{top:50%;left:50%;height:calc(100% / var(--vf));width:auto;aspect-ratio:1;max-width:calc(var(--cw) * .88);max-height:calc(var(--cw) * .88 );transform:translate(-50%,calc(-50% + var(--dy)));clip-path:var(--clip)}
+  .wc .dr-face{--vf:.793;--dy:3.55%;--clip:inset(6.8% 0 13.9% 0)}
+  .wc .dr-scissors{--vf:.859;--dy:-.45%;--clip:inset(7.5% 0 6.6% 0)}
+  .wc.art p{margin-top:0}
 
   /* Послуги. Спершу ліва колонка десктопа, потім права */
   .svc-grid{margin-top:38px;gap:11.5px}
@@ -311,11 +318,19 @@ a.chip-s:hover{color:#fff}
   .svc-i svg{width:18px;height:18px}
 
   /* Каруселі */
-  .car-view{margin-top:36px}
+  /* Каруселі на телефоні гортаються нативно, з природною інерцією і м'яким доводженням до картки */
+  .car-view{margin-top:36px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scrollbar-width:none;touch-action:auto;margin-right:calc(-1 * var(--side,15px));padding-right:var(--side,15px)}
+  .car-view::-webkit-scrollbar{display:none}
+  .car-track{transform:none!important}
+  .work,.barber{scroll-snap-align:start}
+  .car-track > [aria-hidden="true"]{display:none}
   .car-track{gap:14px}
   .work,.barber{flex-basis:calc(100% - 48px)}
   .work img{aspect-ratio:300/456}
-  .barber img{aspect-ratio:302/385}
+  /* Плашка барбера разом з підписом такого ж розміру, як фото роботи */
+  .barber{aspect-ratio:300/456;display:flex;flex-direction:column}
+  .barber img{aspect-ratio:auto;flex:1 1 auto;min-height:0;height:0}
+  .barber .cap{flex:none}
   .barber .cap{height:79px;padding:18px 20px 0}
   .barber h3{font-size:19px}
   .barber p{font-size:12px;margin-top:8px;color:#bdbdbd}
