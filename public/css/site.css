@@ -76,7 +76,7 @@ a.lt:hover{color:#fff}
 .hdr.open .burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
 
 /* ---------- Головний екран ---------- */
-.hero{position:relative;min-height:100vh;min-height:100svh;display:flex;align-items:center;background:#0d0d0d url(/hero-poster.jpg) center/cover;overflow:hidden}
+.hero{position:relative;min-height:100vh;min-height:var(--vh0,100svh);display:flex;align-items:center;background:#0d0d0d url(/hero-poster.jpg) center/cover;overflow:hidden}
 .hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,8,8,.88),rgba(8,8,8,.55) 45%,rgba(8,8,8,.2)),linear-gradient(0deg,var(--bg),transparent 30%)}
 .hero .wrap{position:relative;z-index:1;width:100%;padding-top:140px;padding-bottom:110px}
@@ -118,7 +118,7 @@ a.lt:hover{color:#fff}
 /* ---------- Барбери ---------- */
 .team{padding:var(--gap) 0 0}
 .team .lead{margin-top:16px}
-.car-view{overflow:hidden;margin-top:53px}
+.car-view{overflow:hidden;margin-top:53px;touch-action:pan-y}
 .car-track{display:flex;gap:var(--pad)}
 .barber{background:var(--panel);border-radius:0;overflow:hidden}
 .barber img{width:100%;aspect-ratio:335/406;object-fit:cover}
@@ -140,9 +140,12 @@ a.lt:hover{color:#fff}
 .svc-p{font-size:15px;color:#cacaca;white-space:nowrap;transition:color .25s ease}
 .svc-i{flex:none;display:grid;place-items:center;width:55px;height:55px;border-radius:0;background:var(--chip);transition:background-color .25s ease}
 .svc-i svg{width:22px;height:22px}
+/* Підсвітка лише там, де є миша. На телефоні після повернення з Booksy послуга не лишається червоною */
+@media (hover:hover){
 .svc:hover{background:var(--red)}
 .svc:hover .svc-p{color:#fff}
 .svc:hover .svc-i{background:var(--red-deep)}
+}
 .cta-c{display:flex;justify-content:center;margin-top:40px}
 
 /* ---------- Плашки з іконкою ---------- */
@@ -288,8 +291,8 @@ a.chip-s:hover{color:#fff}
   .mq-u b{font-family:var(--head);font-weight:500;font-size:17px;line-height:1;text-transform:uppercase;color:#fff;white-space:nowrap;letter-spacing:.01em}
 
   /* Переваги. Великі картки лягають віялом поверх заголовка */
-  .why{height:260vh;padding:0;margin-top:40px}
-  .why-stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+  .why{height:calc(var(--vh0,100vh) * 2.6);padding:0;margin-top:40px}
+  .why-stage{position:sticky;top:0;height:100vh;height:var(--vh0,100svh);overflow:hidden}
   .why-title{position:absolute;padding:0;font-size:calc(38 * var(--k,1px));line-height:1.12}
   .why-title .l{white-space:nowrap}
   .why-deck{position:absolute;inset:0;display:block;padding:0;pointer-events:none}
