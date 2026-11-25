@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="uk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex">
+<title>Злі Бороди поява блоків</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Manrope:wght@400;500&display=swap" rel="stylesheet">
+<style>body{margin:0}
+/* Один темний вигляд бренду. Вузька колонка як телефон, блоки йдуть один за одним з відступом 110px */
+:root{
+  --bg:#141414;--panel:#1d1d1d;--ink:#f4f1ef;--mute:#a7a2a0;--red:#e20011;--red-deep:#9e000c;
+  --head:"Oswald","Arial Narrow",Arial,sans-serif;--body:"Manrope",system-ui,-apple-system,sans-serif;
+  color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:rgba(17,17,17,.96);border-bottom:1px solid #262626}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:#111}
+.top .in{max-width:430px;margin:0 auto;padding-block:14px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo{font-family:var(--head);font-weight:600;font-size:22px;text-transform:uppercase;letter-spacing:.01em}
+.logo b{color:var(--red);font-weight:600}
+.replay{font:500 13px var(--body);color:var(--ink);background:var(--red);border:0;border-radius:0;padding:9px 12px;cursor:pointer}
+.replay:hover{background:#e8222f}
+.replay:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+main{max-width:430px;margin:0 auto;padding-block:28px 120px;padding-left:max(15px,env(safe-area-inset-left,0px));padding-right:max(15px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:110px}
+.note{font-size:14px;color:var(--mute);border-left:2px solid var(--red);padding-left:12px}
+.note strong{color:var(--ink);font-weight:500}
+section{display:flex;flex-direction:column;gap:18px}
+h2{font-family:var(--head);font-weight:600;text-transform:uppercase;font-size:34px;line-height:1.1;margin:0;text-align:center;text-wrap:balance}
+h2 em{font-style:normal;color:var(--red)}
+.sub{color:var(--mute);text-align:center;margin:0}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--panel);padding:16px 14px}
+.row b{font-family:var(--head);font-weight:500;text-transform:uppercase;font-size:16px}
+.row span{color:var(--mute);font-size:14px;white-space:nowrap}
+.redbox{background:var(--red);padding:34px 18px;display:flex;flex-direction:column;gap:12px}
+.redbox h3{font-family:var(--head);font-weight:600;text-transform:uppercase;font-size:28px;line-height:1.15;margin:0}
+.redbox h3 mark{background:#fff;color:var(--red);padding:0 .14em}
+.redbox p{margin:0}
+.photo{aspect-ratio:4/3;max-width:100%;background:linear-gradient(160deg,#2b2b2b,#0e0e0e);position:relative;overflow:hidden}
+.photo::after{content:"фото";position:absolute;left:12px;bottom:10px;font-size:12px;color:#6d6866;letter-spacing:.08em;text-transform:uppercase}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid .photo{aspect-ratio:3/4}
+.btn{display:block;text-align:center;background:var(--red);color:#fff;font:500 15px var(--body);padding:15px;text-decoration:none}
+
+.tabs{max-width:430px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid #262626}
+.tabs button{font:500 12px var(--body);color:var(--mute);background:transparent;border:0;border-radius:0;padding:10px 4px;cursor:pointer;border-bottom:2px solid transparent}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--red)}
+.tabs button:focus-visible{outline:2px solid var(--ink);outline-offset:-2px}
+/* Анімація. Рядок заголовка виринає з-під невидимої лінії, блоки виїжджають знизу по черзі. Без прозорості */
+.ln{display:block;overflow:hidden;padding-bottom:.04em}
+.ln>span{display:block;transition:transform .8s cubic-bezier(.2,.75,.25,1)}
+.up{transition:transform .9s cubic-bezier(.2,.75,.25,1),clip-path .9s cubic-bezier(.2,.75,.25,1)}
+.wait .ln>span{transform:translateY(105%)}
+/* 1. Блоки виїжджають з-під нижнього краю екрана */
+[data-v="1"] .wait .up{transform:translateY(calc(100vh - var(--y,0px)))}
+/* 2. Блок стоїть на місці і відкривається шторкою знизу вгору */
+[data-v="2"] .wait .up{clip-path:inset(100% 0 0 0)}
+[data-v="2"] .up{clip-path:inset(0 0 0 0)}
+/* 3. Короткий підйом на 60px з-під маски, швидкий каскад */
+[data-v="3"] .wait .up{transform:translateY(60px);clip-path:inset(0 0 100% 0)}
+[data-v="3"] .up{clip-path:inset(0 0 -20px 0)}
+/* 4. Блоки заїжджають по черзі зліва і справа */
+[data-v="4"] .wait .up{transform:translateX(-110vw)}
+[data-v="4"] .wait .up:nth-of-type(even),[data-v="4"] .wait .grid .up:nth-child(2){transform:translateX(110vw)}
+main{overflow-x:clip}
+@media (prefers-reduced-motion:reduce){.ln>span,.up{transition:none!important;transform:none!important}}
+</style>
+
+<header class="top"><div class="in"><div class="logo">Злі <b>Бороди</b></div><button class="replay" id="replay" type="button">Ще раз</button></div>
+<div class="tabs" role="tablist">
+<button type="button" role="tab" data-v="1" aria-selected="true">1. Знизу екрана</button>
+<button type="button" role="tab" data-v="2" aria-selected="false">2. Шторка</button>
+<button type="button" role="tab" data-v="3" aria-selected="false">3. Каскад</button>
+<button type="button" role="tab" data-v="4" aria-selected="false">4. З боків</button>
+</div></header>
+
+<main>
+  <p class="note" id="note"></p>
+
+  <section>
+    <h2><span class="ln"><span>Наші</span></span><span class="ln"><span><em>послуги</em></span></span></h2>
+    <p class="sub up">Обирайте потрібну послугу, а про результат подбають наші барбери</p>
+    <div class="row up"><b>Чоловіча стрижка</b><span>від 500 грн</span></div>
+    <div class="row up"><b>Фейд</b><span>від 600 грн</span></div>
+    <div class="row up"><b>Стрижка бороди</b><span>від 450 грн</span></div>
+    <a class="btn up" href="#replay">Записатися онлайн</a>
+  </section>
+
+  <section>
+    <h2><span class="ln"><span>Наші</span></span><span class="ln"><span><em>роботи</em></span></span></h2>
+    <p class="sub up">Створюємо образ, який підкреслює твою зовнішність, стиль і характер</p>
+    <div class="grid"><div class="photo up"></div><div class="photo up"></div></div>
+  </section>
+
+  <section>
+    <div class="redbox up">
+      <h3><mark>Злі Бороди</mark> барбершоп, де зароджується ваш стиль</h3>
+      <p>Чоловічі стрижки, оформлення бороди й образ, у якому ви почуваєтесь впевнено щодня.</p>
+    </div>
+    <div class="photo up"></div>
+  </section>
+
+  <section>
+    <h2><span class="ln"><span>Де нас</span></span><span class="ln"><span><em>знайти?</em></span></span></h2>
+    <div class="row up"><b>Адреса</b><span>м. Львів, вул. Мельника 2</span></div>
+    <div class="row up"><b>Графік</b><span>Пн–Нд 10:00–20:00</span></div>
+  </section>
+</main>
+
+<script>
+(function(){
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var groups=[].slice.call(document.querySelectorAll('section'));
+  function arm(sec){
+    var items=[].slice.call(sec.querySelectorAll('.up'));
+    sec.classList.add('wait');
+    items.forEach(function(el,i){var r=el.getBoundingClientRect();el.style.setProperty('--y',Math.max(0,r.top)+'px')});
+  }
+  function fire(sec){
+    var lines=[].slice.call(sec.querySelectorAll('.ln>span')),items=[].slice.call(sec.querySelectorAll('.up'));
+    lines.forEach(function(l,i){l.style.transitionDelay=(i*.09)+'s'});
+    items.forEach(function(el,i){el.style.transitionDelay=(.12+i*.08)+'s'});
+    requestAnimationFrame(function(){sec.classList.remove('wait')});
+  }
+  var io='IntersectionObserver' in window?new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){io.unobserve(e.target);fire(e.target)}})},{threshold:.12}):null;
+  function setup(all){
+    groups.forEach(function(sec){
+      var r=sec.getBoundingClientRect();
+      // Блоки, які вже видно при завантаженні, лишаються на місці. Анімуються лише ті, що нижче
+      if(!io||reduce||(!all&&r.top<innerHeight*.9))return;
+      arm(sec);io.observe(sec);
+    });
+  }
+  setup(false);
+  document.getElementById('replay').addEventListener('click',function(e){
+    e.preventDefault();
+    scrollTo({top:0,behavior:'auto'});
+    groups.forEach(function(sec){sec.querySelectorAll('.ln>span,.up').forEach(function(el){el.style.transitionDelay='0s'})});
+    requestAnimationFrame(function(){setup(true);groups.forEach(function(sec){var r=sec.getBoundingClientRect();if(r.top<innerHeight*.9&&r.bottom>0){io&&io.unobserve(sec);setTimeout(function(){fire(sec)},250)}})});
+  });
+  document.querySelector('.btn').addEventListener('click',function(e){e.preventDefault()});
+  var NOTES={1:'Блоки виїжджають з-під нижнього краю екрана по черзі, як картки переваг. Рядки заголовка виринають з-під лінії.',
+    2:'Блок стоїть на своєму місці і відкривається шторкою знизу вгору. Спокійно і дорого виглядає.',
+    3:'Кожен блок коротко піднімається з-під невидимої лінії, швидко один за одним. Найлегший варіант.',
+    4:'Блоки по черзі заїжджають зліва і справа. Найбільше руху.'};
+  var note=document.getElementById('note');
+  function setV(v){document.body.setAttribute('data-v',v);note.innerHTML='<strong>Варіант '+v+'.</strong> '+NOTES[v]+' Гортайте вниз.';
+    document.querySelectorAll('.tabs button').forEach(function(b){b.setAttribute('aria-selected',b.dataset.v===String(v)?'true':'false')})}
+  document.querySelectorAll('.tabs button').forEach(function(b){b.addEventListener('click',function(){setV(b.dataset.v);document.getElementById('replay').click()})});
+  setV(1);
+})();
+</script>
+
+</html>
