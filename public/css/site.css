@@ -93,8 +93,7 @@ a.lt:hover{color:#fff}
 
 /* ---------- Чому нам варто довірити свій образ ---------- */
 .why{position:relative;height:520vh;margin-bottom:170px}
-/* Закріплена сцена має власний шум, тому він стоїть разом з картками і не їде під ними */
-.why-stage{position:sticky;top:0;background:var(--bg) url(/img/noise.png) repeat;background-size:128px 128px;height:100vh;height:100svh;overflow:hidden}
+.why-stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
 .why-title{position:absolute;left:0;right:0;top:0;margin:0;text-align:center;font-family:var(--head);font-weight:600;text-transform:uppercase;line-height:1.165;letter-spacing:-.005em;font-size:calc(97 * var(--k,1px));will-change:transform}
 .why-title .l{display:block;white-space:nowrap}
 .why-title .d{color:var(--dim)}
@@ -292,7 +291,7 @@ a.chip-s:hover{color:#fff}
 
   /* Переваги. Великі картки лягають віялом поверх заголовка */
   .why{height:calc(var(--vh0,100vh) * 2.6);padding:0;margin-top:40px}
-  .why-stage{position:sticky;top:0;height:100vh;height:var(--vh0,100svh);overflow:hidden}
+  .why-stage{position:sticky;top:0;height:100vh;height:var(--vh0,100svh);overflow:hidden;overflow:clip visible}
   .why-title{position:absolute;padding:0;font-size:calc(38 * var(--k,1px));line-height:1.12}
   .why-title .l{white-space:nowrap}
   .why-deck{position:absolute;inset:0;display:block;padding:0;pointer-events:none}
