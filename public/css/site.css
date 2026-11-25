@@ -278,8 +278,12 @@ a.chip-s:hover{color:#fff}
   .btn{height:53px;font-size:15px}
   .cta-c{margin-top:20px}
   .cta-c .btn,.team-foot .btn,.hero .btn{width:100%}
-  .mq{height:99px;min-height:0}
-  .mq-t img{height:78px;min-height:0;margin-right:34px}
+  /* Стрічка за макетом. Висота 64, бородач 24 на 43, напис Oswald Medium 16, між ними 8, між повторами 35 */
+  .mq{height:64px;min-height:0}
+  .mq-t{animation-duration:20s}
+  .mq-u{display:flex;align-items:center;gap:8px;margin-right:35px;flex:none}
+  .mq-u img{width:24px;height:43px;min-height:0;margin:0}
+  .mq-u b{font-family:var(--head);font-weight:500;font-size:16px;line-height:1;text-transform:uppercase;color:#fff;white-space:nowrap;letter-spacing:.01em}
 
   /* Переваги. Великі картки лягають віялом поверх заголовка */
   .why{height:260vh;padding:0}
