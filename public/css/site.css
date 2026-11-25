@@ -402,3 +402,42 @@ a.chip-s:hover{color:#fff}
   html{scroll-behavior:auto}
   .js .rv{opacity:1;transform:none;transition:none}
 }
+
+/* Меню на телефоні і планшеті. Плитки, панель справа на всю висоту екрана */
+.mm,.mm-scrim{display:none}
+@media (max-width:860px){
+  .nav{display:none}
+  .mm-scrim{display:block;position:fixed;inset:0;z-index:90;background:rgba(8,8,8,.62);opacity:0;pointer-events:none;transition:opacity .4s var(--ease)}
+  .mm{display:flex;flex-direction:column;gap:4px;position:fixed;top:0;right:0;bottom:0;z-index:91;width:min(369px,calc(100% - 24px));padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom));background:#0f0f0f;transform:translateX(100%);transition:transform .5s var(--ease);overflow-y:auto;overscroll-behavior:contain;visibility:hidden}
+  .mm-open .mm{transform:none;visibility:visible}
+  .mm-open .mm-scrim{opacity:1;pointer-events:auto}
+  .mm-open,.mm-open body{overflow:hidden}
+  .mm a{color:#fff;text-decoration:none}
+  .mm-top{display:flex;align-items:center;justify-content:space-between;background:var(--bg);height:60px;padding-left:18px;flex:none}
+  .mm-top .logo{font-size:26px}
+  .mm-x{width:60px;height:60px;border:0;background:var(--panel);display:grid;place-items:center;cursor:pointer}
+  .mm-x svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:1.8}
+  /* Плитки розділів займають увесь вільний простір, тож унизу немає порожнечі */
+  .mm-grid{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:minmax(64px,1fr);gap:4px;flex:1 0 auto}
+  .mm-grid.odd .mm-t:last-child{grid-column:1 / -1}
+  .mm-t{background:var(--bg);padding:12px 14px;display:flex;flex-direction:column;justify-content:space-between;font-family:var(--head);font-weight:500;font-size:21px;line-height:1;text-transform:uppercase;transition:background-color .2s}
+  .mm-t i{font-style:normal;font-family:var(--font);font-size:11px;font-weight:600;color:#8a8a8a}
+  .mm-map{position:relative;display:block;height:150px;flex:none;overflow:hidden;background:#1a1a1a;transition:background-color .2s}
+  .mm-streets{position:absolute;inset:0;width:100%;height:100%}
+  .mm-pin{position:absolute;left:44%;top:36%;width:16px;height:16px;background:var(--red);transform:translate(-50%,-50%) rotate(45deg);box-shadow:0 0 0 6px rgba(226,0,17,.25)}
+  .mm-cap{position:absolute;left:0;right:0;bottom:0;padding:12px 14px;display:flex;justify-content:space-between;align-items:flex-end;gap:10px;background:linear-gradient(transparent,rgba(10,10,10,.92) 45%)}
+  .mm-cap b{display:block;font-family:var(--head);font-weight:500;font-size:20px;text-transform:uppercase}
+  .mm-cap small{font-size:13px;color:#d6d6d6}
+  .mm-go{font-size:13px;font-weight:600;white-space:nowrap}
+  .mm-row{display:grid;grid-template-columns:1fr auto;gap:4px;flex:none}
+  .mm-row.solo{grid-template-columns:1fr}
+  .mm-ph{background:var(--bg);padding:14px;display:flex;flex-direction:column;justify-content:center;gap:4px;min-height:76px;transition:background-color .2s}
+  .mm-ph small{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#8a8a8a}
+  .mm-ph b{font-size:18px;font-weight:600}
+  .mm-soc{display:grid;grid-template-columns:48px 48px;gap:4px;align-content:start}
+  .mm-s{width:48px;height:48px;display:grid;place-items:center;background:var(--bg);transition:background-color .2s}
+  .mm-s svg{width:20px;height:20px;fill:#fff}
+  .mm-book{height:60px;flex:none;width:100%}
+  .mm .tap{background:var(--red)!important;transition:none}
+  .mm .tap i,.mm .tap small{color:#fff}
+}
