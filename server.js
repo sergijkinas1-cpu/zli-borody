@@ -102,6 +102,11 @@ http.createServer(async (req, res) => {
     const proto = String(req.headers['x-forwarded-proto'] || 'http').split(',')[0].trim();
     const host = req.headers['x-forwarded-host'] || req.headers.host || 'localhost';
     const u = new URL(req.url, `${proto}://${host}`);
+    // www веде на головну адресу без www, щоб Google не бачив дублікатів. Перехід з http на https робить сам Hostinger
+    if (/^www\./i.test(host)) {
+      res.writeHead(301, { Location: `https://${host.replace(/^www\./i, '')}${req.url}` });
+      return res.end();
+    }
     let p;
     try { p = decodeURIComponent(u.pathname); } catch { res.writeHead(400); return res.end('Bad request'); }
 
