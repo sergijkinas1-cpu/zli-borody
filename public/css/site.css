@@ -140,6 +140,9 @@ a.lt:hover{color:#fff}
 .svc-i{flex:none;display:grid;place-items:center;width:55px;height:55px;border-radius:0;background:var(--chip);transition:background-color .25s ease}
 .svc-i svg{width:22px;height:22px}
 /* Підсвітка лише там, де є миша. На телефоні після повернення з Booksy послуга не лишається червоною */
+.svc.tap{background:var(--red);transition:none}
+.svc.tap .svc-p{color:#fff}
+.svc.tap .svc-i{background:var(--red-deep)}
 @media (hover:hover){
 .svc:hover{background:var(--red)}
 .svc:hover .svc-p{color:#fff}
