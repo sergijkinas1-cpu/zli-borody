@@ -23,6 +23,7 @@
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:90px}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.4;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+@supports (overflow:clip){body{overflow-x:clip}}
 a{color:inherit;text-decoration:none}
 img,video{display:block;max-width:100%}
 button{font:inherit;color:inherit;cursor:pointer}
@@ -272,6 +273,7 @@ a.chip-s:hover{color:#fff}
   :root{--pad:12px}
   .wrap{padding-left:max(15px,env(safe-area-inset-left,0px));padding-right:max(15px,env(safe-area-inset-right,0px))}
   .h2{font-size:28.5px;line-height:1.16}
+  .hdr.scrolled:not(.open){background:rgba(17,17,17,.96);-webkit-backdrop-filter:none;backdrop-filter:none}
   .lead{font-size:17px;line-height:1.25;max-width:330px;margin-top:12px;color:#c4c4c4}
   .btn{height:53px;font-size:15px}
   .cta-c{margin-top:20px}
@@ -280,12 +282,12 @@ a.chip-s:hover{color:#fff}
   .mq-t img{height:78px;min-height:0;margin-right:34px}
 
   /* Переваги. Великі картки лягають віялом поверх заголовка */
-  .why{height:300vh;padding:0;margin-bottom:var(--gap)}
+  .why{height:260vh;padding:0}
   .why-stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
   .why-title{position:absolute;padding:0;font-size:calc(38 * var(--k,1px));line-height:1.12}
   .why-title .l{white-space:nowrap}
   .why-deck{position:absolute;inset:0;display:block;padding:0;pointer-events:none}
-  .wc{position:absolute;transition:none;height:calc(var(--cw) * 166 / 150 * 1.2);padding:calc(var(--cw) * .085) calc(var(--cw) * .062)}
+  .wc{position:absolute;transition:none;will-change:transform;backface-visibility:hidden;height:calc(var(--cw) * 166 / 150 * 1.2);padding:calc(var(--cw) * .085) calc(var(--cw) * .062)}
   .wc .ph{height:calc(var(--cw) * .82)}
   .wc h3{font-size:calc(var(--cw) * .07)}
   .wc p{font-size:calc(var(--cw) * .045)}
