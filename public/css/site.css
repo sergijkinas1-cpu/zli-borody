@@ -93,7 +93,8 @@ a.lt:hover{color:#fff}
 
 /* ---------- Чому нам варто довірити свій образ ---------- */
 .why{position:relative;height:520vh;margin-bottom:170px}
-.why-stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+/* Закріплена сцена має власний шум, тому він стоїть разом з картками і не їде під ними */
+.why-stage{position:sticky;top:0;background:var(--bg) url(/img/noise.png) repeat;background-size:128px 128px;height:100vh;height:100svh;overflow:hidden}
 .why-title{position:absolute;left:0;right:0;top:0;margin:0;text-align:center;font-family:var(--head);font-weight:600;text-transform:uppercase;line-height:1.165;letter-spacing:-.005em;font-size:calc(97 * var(--k,1px));will-change:transform}
 .why-title .l{display:block;white-space:nowrap}
 .why-title .d{color:var(--dim)}
