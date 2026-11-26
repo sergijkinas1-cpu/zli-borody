@@ -515,3 +515,15 @@ a.chip-s:hover{color:#fff}
 }
 @media (max-width:370px){.svc-n{font-size:15px}.mm-g2 > div:last-child p{white-space:normal}}
 .no-rv .rv{opacity:1!important;transform:none!important;transition:none!important}
+
+/* Кнопка в шапці другорядна, без заливки, тонка обводка */
+.hdr .btn.btn,.hdr .btn.btn-red{background:transparent;box-shadow:inset 0 0 0 1px rgba(255,255,255,.55);color:#fff;transition:background-color .35s var(--ease),box-shadow .35s var(--ease)}
+@media (hover:hover){.hdr .btn.btn:hover{background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px #fff}}
+.hdr .btn.btn:active{background:rgba(255,255,255,.12)}
+
+/* Hero на десктопі. Плашка нижче на 3, кнопка ближче до опису на 5 і трохи більша */
+@media (min-width:861px){
+.hero-addr{margin-bottom:21px}
+.hero p{margin-bottom:31px}
+.hero .btn{height:61px;padding:0 31px;font-size:17px}
+}
