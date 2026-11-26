@@ -511,3 +511,4 @@ a.chip-s:hover{color:#fff}
   .mm-glass .mm-socs a.on{background:var(--red)}
 }
 @media (max-width:370px){.svc-n{font-size:15px}.mm-g2 > div:last-child p{white-space:normal}}
+.no-rv .rv{opacity:1!important;transform:none!important;transition:none!important}
