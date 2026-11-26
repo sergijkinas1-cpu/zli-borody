@@ -206,17 +206,16 @@ button{font:inherit;color:inherit;cursor:pointer}
   .mm-open .burger span:nth-child(1){transform:rotate(45deg)}
   .mm-open .burger span:nth-child(2){transform:rotate(-45deg)}
   /* Відкрите меню виїжджає під шапкою. Логотип, дзвінок і бургер лишаються зверху */
-  .mm-open .hdr{background:#161616;-webkit-backdrop-filter:none;backdrop-filter:none;border-bottom-color:transparent}
+  .mm-open .hdr{background:#141414;-webkit-backdrop-filter:none;backdrop-filter:none;border-bottom-color:transparent}
   /* Пункти меню не стискаються, коли екран низький, меню тоді просто прокручується */
   .mm-in > *{flex-shrink:0}
   .mm-scrim{display:block;position:fixed;inset:0;z-index:44;background:rgba(8,8,8,.62);opacity:0;pointer-events:none;transition:opacity .45s var(--ease)}
-  .mm{display:flex;flex-direction:column;position:fixed;top:0;right:0;bottom:0;z-index:45;width:100%;background:#161616;transform:translateX(100%);transition:transform .55s var(--ease),visibility 0s linear .55s;visibility:hidden}
-  .mm::before{content:"";position:absolute;inset:0;background:url(/img/noise.webp);opacity:.05;pointer-events:none}
+  .mm{display:flex;flex-direction:column;position:fixed;top:0;right:0;bottom:0;z-index:45;width:100%;background:#141414;transform:translateX(100%);transition:transform .55s var(--ease),visibility 0s linear .55s;visibility:hidden}
   .mm-open .mm{transform:none;visibility:visible;transition:transform .55s var(--ease)}
   .mm-open .mm-scrim{opacity:1;pointer-events:auto}
   .mm-open,.mm-open body{overflow:hidden}
   .mm a{color:#fff;text-decoration:none}
-  .mm-in{position:relative;flex:1;overflow-y:auto;overscroll-behavior:contain;padding:calc(env(safe-area-inset-top) + 87px) 15px max(24px,env(safe-area-inset-bottom));display:flex;flex-direction:column}
+  .mm-in{position:relative;flex:1;overflow-y:auto;overscroll-behavior:contain;padding:calc(env(safe-area-inset-top) + 89px) 15px max(24px,env(safe-area-inset-bottom));display:flex;flex-direction:column}
   .mm svg{flex:none}
   .mm-top{display:flex;align-items:center;gap:10px;margin-bottom:25px}
   .mm-top .logo{margin-right:auto;font-size:24px;font-weight:500;line-height:1}
@@ -227,23 +226,23 @@ button{font:inherit;color:inherit;cursor:pointer}
   .mm-sq.dark{background:#242424}
   .mm-sq.dark:active{background:#2c2c2c}
   .mm-nav{display:grid;gap:8px}
-  .mm-t{display:flex;align-items:center;height:51px;padding:0 11px;background:#1e1e1e;font-family:var(--head);font-weight:500;font-size:24px;text-transform:uppercase;line-height:1;transition:background-color .25s,border-color .25s;-webkit-tap-highlight-color:transparent}
+  .mm-t{display:flex;align-items:center;height:51px;padding:0 10px;background:#1b1b1b;font-family:var(--head);font-weight:500;font-size:21px;text-transform:uppercase;line-height:1;transition:background-color .25s,border-color .25s;-webkit-tap-highlight-color:transparent}
   .mm-t:active{background:var(--red)}
-  .mm-cta{margin-top:10px;height:46px;font-weight:400;font-size:15px;gap:12px;width:100%}
-  .mm-cta svg{width:20px;height:20px}
-  .mm-card{margin-top:25px;background:#1e1e1e;padding:12px}
-  .mm-g2{display:grid;grid-template-columns:auto minmax(0,1fr);gap:0 16px}
-  .mm-chip{display:inline-flex;align-items:center;gap:10px;height:26px;padding:0 8px;background:#262626;font-family:var(--head);font-weight:500;font-size:16px;text-transform:uppercase;margin:0 0 12px;color:#fff}
-  .mm-chip svg{width:17px;height:17px}
+  .mm-cta{margin-top:20px;height:48px;font-weight:600;font-size:14px;gap:10px;width:100%}
+  .mm-cta svg{width:18px;height:18px}
+  .mm-card{margin-top:25px;background:#1b1b1b;padding:12px}
+  .mm-g2{display:grid;grid-template-columns:59% minmax(0,1fr);gap:0}
+  .mm-chip{display:inline-flex;align-items:center;gap:10px;height:26px;padding:0 8px;background:#282828;font-family:var(--head);font-weight:600;font-size:16px;text-transform:uppercase;margin:0 0 10px;color:#fff}
+  .mm-row .mm-chip{margin-bottom:12px}
+  .mm-chip svg{width:16px;height:16px}
   .mm-card p{margin:0;font-size:12px;line-height:21px;color:#d0d0d0}
   .mm-g2 > div:last-child p{white-space:nowrap}
   .mm-card p a{color:#d0d0d0}
-  .mm-row{margin-top:23px}
+  .mm-row{margin-top:20px}
   .mm-socs{display:flex;gap:8px}
-  .mm-socs a{width:46px;height:46px;display:grid;place-items:center;background:#262626;color:#c9c9c9;transition:background-color .25s}
-  .mm-socs a:active{background:#2e2e2e}
-  .mm-socs a.on{background:var(--red);color:#fff}
-  .mm-socs svg{width:28px;height:28px}
+  .mm-socs a{width:46px;height:46px;display:grid;place-items:center;background:#282828;color:#c9c9c9;transition:background-color .25s,color .25s}
+  .mm-socs a:active{background:var(--red);color:#fff}
+  .mm-socs svg{width:24px;height:24px}
   /* Пункти з'являються по черзі */
   /* Варіант зі склом. Щоб повернути суцільний фон, у render.js став MM_VARIANT = 'solid' */
   .mm-glass{background:rgba(12,12,12,.5);-webkit-backdrop-filter:blur(60px) saturate(150%);backdrop-filter:blur(60px) saturate(150%)}
