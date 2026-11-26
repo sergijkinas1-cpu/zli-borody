@@ -22,7 +22,10 @@ button{font:inherit;color:inherit;cursor:pointer}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;height:60px;padding:0 28px;border-radius:0;border:0;font-family:var(--font);font-weight:500;font-size:15px;white-space:nowrap;transition:background-color .35s var(--ease)}
 .btn svg{width:20px;height:20px;flex:none}
 .btn-red{background:var(--red);color:#fff}
-.btn-red:hover{background:var(--red-hover)}
+/* Червона кнопка. На десктопі темнішає при наведенні, на телефоні в момент натискання */
+@media (hover:hover){.btn-red:hover{background:var(--red-hover)}}
+.btn-red{-webkit-tap-highlight-color:transparent}
+.btn-red:active{background:var(--red-hover);transition-duration:.08s}
 .bt{position:relative;display:block;overflow:hidden;height:1.4em;line-height:1.4em}
 .bt > span{display:block;transition:transform .35s ease}
 .bt > span + span{position:absolute;left:0;top:100%}

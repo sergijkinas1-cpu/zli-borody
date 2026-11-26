@@ -49,7 +49,10 @@ button{font:inherit;color:inherit;cursor:pointer}
 .flip .bt{height:1.45em;line-height:1.45em}
 .lt{transition:color .25s}
 a.lt:hover{color:#fff}
-.btn-red:hover{background:var(--red-hover)}
+/* Червона кнопка. На десктопі темнішає при наведенні, на телефоні в момент натискання */
+@media (hover:hover){.btn-red:hover{background:var(--red-hover)}}
+.btn-red{-webkit-tap-highlight-color:transparent}
+.btn-red:active{background:var(--red-hover);transition-duration:.08s}
 .btn-dark{background:var(--chip);color:#fff}
 .btn-dark:hover{background:var(--chip-hover)}
 .btn-white{background:#fff;color:var(--red);height:50px;padding:0 16px}
