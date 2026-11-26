@@ -139,6 +139,9 @@ a.hero-addr:hover{background:rgba(34,34,34,.6)}
 .barber .cap{height:85px;padding:20px 20px 0}
 .barber h3{font-weight:400;font-size:20px;line-height:1.2;margin:0}
 .barber p{font-size:13px;margin:6px 0 0;color:#cfcfcf}
+.b-ph{position:relative;aspect-ratio:335/406;background:#1b1b1b;display:flex;align-items:center;justify-content:center;border-bottom:3px solid var(--red)}
+.b-ph svg{width:43%;height:auto;fill:#272727}
+.b-ph-t{position:absolute;top:22px;left:20px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#8a8a8a}
 .team-foot{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:35px}
 .team-foot.center{justify-content:center}
 .arrows{display:flex;gap:10px}
@@ -363,6 +366,7 @@ a.chip-s:hover{color:#fff}
   /* Плашка барбера разом з підписом такого ж розміру, як фото роботи */
   .barber{aspect-ratio:300/456;display:flex;flex-direction:column}
   .barber img{aspect-ratio:auto;flex:1 1 auto;min-height:0;height:0}
+  .b-ph{aspect-ratio:auto;flex:1 1 auto;min-height:0;height:0}
   .barber .cap{flex:none}
   .barber .cap{height:79px;padding:18px 20px 0}
   .barber h3{font-size:19px}
