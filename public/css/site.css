@@ -31,7 +31,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .wrap{max-width:1440px;margin:0 auto;padding-left:var(--gut);padding-right:var(--gutR)}
 .h2{font-family:var(--head);font-weight:600;text-transform:uppercase;text-align:center;margin:0;font-size:clamp(36px,calc(52 * var(--u)),52px);line-height:1.2;letter-spacing:-.005em}
 .h2 em{font-style:normal;color:var(--red)}
-.lead{font-weight:300;font-size:clamp(16px,calc(20 * var(--u)),20px);line-height:1.3;text-align:center;color:var(--sub);max-width:400px;margin:16px auto 0}
+.lead{font-weight:300;font-size:clamp(16px,calc(20 * var(--u)),20px);line-height:1.3;text-align:center;color:var(--sub);max-width:400px;margin:11px auto 0}
 
 /* ---------- Посилання. Підкреслення виїжджає зліва направо ---------- */
 .ul{background:linear-gradient(currentColor,currentColor) left bottom/0 1px no-repeat;padding-bottom:2px;transition:background-size .35s var(--ease),color .2s}
@@ -125,8 +125,8 @@ a.lt:hover{color:#fff}
 
 /* ---------- Барбери ---------- */
 .team{padding:var(--gap) 0 0}
-.team .lead{margin-top:16px}
-.car-view{overflow:hidden;margin-top:53px;touch-action:pan-y}
+.team .lead{margin-top:11px}
+.car-view{overflow:hidden;margin-top:48px;touch-action:pan-y}
 .car-track{display:flex;gap:var(--pad)}
 .barber{background:var(--panel);border-radius:0;overflow:hidden}
 .barber img{width:100%;aspect-ratio:335/406;object-fit:cover}
@@ -142,7 +142,7 @@ a.lt:hover{color:#fff}
 
 /* ---------- Наші послуги ---------- */
 .services{padding:0}
-.svc-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px var(--pad);margin-top:53px}
+.svc-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px var(--pad);margin-top:48px}
 .svc{display:flex;align-items:center;gap:20px;min-height:94px;padding:0 20px;background:var(--panel);border-radius:0;transition:background-color .25s ease}
 .svc-n{flex:1;min-width:0;font-family:var(--head);font-weight:600;text-transform:uppercase;font-size:clamp(20px,calc(26 * var(--u)),26px);line-height:1.15}
 .svc-p{font-size:15px;color:#cacaca;white-space:nowrap;transition:color .25s ease}
@@ -173,7 +173,7 @@ a.lt:hover{color:#fff}
 .find-map img{width:100%;height:100%}
 .find-pin{position:absolute;width:calc(34 * var(--u));min-width:24px;height:auto;aspect-ratio:1;color:var(--red);transform:translate(-50%,-100%);filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))}
 .find-city{position:absolute;left:calc(925 * var(--u));top:calc(130 * var(--u));min-width:calc(205 * var(--u));padding:0 calc(36 * var(--u));height:calc(76 * var(--u));display:grid;place-items:center;background:var(--red);color:#fff;font-family:var(--head);font-weight:600;text-transform:uppercase;font-size:clamp(40px,calc(58 * var(--u)),58px);line-height:1}
-.find-card{position:absolute;left:calc(1008 * var(--u));top:calc(206 * var(--u));width:calc(331 * var(--u));min-width:300px;background:#212121;color:#fff;padding:18px 20px 20px;display:grid;grid-template-columns:1fr auto;gap:14px 16px;box-shadow:0 20px 40px -20px rgba(0,0,0,.5)}
+.find-card{position:absolute;left:calc(1008 * var(--u));top:calc(206 * var(--u) + 5px);width:calc(331 * var(--u));min-width:300px;background:#212121;color:#fff;padding:18px 20px 20px;display:grid;grid-template-columns:1fr auto;gap:14px 16px;box-shadow:0 20px 40px -20px rgba(0,0,0,.5)}
 .find-col{display:grid;justify-items:start;gap:10px;font-size:13px;color:#cfcfcf}
 .find-col .chip{font-size:14px;padding:5px 9px}
 .find-card .btn{grid-column:1/-1;height:44px;font-size:13px;gap:10px;padding:0 16px}
@@ -213,7 +213,7 @@ a.lt:hover{color:#fff}
 .ftr-map{position:absolute;left:calc(500 * var(--u));top:calc(24 * var(--u));width:calc(335 * var(--u));aspect-ratio:1000/923;display:block}
 .ftr-sil{position:absolute;inset:0;width:100%;height:100%}
 .ftr-pin{position:absolute;left:45.1%;top:54%;width:30px;height:30px;color:var(--red);transform:translate(-50%,-100%)}
-.ftr-map b{position:absolute;left:12%;right:0;top:55%;text-align:center;font-family:var(--head);font-weight:600;font-size:calc(42 * var(--u));text-transform:uppercase;color:#2c2c2c}
+.ftr-map b{position:absolute;right:auto;top:55%;text-align:left;margin-left:-.03em;white-space:nowrap;font-family:var(--head);font-weight:600;font-size:calc(42 * var(--u));text-transform:uppercase;color:#2c2c2c}
 .ftr-brand{grid-row:1;grid-column:1;align-self:start;position:relative;font-family:var(--head);font-weight:600;font-size:18px;text-transform:uppercase}
 .ftr-nav{grid-row:1;grid-column:2;position:relative;align-self:start;justify-self:start}
 .ftr .chip{font-family:var(--head);font-weight:600;text-transform:uppercase;font-size:clamp(20px,calc(23 * var(--u)),23px);padding:6px 10px;gap:10px}
@@ -245,7 +245,6 @@ a.chip-s:hover{color:#fff}
 
 /* ---------- Адаптив ---------- */
 /* Напис «Львів» на карті у футері на десктопі трохи правіше */
-@media (min-width:1101px){.ftr-map b{transform:translateX(5px)}}
 @media (max-width:1100px){
   .nav{gap:18px}.phone{display:none}
   .about .wrap{grid-template-columns:minmax(0,1fr)}
@@ -291,7 +290,7 @@ a.chip-s:hover{color:#fff}
   .wrap{padding-left:max(15px,env(safe-area-inset-left,0px));padding-right:max(15px,env(safe-area-inset-right,0px))}
   .h2{font-size:28.5px;line-height:1.16}
   .hdr.scrolled:not(.open){background:rgba(17,17,17,.96);-webkit-backdrop-filter:none;backdrop-filter:none}
-  .lead,.team .lead{font-size:17px;line-height:1.25;max-width:330px;margin-top:15px;color:#c4c4c4}
+  .lead,.team .lead{font-size:17px;line-height:1.25;max-width:330px;margin-top:25px;color:#c4c4c4}
   /* Зверху першого екрана м'яке затемнення, щоб шапку і текст було добре видно на відео */
   .hero::after{background:linear-gradient(180deg,rgba(8,8,8,.85),rgba(8,8,8,.4) 14%,rgba(8,8,8,0) 30%),linear-gradient(90deg,rgba(8,8,8,.88),rgba(8,8,8,.55) 45%,rgba(8,8,8,.2)),linear-gradient(0deg,var(--bg),transparent 30%)}
   .btn{height:53px;font-size:15px}
@@ -325,17 +324,18 @@ a.chip-s:hover{color:#fff}
   .wc.art p{margin-top:0}
 
   /* Послуги. Спершу ліва колонка десктопа, потім права */
-  .svc-grid{margin-top:15px;gap:11.5px}
+  .svc-grid{margin-top:25px;gap:11.5px}
   .svc:nth-child(even){order:1}
-  .svc{gap:12px;min-height:52px;padding:0 10px}
-  .svc-n{font-size:min(14.5px,3.9vw);font-weight:500;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .svc-p{font-size:12.5px;color:#8d8d8d}
-  .svc-i{width:32px;height:32px}
+  .svc{gap:8px;min-height:52px;padding:0 10px}
+  .svc-n{font-size:16px;font-weight:500;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .svc-p{font-size:13px;font-weight:500;color:#8d8d8d}
+  .svc-i{width:32px;height:32px;background:#313131;color:#cacaca}
+  .svc.tap .svc-i{color:#fff}
   .svc-i svg{width:18px;height:18px}
 
   /* Каруселі */
   /* Каруселі на телефоні гортаються нативно, з природною інерцією і м'яким доводженням до картки */
-  .car-view{margin-top:15px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scrollbar-width:none;touch-action:auto;margin-right:calc(-1 * var(--side,15px));padding-right:var(--side,15px)}
+  .car-view{margin-top:25px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scrollbar-width:none;touch-action:auto;margin-right:calc(-1 * var(--side,15px));padding-right:var(--side,15px)}
   .car-view::-webkit-scrollbar{display:none}
   .car-track{transform:none!important}
   .work,.barber{scroll-snap-align:start}
@@ -406,7 +406,7 @@ a.chip-s:hover{color:#fff}
   .soc svg{width:21px;height:21px}
   .ftr-btn{grid-column:1/-1;margin-top:19px;height:47px}
   .ftr-map{order:5;grid-column:1/-1;position:relative;left:auto;right:auto;top:auto;width:235px;margin:26px auto 0;opacity:1}
-  .ftr-map b{left:10%;font-size:29px}
+  .ftr-map b{font-size:29px}
   .ftr-legal{order:6;grid-column:1/-1;grid-row:auto;margin-top:22px;gap:9px}
   .ftr-legal .chip-s:nth-child(2){order:5}
   .chip-s{min-height:34px;font-size:10.3px;padding:0 7px}
@@ -436,9 +436,8 @@ a.chip-s:hover{color:#fff}
   .hdr-call + .burger{margin-left:-14px}
   /* Бургер. Сіра плитка з обводкою і двома рисками, при відкритті риски сходяться в хрестик */
   .burger{width:50px;height:50px;background:#333;box-shadow:inset 0 0 0 1px #3f3f3f;flex:none;-webkit-tap-highlight-color:transparent}
-  .burger span{left:10px;right:10px;height:2px;background:#e2e2e2;transition:top .22s var(--ease) .22s,transform .22s var(--ease)}
+  .burger span{left:9px;right:9px;height:2px;background:#e2e2e2;transition:transform .3s ease,top .3s ease}
   .burger span:nth-child(1){top:20px}.burger span:nth-child(2){top:28px;opacity:1}
-  .mm-open .burger span{transition:top .22s var(--ease),transform .22s var(--ease) .22s}
   .mm-open .burger span:nth-child(1),.mm-open .burger span:nth-child(2){top:24px}
   .mm-open .burger span:nth-child(1){transform:rotate(45deg)}
   .mm-open .burger span:nth-child(2){transform:rotate(-45deg)}
@@ -466,15 +465,17 @@ a.chip-s:hover{color:#fff}
   .mm-nav{display:grid;gap:8px}
   .mm-t{display:flex;align-items:center;height:51px;padding:0 11px;background:#1e1e1e;font-family:var(--head);font-weight:500;font-size:24px;text-transform:uppercase;line-height:1;transition:background-color .25s,border-color .25s;-webkit-tap-highlight-color:transparent}
   .mm-t:active{background:var(--red)}
-  .mm-cta{margin-top:12px;height:46px;font-weight:400;font-size:15px;gap:12px;width:100%}
+  .mm-cta{margin-top:20px;height:46px;font-weight:400;font-size:15px;gap:12px;width:100%}
   .mm-cta svg{width:20px;height:20px}
-  .mm-card{margin-top:25px;background:#1e1e1e;padding:12px}
-  .mm-g2{display:grid;grid-template-columns:auto minmax(0,1fr);gap:0 20px}
+  .mm-card{margin-top:12px;background:#1e1e1e;padding:12px}
+  .mm-g2{display:grid;grid-template-columns:auto minmax(0,1fr);gap:0 16px}
   .mm-chip{display:inline-flex;align-items:center;gap:10px;height:26px;padding:0 9px 0 8px;background:#262626;font-family:var(--head);font-weight:500;font-size:16px;text-transform:uppercase;margin:0 0 8px;color:#fff}
   .mm-chip svg{width:17px;height:17px}
-  .mm-card p{margin:0;font-size:12.5px;line-height:21px;color:#d0d0d0}
+  .mm-card p{margin:0;font-size:12px;line-height:21px;color:#d0d0d0}
+  .mm-g2 > div:last-child p{white-space:nowrap}
   .mm-card p a{color:#d0d0d0}
-  .mm-row{margin-top:20px}
+  .mm-row{margin-top:23px}
+  .mm-row .mm-chip{margin-bottom:12px}
   .mm-socs{display:flex;gap:8px}
   .mm-socs a{width:46px;height:46px;display:grid;place-items:center;background:#262626;color:#c9c9c9;transition:background-color .25s}
   .mm-socs a:active{background:#2e2e2e}
@@ -491,3 +492,4 @@ a.chip-s:hover{color:#fff}
   .mm-glass .mm-socs a:active{background:rgba(255,255,255,.13)}
   .mm-glass .mm-socs a.on{background:var(--red)}
 }
+@media (max-width:370px){.svc-n{font-size:15px}.mm-g2 > div:last-child p{white-space:normal}}
