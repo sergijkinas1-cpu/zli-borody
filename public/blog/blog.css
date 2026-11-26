@@ -124,7 +124,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 
 @media (max-width:1100px){.nav{gap:18px}.phone{display:none}.posts{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:860px){
-  .hdr .wrap{height:64px}
+  .hdr .wrap{height:68px}
   .burger{display:block}
   .hdr .btn{display:none}
   .nav{position:absolute;left:0;right:0;top:100%;flex-direction:column;gap:0;background:#0f0f0f;padding:8px var(--gutR) 16px var(--gut);clip-path:inset(0 0 100% 0);transition:clip-path .4s var(--ease)}
@@ -167,9 +167,15 @@ button{font:inherit;color:inherit;cursor:pointer}
   .ttl{margin-top:25px}
   .posts{margin-top:35px;gap:25px}
   .post-t{font-size:21px;margin-top:15px;max-width:70vw}
-  .post-x{font-size:12px;margin-top:8px;max-width:70vw}
-  .pager{margin-top:20px}
+  .post-x{font-size:13px;margin-top:8px;max-width:70vw}
+  .pager{margin-top:25px}
   .page-art .art-ttl{margin-top:25px}
+  .art-cta{margin-top:20px;width:100%}
+  /* Читайте також. Гортається вправо, наступна стаття трохи визирає */
+  .more-p{display:flex;gap:14px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scrollbar-width:none;margin-right:-16px;padding-right:16px}
+  .more-p::-webkit-scrollbar{display:none}
+  .more-p .post{flex:0 0 calc(100% - 48px);scroll-snap-align:start}
+  .more-p .post-t,.more-p .post-x{max-width:none}
 }
 .empty{color:var(--sub);margin:24px 0 0;font-size:15px}
 
@@ -215,7 +221,7 @@ button{font:inherit;color:inherit;cursor:pointer}
   .mm-open .mm-scrim{opacity:1;pointer-events:auto}
   .mm-open,.mm-open body{overflow:hidden}
   .mm a{color:#fff;text-decoration:none}
-  .mm-in{position:relative;flex:1;overflow-y:auto;overscroll-behavior:contain;padding:calc(env(safe-area-inset-top) + 89px) 15px max(24px,env(safe-area-inset-bottom));display:flex;flex-direction:column}
+  .mm-in{position:relative;flex:1;overflow-y:auto;overscroll-behavior:contain;padding:calc(env(safe-area-inset-top) + 93px) 15px max(24px,env(safe-area-inset-bottom));display:flex;flex-direction:column}
   .mm svg{flex:none}
   .mm-top{display:flex;align-items:center;gap:10px;margin-bottom:25px}
   .mm-top .logo{margin-right:auto;font-size:24px;font-weight:500;line-height:1}
