@@ -513,6 +513,7 @@ function renderField(f, root) {
 function mediaField(f, val, upd, hint) {
   const box = document.createElement('div');
   const isVid = f.t === 'video';
+  if (!isVid) hint += '<div class="hint">Будь-яке фото (JPG, PNG, HEIC) сайт сам переведе у WebP і стисне</div>';
   box.innerHTML = `<div class="lbl">${esc(f.label)}</div><div class="img-f"><div class="thumb"></div><div class="img-side"><div class="img-btns"><button type="button" class="btn btn-sm" data-up>Завантажити</button><button type="button" class="btn btn-sm btn-line" data-lib>З медіатеки</button><button type="button" class="btn btn-sm btn-line" data-rm>Прибрати</button></div><input class="in" spellcheck="false" placeholder="або вставте посилання" value="${esc(val)}">${hint}</div></div>`;
   const th = $('.thumb', box), inp = $('input', box);
   const show = (v) => {
@@ -547,23 +548,27 @@ function dropTarget(el, cb) {
   el.addEventListener('dragleave', () => el.classList.remove('drag'));
   el.addEventListener('drop', (e) => { e.preventDefault(); el.classList.remove('drag'); if (e.dataTransfer.files.length) cb([...e.dataTransfer.files]); });
 }
-// Великі фото стискаємо в браузері, щоб сайт вантажився швидко
+// Усі фото перед завантаженням переводимо у WebP і зменшуємо до 2400px. JPG, PNG і HEIC з телефона теж
 async function shrink(file) {
-  if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return file;
+  const isImg = /^image\//.test(file.type) || /\.(heic|heif)$/i.test(file.name);
+  if (!isImg || /svg|gif/.test(file.type)) return file;
   const MAXD = 2400;
   const bmp = await createImageBitmap(file).catch(() => null);
-  if (!bmp) return file;
-  const big = Math.max(bmp.width, bmp.height) > MAXD;
-  if (!big && file.size < 1.2 * 1024 * 1024) return file;
-  if (file.type === 'image/png' && !big && file.size < 3.5 * 1024 * 1024) return file;
+  if (!bmp) {
+    if (/heic|heif/i.test(file.type + file.name)) throw new Error('Цей браузер не відкриває HEIC. Збережіть фото як JPG або завантажте з iPhone через Safari');
+    return file;
+  }
+  if (file.type === 'image/webp' && Math.max(bmp.width, bmp.height) <= MAXD && file.size < 1.5 * 1024 * 1024) return file;
   const k = Math.min(1, MAXD / Math.max(bmp.width, bmp.height));
   const c = document.createElement('canvas');
   c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
   c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
-  const keepPng = file.type === 'image/png';
-  const blob = await new Promise((r) => c.toBlob(r, keepPng ? 'image/png' : 'image/jpeg', 0.86));
-  if (!blob || blob.size >= file.size) return file;
-  return new File([blob], file.name.replace(/\.(png|webp|jpe?g)$/i, keepPng ? '.png' : '.jpg'), { type: blob.type });
+  let blob = await new Promise((r) => c.toBlob(r, 'image/webp', 0.82));
+  // Старий браузер без WebP. Тоді хоча б стиснутий JPG
+  if (!blob || blob.type !== 'image/webp') blob = await new Promise((r) => c.toBlob(r, 'image/jpeg', 0.86));
+  if (!blob) return file;
+  const ext = blob.type === 'image/webp' ? '.webp' : '.jpg';
+  return new File([blob], file.name.replace(/\.[a-z0-9]{2,5}$/i, '') + ext, { type: blob.type });
 }
 async function uploadFile(file) {
   const f = await shrink(file);
