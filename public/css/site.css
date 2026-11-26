@@ -84,12 +84,12 @@ a.lt:hover{color:#fff}
 .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,8,8,.88),rgba(8,8,8,.55) 45%,rgba(8,8,8,.2)),linear-gradient(0deg,var(--bg),transparent 30%)}
 .hero .wrap{position:relative;z-index:1;width:100%;padding-top:140px;padding-bottom:110px}
 .hero-in{max-width:640px}
-.hero-addr{display:inline-flex;align-items:center;gap:14px;margin:0 0 24px;padding:8px 26px 8px 8px;border-radius:0;background:rgba(18,18,18,.72);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);color:#fff;transition:background-color .25s}
+.hero-addr{display:inline-flex;align-items:center;gap:14px;margin:0 0 24px;padding:8px 26px 8px 8px;border-radius:0;background:rgba(18,18,18,.55);-webkit-backdrop-filter:blur(28px) saturate(1.2);backdrop-filter:blur(28px) saturate(1.2);color:#fff;transition:background-color .25s}
 .hero-addr i{width:44px;height:44px;border-radius:0;background:var(--red);display:grid;place-items:center;flex:none}
 .hero-addr svg{width:14px;height:19px;color:#fff}
 .hero-addr b{display:block;font-weight:600;font-size:11px;line-height:1.2;letter-spacing:.08em;text-transform:uppercase}
 .hero-addr em{display:block;font-style:normal;font-size:12px;line-height:1.2;color:#cfcfcf;margin-top:4px}
-a.hero-addr:hover{background:rgba(34,34,34,.8)}
+a.hero-addr:hover{background:rgba(34,34,34,.6)}
 .hero h1{font-family:var(--head);font-weight:600;text-transform:uppercase;font-size:clamp(52px,7vw,104px);line-height:.98;margin:0 0 24px}
 .hero h1 em{font-style:normal;color:var(--red)}
 .hero p{font-weight:300;font-size:clamp(17px,1.5vw,20px);line-height:1.45;max-width:440px;margin:0 0 36px;color:var(--sub)}
