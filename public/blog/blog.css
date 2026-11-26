@@ -232,8 +232,8 @@ button{font:inherit;color:inherit;cursor:pointer}
   .mm-sq.dark{background:#242424}
   .mm-sq.dark:active{background:#2c2c2c}
   .mm-nav{display:grid;gap:8px}
-  .mm-t{display:flex;align-items:center;height:51px;padding:0 10px;background:#1b1b1b;font-family:var(--head);font-weight:500;font-size:21px;text-transform:uppercase;line-height:1;transition:background-color .25s,border-color .25s;-webkit-tap-highlight-color:transparent}
-  .mm-t:active{background:#3a3a3a;transition:none}
+  .mm-t{display:flex;align-items:center;height:51px;padding:0 10px;background:#1b1b1b;font-family:var(--head);font-weight:500;font-size:21px;text-transform:uppercase;line-height:1;transition:background-color .5s ease,border-color .5s ease;-webkit-tap-highlight-color:transparent}
+  .mm-t:active{background:#3a3a3a;transition:background-color .2s ease}
   .mm-cta{margin-top:20px;height:48px;font-weight:600;font-size:14px;gap:10px;width:100%}
   .mm-cta svg{width:18px;height:18px}
   .mm-card{margin-top:25px;background:#1b1b1b;padding:12px}
@@ -255,7 +255,7 @@ button{font:inherit;color:inherit;cursor:pointer}
   .mm-glass::before{opacity:.04}
   .mm-glass .mm-t,.mm-glass .mm-card,.mm-glass .mm-sq.dark{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08)}
   .mm-glass .mm-sq.dark:active{background:rgba(255,255,255,.1)}
-  .mm-glass .mm-t:active{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.16);transition:none}
+  .mm-glass .mm-t:active{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.16);transition:background-color .2s ease,border-color .2s ease}
   .mm-glass .mm-chip,.mm-glass .mm-socs a{background:rgba(255,255,255,.08)}
   .mm-glass .mm-socs a:active{background:rgba(255,255,255,.13)}
   .mm-glass .mm-socs a.on{background:var(--red)}
