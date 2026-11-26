@@ -84,9 +84,12 @@ a.lt:hover{color:#fff}
 .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,8,8,.88),rgba(8,8,8,.55) 45%,rgba(8,8,8,.2)),linear-gradient(0deg,var(--bg),transparent 30%)}
 .hero .wrap{position:relative;z-index:1;width:100%;padding-top:140px;padding-bottom:110px}
 .hero-in{max-width:640px}
-.hero-addr{display:inline-flex;align-items:center;gap:8px;margin:0 0 22px;padding:9px 14px 9px 11px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);font-size:14px;line-height:1.2;color:#fff;transition:background-color .25s}
-.hero-addr svg{width:13px;height:18px;flex:none;color:var(--red)}
-a.hero-addr:hover{background:rgba(255,255,255,.14)}
+.hero-addr{display:inline-flex;align-items:center;gap:14px;margin:0 0 24px;padding:8px 26px 8px 8px;border-radius:999px;background:rgba(18,18,18,.72);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);color:#fff;transition:background-color .25s}
+.hero-addr i{width:44px;height:44px;border-radius:50%;background:var(--red);display:grid;place-items:center;flex:none}
+.hero-addr svg{width:14px;height:19px;color:#fff}
+.hero-addr b{display:block;font-weight:600;font-size:11px;line-height:1.2;letter-spacing:.08em;text-transform:uppercase}
+.hero-addr em{display:block;font-style:normal;font-size:14px;line-height:1.2;color:#cfcfcf;margin-top:4px}
+a.hero-addr:hover{background:rgba(34,34,34,.8)}
 .hero h1{font-family:var(--head);font-weight:600;text-transform:uppercase;font-size:clamp(52px,7vw,104px);line-height:.98;margin:0 0 24px}
 .hero h1 em{font-style:normal;color:var(--red)}
 .hero p{font-weight:300;font-size:clamp(17px,1.5vw,20px);line-height:1.45;max-width:440px;margin:0 0 36px;color:var(--sub)}
@@ -302,6 +305,7 @@ a.chip-s:hover{color:#fff}
   .hero-in{display:grid;justify-items:start;width:max-content;max-width:100%}
   .hero h1{font-size:48px}
   .hero p{font-size:13px;width:0;min-width:100%;max-width:none}
+  .hero .btn{width:80%}
   /* Стрічка за макетом. Висота 64, бородач 24 на 43, напис Oswald Medium 16, між ними 8, між повторами 35 */
   .mq{height:68px;min-height:0}
   .mq.in-why{position:absolute;left:0;right:0;top:0;margin:0;z-index:0}
@@ -473,7 +477,7 @@ a.chip-s:hover{color:#fff}
   .mm-cta svg{width:18px;height:18px}
   .mm-card{margin-top:25px;background:#1b1b1b;padding:12px}
   .mm-g2{display:grid;grid-template-columns:59% minmax(0,1fr);gap:0}
-  .mm-chip{display:inline-flex;align-items:center;gap:10px;height:26px;padding:0 8px;background:#282828;font-family:var(--head);font-weight:600;font-size:16px;text-transform:uppercase;margin:0 0 10px;color:#fff}
+  .mm-chip{display:inline-flex;align-items:center;gap:9px;height:26px;padding:0 8px;background:#282828;font-family:var(--head);font-weight:600;font-size:16px;text-transform:uppercase;margin:0 0 10px;color:#fff}
   .mm-row .mm-chip{margin-bottom:12px}
   .mm-chip svg{width:16px;height:16px}
   .mm-card p{margin:0;font-size:12px;line-height:21px;color:#d0d0d0}
