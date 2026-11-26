@@ -161,6 +161,7 @@ a.hero-addr:hover{background:rgba(34,34,34,.6)}
 .svc.tap{background:var(--red);transition:none}
 .svc.tap .svc-p{color:#fff}
 .svc.tap .svc-i{background:var(--red-deep)}
+.no-tr .svc,.no-tr .svc *{transition:none!important}
 @media (hover:hover){
 .svc:hover{background:var(--red)}
 .svc:hover .svc-p{color:#fff}
