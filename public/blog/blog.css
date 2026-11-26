@@ -52,7 +52,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .hdr.open .burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
 
 /* сторінка */
-.page{padding-top:152px;padding-bottom:110px}
+.page{padding-top:152px;padding-bottom:0}
 .crumbs{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-size:13px;color:var(--muted)}
 .crumbs span,.crumbs a:last-child{color:#fff}
 .crumbs a:first-child{color:var(--muted)}
