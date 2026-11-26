@@ -1,6 +1,6 @@
 :root{
   --bg:#141414;--panel:#212121;--panel-hover:#2b2b2b;--ink:#fff;--sub:#cfcfcf;--muted:#7a7a7a;
-  --red:#e20011;--red-hover:#c9000f;
+  --red:#e20011;--red-hover:#ce000f;
   --head:Oswald,"Arial Narrow",Impact,sans-serif;--font:Manrope,"Helvetica Neue",Arial,sans-serif;
   --ease:cubic-bezier(.22,.61,.36,1);
   --gut:max(20px,env(safe-area-inset-left,0px));--gutR:max(20px,env(safe-area-inset-right,0px));
