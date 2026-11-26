@@ -139,9 +139,8 @@ a.hero-addr:hover{background:rgba(34,34,34,.6)}
 .barber .cap{height:85px;padding:20px 20px 0}
 .barber h3{font-weight:400;font-size:20px;line-height:1.2;margin:0}
 .barber p{font-size:13px;margin:6px 0 0;color:#cfcfcf}
-.b-ph{position:relative;aspect-ratio:335/406;background:#1b1b1b;display:flex;align-items:center;justify-content:center;border-bottom:3px solid var(--red)}
-.b-ph svg{width:43%;height:auto;fill:#272727}
-.b-ph-t{position:absolute;top:22px;left:20px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#8a8a8a}
+.b-ph{position:relative;aspect-ratio:335/406;background:#1b1b1b;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.barber .b-ph img{width:55%;height:auto;aspect-ratio:auto;object-fit:contain;opacity:.06;flex:none;min-height:0}
 .team-foot{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:35px}
 .team-foot.center{justify-content:center}
 .arrows{display:flex;gap:10px}
@@ -309,12 +308,12 @@ a.chip-s:hover{color:#fff}
   .hero-in{display:grid;justify-items:start;width:max-content;max-width:100%}
   .hero h1{font-size:48px}
   .hero p{font-size:13px;width:0;min-width:100%;max-width:none}
-  .hero .btn{width:90%;min-width:max-content;padding:0 18px}
-  .hero h1{margin-bottom:15px}
-  .hero p{margin-bottom:20px}
+  .hero .btn{width:calc(90% - 4px);min-width:max-content;padding:0 18px;height:49px}
+  .hero h1{margin-bottom:11px}
+  .hero p{margin-bottom:13px}
   .hero-addr{gap:12px;margin-bottom:18px;padding:7px 23px 7px 7px}
   .hero-addr i{width:39px;height:39px}
-  .hero-addr svg{width:12px;height:17px}
+  .hero-addr svg{width:13px;height:18px}
   .hero-addr b{font-size:10px}
   .hero-addr em{font-size:11px;margin-top:3px}
   /* Стрічка за макетом. Висота 64, бородач 24 на 43, напис Oswald Medium 16, між ними 8, між повторами 35 */
