@@ -275,8 +275,8 @@ button{font:inherit;color:inherit;cursor:pointer}
 }
 @media (max-width:860px){.art-wrap{margin-top:0}.art-wrap .art-ttl{margin-bottom:22px}}
 /* Фото в статті. Стандартно середнє, розмір можна змінити в адмінці */
-.art figure img{width:70%}
-.art figure.sz-s img{width:45%}
-.art figure.sz-m img{width:70%}
-.art figure.sz-l img{width:100%}
-@media (max-width:560px){.art figure img,.art figure.sz-s img,.art figure.sz-m img{width:100%}}
+.art figure img{width:auto;max-width:100%;max-height:420px}
+.art figure.sz-s img{max-height:280px}
+.art figure.sz-m img{max-height:420px}
+.art figure.sz-l img{width:100%;max-height:none}
+@media (max-width:860px){.art figure img,.art figure.sz-s img,.art figure.sz-m img{width:100%;max-height:none}}

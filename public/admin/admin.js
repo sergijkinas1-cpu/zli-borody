@@ -642,7 +642,7 @@ function richField(f, val, upd) {
     <button type="button" data-b="p" title="Звичайний текст">Текст</button><button type="button" data-b="h2" title="Заголовок розділу">H2</button><button type="button" data-b="h3" title="Підзаголовок">H3</button><span class="sep"></span>
     <button type="button" data-c="bold" title="Жирний"><b>Ж</b></button><button type="button" data-c="italic" title="Курсив"><i>К</i></button><span class="sep"></span>
     <button type="button" data-c="insertUnorderedList" title="Список">• Список</button><button type="button" data-c="insertOrderedList" title="Нумерований список">1. Список</button><button type="button" data-b="blockquote" title="Цитата">Цитата</button><span class="sep"></span>
-    <button type="button" data-x="link" title="Посилання">Посилання</button><button type="button" data-x="img" title="Фото">Фото</button><button type="button" data-sz="sz-s" title="Клікніть на фото в тексті, потім оберіть розмір">Фото мале</button><button type="button" data-sz="sz-m" title="Клікніть на фото в тексті, потім оберіть розмір">Середнє</button><button type="button" data-sz="sz-l" title="Клікніть на фото в тексті, потім оберіть розмір">На всю ширину</button><button type="button" data-c="removeFormat" title="Прибрати форматування">Очистити</button>
+    <button type="button" data-x="link" title="Посилання">Посилання</button><button type="button" data-x="img" title="Фото">Фото</button><button type="button" data-sz="sz-s" title="Клікніть на фото в тексті, потім оберіть розмір">Фото мале</button><button type="button" data-sz="sz-m" title="Клікніть на фото в тексті, потім оберіть розмір">Середнє</button><button type="button" data-sz="sz-l" title="Клікніть на фото в тексті, потім оберіть розмір">На всю ширину</button><button type="button" data-x="imgdel" title="Клікніть на фото в тексті, потім видаліть">Видалити фото</button><button type="button" data-c="removeFormat" title="Прибрати форматування">Очистити</button>
   </div><div class="rte-area" contenteditable="true" data-ph="Почніть писати статтю"></div></div><div class="hint" style="margin-top:6px">Розділи статті оформлюйте заголовками H2, а підрозділи H3. Так статтю краще бачить Google</div>`;
   const area = $('.rte-area', box);
   area.innerHTML = val || '';
@@ -652,6 +652,10 @@ function richField(f, val, upd) {
   area.addEventListener('input', emit);
   let curImg = null;
   area.addEventListener('click', (e) => { area.querySelectorAll('img.sel').forEach((i) => i.classList.remove('sel')); curImg = e.target.tagName === 'IMG' ? e.target : null; if (curImg) curImg.classList.add('sel'); });
+  const delImg = () => { if (!curImg) return false; const fig = curImg.closest('figure') || curImg; const next = fig.nextElementSibling; fig.remove(); curImg = null; if (next && next.tagName === 'P' && !next.textContent.trim() && !next.querySelector('img')) next.remove(); emit(); return true; };
+  $('[data-x="imgdel"]', box).onmousedown = (e) => e.preventDefault();
+  $('[data-x="imgdel"]', box).onclick = () => { if (!delImg()) alert('Спочатку клікніть на фото в тексті'); };
+  area.addEventListener('keydown', (e) => { if (curImg && (e.key === 'Backspace' || e.key === 'Delete')) { e.preventDefault(); delImg(); } });
   box.querySelectorAll('[data-sz]').forEach((b) => { b.onmousedown = (e) => e.preventDefault(); b.onclick = () => { const img = curImg || area.querySelector('img'); if (!img) return alert('Спочатку клікніть на фото в тексті'); let fig = img.closest('figure'); if (!fig) { fig = document.createElement('figure'); img.replaceWith(fig); fig.append(img); } fig.className = b.dataset.sz; emit(); }; });
   area.addEventListener('paste', (e) => {
     e.preventDefault();
