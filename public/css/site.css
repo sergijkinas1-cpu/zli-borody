@@ -309,13 +309,13 @@ a.chip-s:hover{color:#fff}
   .cta-c{margin-top:20px}
   .cta-c .btn,.team-foot .btn,.hero .btn{width:100%}
   .hero-in{display:grid;justify-items:start;width:max-content;max-width:100%}
-  .hero h1{font-size:48px;line-height:1.06}
-  .hero p{font-size:13px;width:0;min-width:100%;max-width:none}
+  .hero h1{font-size:52px;line-height:1.06}
+  .hero p{font-size:14px;width:0;min-width:100%;max-width:none}
   .hero .btn{width:calc(90% - 10px);min-width:max-content;padding:0 18px;height:47px;font-size:13px;gap:10px}
   .hero .btn svg{width:17px;height:17px}
   .hero h1{margin-bottom:12px}
   .hero p{margin-bottom:15px}
-  .hero-addr{gap:11px;margin-bottom:18px;padding:6px 21px 6px 6px}
+  .hero-addr{gap:11px;margin-bottom:15px;padding:6px 21px 6px 6px}
   .hero-addr i{width:35px;height:35px}
   .hero-addr svg{width:12px;height:16px}
   .hero-addr b{font-size:9px}
@@ -523,7 +523,16 @@ a.chip-s:hover{color:#fff}
 
 /* Hero на десктопі. Плашка нижче на 3, кнопка ближче до опису на 5 і трохи більша */
 @media (min-width:861px){
-.hero-addr{margin-bottom:21px}
-.hero p{margin-bottom:31px}
+.hero-addr{margin-bottom:18px}
+.hero h1{margin-bottom:22px}
+.hero p{margin-bottom:29px}
 .hero .btn{height:61px;padding:0 31px;font-size:17px}
+}
+/* Підказка гортати внизу першого екрана, лише на мобілці */
+.hero-scroll{display:none}
+@media (max-width:560px){
+  .hero-in{transform:translateY(-30px)}
+  .hero-scroll{position:absolute;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));z-index:1;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;color:rgba(255,255,255,.38);font-size:10px;letter-spacing:.14em;text-transform:uppercase;text-decoration:none}
+  .hero-scroll svg{width:10px;height:15px;animation:hsc 2.2s ease-in-out infinite}
+  @keyframes hsc{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
 }
