@@ -84,11 +84,11 @@ a.lt:hover{color:#fff}
 .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,8,8,.88),rgba(8,8,8,.55) 45%,rgba(8,8,8,.2)),linear-gradient(0deg,var(--bg),transparent 30%)}
 .hero .wrap{position:relative;z-index:1;width:100%;padding-top:140px;padding-bottom:110px}
 .hero-in{max-width:640px}
-.hero-addr{display:inline-flex;align-items:center;gap:14px;margin:0 0 24px;padding:8px 26px 8px 8px;border-radius:999px;background:rgba(18,18,18,.72);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);color:#fff;transition:background-color .25s}
-.hero-addr i{width:44px;height:44px;border-radius:50%;background:var(--red);display:grid;place-items:center;flex:none}
+.hero-addr{display:inline-flex;align-items:center;gap:14px;margin:0 0 24px;padding:8px 26px 8px 8px;border-radius:0;background:rgba(18,18,18,.72);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);color:#fff;transition:background-color .25s}
+.hero-addr i{width:44px;height:44px;border-radius:0;background:var(--red);display:grid;place-items:center;flex:none}
 .hero-addr svg{width:14px;height:19px;color:#fff}
 .hero-addr b{display:block;font-weight:600;font-size:11px;line-height:1.2;letter-spacing:.08em;text-transform:uppercase}
-.hero-addr em{display:block;font-style:normal;font-size:14px;line-height:1.2;color:#cfcfcf;margin-top:4px}
+.hero-addr em{display:block;font-style:normal;font-size:12px;line-height:1.2;color:#cfcfcf;margin-top:4px}
 a.hero-addr:hover{background:rgba(34,34,34,.8)}
 .hero h1{font-family:var(--head);font-weight:600;text-transform:uppercase;font-size:clamp(52px,7vw,104px);line-height:.98;margin:0 0 24px}
 .hero h1 em{font-style:normal;color:var(--red)}
@@ -305,7 +305,7 @@ a.chip-s:hover{color:#fff}
   .hero-in{display:grid;justify-items:start;width:max-content;max-width:100%}
   .hero h1{font-size:48px}
   .hero p{font-size:13px;width:0;min-width:100%;max-width:none}
-  .hero .btn{width:80%}
+  .hero .btn{width:90%;min-width:max-content;padding:0 18px}
   /* Стрічка за макетом. Висота 64, бородач 24 на 43, напис Oswald Medium 16, між ними 8, між повторами 35 */
   .mq{height:68px;min-height:0}
   .mq.in-why{position:absolute;left:0;right:0;top:0;margin:0;z-index:0}
@@ -391,12 +391,11 @@ a.chip-s:hover{color:#fff}
   .ab-red h2 .in{--ind:1.8em}
   .ab-red h2 img{height:1.15em;aspect-ratio:87/30;vertical-align:-.12em}
   .ab-mid{margin:56px -16px 62px;gap:14px}
-  .ab-face{width:48px;min-width:0}
+  .ab-face{width:46px;min-width:0}
   .ab-bot h3{font-size:15.5px;margin-bottom:7px}
   .ab-bot{max-width:310px}
   .ab-bot p{font-size:11px;line-height:1.36}
   .ab-photo{aspect-ratio:1/1;position:relative}
-  .ab-photo::after{content:"";position:absolute;left:34px;bottom:61px;width:57px;height:2px;background:#fff}
 
   /* Футер */
   .ftr .wrap{padding-left:0;padding-right:0}
@@ -472,7 +471,7 @@ a.chip-s:hover{color:#fff}
   .mm-sq.dark:active{background:#2c2c2c}
   .mm-nav{display:grid;gap:8px}
   .mm-t{display:flex;align-items:center;height:51px;padding:0 10px;background:#1b1b1b;font-family:var(--head);font-weight:500;font-size:21px;text-transform:uppercase;line-height:1;transition:background-color .25s,border-color .25s;-webkit-tap-highlight-color:transparent}
-  .mm-t:active{background:var(--red)}
+  .mm-t:active{background:#3a3a3a;transition:none}
   .mm-cta{margin-top:20px;height:48px;font-weight:600;font-size:14px;gap:10px;width:100%}
   .mm-cta svg{width:18px;height:18px}
   .mm-card{margin-top:25px;background:#1b1b1b;padding:12px}
@@ -494,7 +493,7 @@ a.chip-s:hover{color:#fff}
   .mm-glass::before{opacity:.04}
   .mm-glass .mm-t,.mm-glass .mm-card,.mm-glass .mm-sq.dark{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08)}
   .mm-glass .mm-sq.dark:active{background:rgba(255,255,255,.1)}
-  .mm-glass .mm-t:active{background:var(--red);border-color:var(--red)}
+  .mm-glass .mm-t:active{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.16);transition:none}
   .mm-glass .mm-chip,.mm-glass .mm-socs a{background:rgba(255,255,255,.08)}
   .mm-glass .mm-socs a:active{background:rgba(255,255,255,.13)}
   .mm-glass .mm-socs a.on{background:var(--red)}
