@@ -642,7 +642,7 @@ function richField(f, val, upd) {
     <button type="button" data-b="p" title="Звичайний текст">Текст</button><button type="button" data-b="h2" title="Заголовок розділу">H2</button><button type="button" data-b="h3" title="Підзаголовок">H3</button><span class="sep"></span>
     <button type="button" data-c="bold" title="Жирний"><b>Ж</b></button><button type="button" data-c="italic" title="Курсив"><i>К</i></button><span class="sep"></span>
     <button type="button" data-c="insertUnorderedList" title="Список">• Список</button><button type="button" data-c="insertOrderedList" title="Нумерований список">1. Список</button><button type="button" data-b="blockquote" title="Цитата">Цитата</button><span class="sep"></span>
-    <button type="button" data-x="link" title="Посилання">Посилання</button><button type="button" data-x="img" title="Фото">Фото</button><button type="button" data-c="removeFormat" title="Прибрати форматування">Очистити</button>
+    <button type="button" data-x="link" title="Посилання">Посилання</button><button type="button" data-x="img" title="Фото">Фото</button><button type="button" data-sz="sz-s" title="Клікніть на фото в тексті, потім оберіть розмір">Фото мале</button><button type="button" data-sz="sz-m" title="Клікніть на фото в тексті, потім оберіть розмір">Середнє</button><button type="button" data-sz="sz-l" title="Клікніть на фото в тексті, потім оберіть розмір">На всю ширину</button><button type="button" data-c="removeFormat" title="Прибрати форматування">Очистити</button>
   </div><div class="rte-area" contenteditable="true" data-ph="Почніть писати статтю"></div></div><div class="hint" style="margin-top:6px">Розділи статті оформлюйте заголовками H2, а підрозділи H3. Так статтю краще бачить Google</div>`;
   const area = $('.rte-area', box);
   area.innerHTML = val || '';
@@ -650,6 +650,9 @@ function richField(f, val, upd) {
   const emit = () => upd(cleanHtml(area.innerHTML));
   area.addEventListener('focus', () => { if (!area.innerHTML.trim()) { area.innerHTML = '<p><br></p>'; const r = document.createRange(); r.setStart(area.firstChild, 0); r.collapse(true); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); } });
   area.addEventListener('input', emit);
+  let curImg = null;
+  area.addEventListener('click', (e) => { area.querySelectorAll('img.sel').forEach((i) => i.classList.remove('sel')); curImg = e.target.tagName === 'IMG' ? e.target : null; if (curImg) curImg.classList.add('sel'); });
+  box.querySelectorAll('[data-sz]').forEach((b) => { b.onmousedown = (e) => e.preventDefault(); b.onclick = () => { const img = curImg || area.querySelector('img'); if (!img) return alert('Спочатку клікніть на фото в тексті'); let fig = img.closest('figure'); if (!fig) { fig = document.createElement('figure'); img.replaceWith(fig); fig.append(img); } fig.className = b.dataset.sz; emit(); }; });
   area.addEventListener('paste', (e) => {
     e.preventDefault();
     const html = e.clipboardData.getData('text/html');
@@ -700,7 +703,8 @@ function cleanHtml(html) {
       if (['SCRIPT', 'STYLE', 'META', 'LINK', 'IFRAME', 'OBJECT'].includes(tag)) return n.remove();
       if (!ok[tag]) { n.replaceWith(...n.childNodes); return; }
       if (tag !== n.tagName) { const r = doc.createElement(tag); r.append(...n.childNodes); n.replaceWith(r); n = r; }
-      [...n.attributes].forEach((a) => { if (!((tag === 'A' && a.name === 'href') || (tag === 'IMG' && (a.name === 'src' || a.name === 'alt')))) n.removeAttribute(a.name); });
+      [...n.attributes].forEach((a) => { if (!((tag === 'A' && a.name === 'href') || (tag === 'IMG' && (a.name === 'src' || a.name === 'alt')) || (tag === 'FIGURE' && a.name === 'class'))) n.removeAttribute(a.name); });
+      if (tag === 'FIGURE' && n.getAttribute('class')) { const k = n.getAttribute('class').split(/\s+/).filter((x) => /^sz-[sml]$/.test(x))[0]; if (k) n.setAttribute('class', k); else n.removeAttribute('class'); }
       if (tag === 'A' && /^\s*javascript:/i.test(n.getAttribute('href') || '')) n.removeAttribute('href');
     });
   };

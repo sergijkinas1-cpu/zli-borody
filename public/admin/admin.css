@@ -284,3 +284,4 @@ textarea.in.short{min-height:64px}
 .pv-close{display:none!important}
 .mob-status{display:none!important;align-items:center;gap:8px;color:var(--sub);font-size:12.5px;margin:-8px 0 16px}
 #gbtn:empty{display:none}
+.rte-area figure{margin:14px 0}.rte-area figure img{display:block;width:70%;height:auto}.rte-area figure.sz-s img{width:45%}.rte-area figure.sz-m img{width:70%}.rte-area figure.sz-l img{width:100%}.rte-area img.sel{outline:2px solid #e20011;outline-offset:2px}
