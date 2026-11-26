@@ -1,6 +1,6 @@
 :root{
   --bg:#141414;--panel:#212121;--panel-hover:#2b2b2b;--ink:#fff;--sub:#cfcfcf;--muted:#7a7a7a;
-  --red:#e20011;--red-hover:#ce000f;
+  --red:#e20011;--red-hover:#d90010;
   --head:Oswald,"Arial Narrow",Impact,sans-serif;--font:Manrope,"Helvetica Neue",Arial,sans-serif;
   --ease:cubic-bezier(.22,.61,.36,1);
   --gut:max(20px,env(safe-area-inset-left,0px));--gutR:max(20px,env(safe-area-inset-right,0px));
@@ -70,11 +70,13 @@ button{font:inherit;color:inherit;cursor:pointer}
 .post-t{font-size:20px;font-weight:500;line-height:1.25;margin-top:18px}
 .post-x{font-size:13px;line-height:1.45;color:var(--sub);margin-top:10px;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
 .post:hover .post-t{color:#dcdcdc}
-.pager{display:flex;justify-content:center;gap:8px;margin-top:56px}
+.pager{display:flex;justify-content:center;gap:6px;margin-top:56px}
+.pager .pg-arr:first-child{margin-right:12px}
+.pager .pg-arr:last-child{margin-left:12px}
 .pg{width:50px;height:50px;display:grid;place-items:center;border:0;border-radius:0;background:var(--panel);font-size:15px;transition:background-color .25s}
 .pg:hover{background:var(--panel-hover)}
-.pg.on{background:var(--red)}
-.pg.on:hover{background:var(--red-hover)}
+.pg.on{background:#333}
+.pg.on:hover{background:#3a3a3a}
 .pg[disabled]{opacity:.45;cursor:default}
 .pg[disabled]:hover{background:var(--panel)}
 .pg-arr{background:transparent;box-shadow:inset 0 0 0 1.5px #313131}
