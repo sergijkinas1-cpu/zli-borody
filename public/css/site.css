@@ -308,11 +308,11 @@ a.chip-s:hover{color:#fff}
   .hero .btn{width:90%;min-width:max-content;padding:0 18px}
   .hero h1{margin-bottom:15px}
   .hero p{margin-bottom:20px}
-  .hero-addr{gap:11px;margin-bottom:18px;padding:6px 21px 6px 6px}
-  .hero-addr i{width:35px;height:35px}
-  .hero-addr svg{width:11px;height:15px}
-  .hero-addr b{font-size:9px}
-  .hero-addr em{font-size:10px;margin-top:3px}
+  .hero-addr{gap:12px;margin-bottom:18px;padding:7px 23px 7px 7px}
+  .hero-addr i{width:39px;height:39px}
+  .hero-addr svg{width:12px;height:17px}
+  .hero-addr b{font-size:10px}
+  .hero-addr em{font-size:11px;margin-top:3px}
   /* Стрічка за макетом. Висота 64, бородач 24 на 43, напис Oswald Medium 16, між ними 8, між повторами 35 */
   .mq{height:68px;min-height:0}
   .mq.in-why{position:absolute;left:0;right:0;top:0;margin:0;z-index:0}
