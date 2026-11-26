@@ -291,7 +291,9 @@ a.chip-s:hover{color:#fff}
   .wrap{padding-left:max(15px,env(safe-area-inset-left,0px));padding-right:max(15px,env(safe-area-inset-right,0px))}
   .h2{font-size:28.5px;line-height:1.16}
   .hdr.scrolled:not(.open){background:rgba(17,17,17,.96);-webkit-backdrop-filter:none;backdrop-filter:none}
-  .lead{font-size:17px;line-height:1.25;max-width:330px;margin-top:12px;color:#c4c4c4}
+  .lead,.team .lead{font-size:17px;line-height:1.25;max-width:330px;margin-top:15px;color:#c4c4c4}
+  /* Зверху першого екрана м'яке затемнення, щоб шапку і текст було добре видно на відео */
+  .hero::after{background:linear-gradient(180deg,rgba(8,8,8,.85),rgba(8,8,8,.4) 14%,rgba(8,8,8,0) 30%),linear-gradient(90deg,rgba(8,8,8,.88),rgba(8,8,8,.55) 45%,rgba(8,8,8,.2)),linear-gradient(0deg,var(--bg),transparent 30%)}
   .btn{height:53px;font-size:15px}
   .cta-c{margin-top:20px}
   .cta-c .btn,.team-foot .btn,.hero .btn{width:100%}
@@ -316,14 +318,14 @@ a.chip-s:hover{color:#fff}
   .wc p{font-size:calc(var(--cw) * .047);line-height:1.35}
   .wc video,.wc .draw-end{width:calc(var(--cw) * .5);height:calc(var(--cw) * .5)}
   /* Анімація займає весь простір між заголовком і описом, однакові відступи зверху і знизу. Пунктир обрізано по рамці */
-  .wc .dr{position:relative;flex:1 1 auto;min-height:0;margin:calc(var(--cw) * .045) 0}
+  .wc .dr{position:relative;flex:1 1 auto;min-height:0;margin:calc(var(--cw) * .045 + 5px) 0}
   .wc .dr video,.wc .dr .draw-end{top:50%;left:50%;height:calc(100% / var(--vf));width:auto;aspect-ratio:1;max-width:calc(var(--cw) * .88);max-height:calc(var(--cw) * .88 );transform:translate(-50%,calc(-50% + var(--dy)));clip-path:var(--clip)}
   .wc .dr-face{--vf:.793;--dy:3.55%;--clip:inset(6.8% 0 13.9% 0)}
   .wc .dr-scissors{--vf:.859;--dy:-.45%;--clip:inset(7.5% 0 6.6% 0)}
   .wc.art p{margin-top:0}
 
   /* Послуги. Спершу ліва колонка десктопа, потім права */
-  .svc-grid{margin-top:38px;gap:11.5px}
+  .svc-grid{margin-top:15px;gap:11.5px}
   .svc:nth-child(even){order:1}
   .svc{gap:12px;min-height:52px;padding:0 10px}
   .svc-n{font-size:min(14.5px,3.9vw);font-weight:500;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -333,7 +335,7 @@ a.chip-s:hover{color:#fff}
 
   /* Каруселі */
   /* Каруселі на телефоні гортаються нативно, з природною інерцією і м'яким доводженням до картки */
-  .car-view{margin-top:36px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scrollbar-width:none;touch-action:auto;margin-right:calc(-1 * var(--side,15px));padding-right:var(--side,15px)}
+  .car-view{margin-top:15px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scrollbar-width:none;touch-action:auto;margin-right:calc(-1 * var(--side,15px));padding-right:var(--side,15px)}
   .car-view::-webkit-scrollbar{display:none}
   .car-track{transform:none!important}
   .work,.barber{scroll-snap-align:start}
@@ -350,7 +352,9 @@ a.chip-s:hover{color:#fff}
   .barber p{font-size:12px;margin-top:8px;color:#bdbdbd}
   .team-foot,.team-foot.center{flex-direction:column;align-items:stretch;gap:14px;margin-top:20px}
   .arrows{justify-content:center;gap:9px}
-  .car-btn{width:55px;height:56px}
+  .car-btn{width:55px;height:56px;transition:background-color .25s}
+  .car-btn.off{background:#1b1b1b;cursor:default}
+  .car-btn.off svg{stroke:#6a6a6a}
 
   /* Де нас знайти */
   .find .wrap{padding-left:0;padding-right:0}
@@ -414,6 +418,13 @@ a.chip-s:hover{color:#fff}
   .js .rv{opacity:1;transform:none;transition:none}
 }
 
+/* Кнопка нагору */
+.to-top{position:fixed;right:20px;bottom:20px;z-index:40;width:46px;height:46px;display:grid;place-items:center;border:1px solid #333;background:#242424;color:#fff;cursor:pointer;opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .3s var(--ease),transform .3s var(--ease),background-color .25s}
+.to-top.on{opacity:1;transform:none;pointer-events:auto}
+.to-top:hover{background:#2e2e2e}
+.to-top svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+@media (max-width:560px){.to-top{right:15px;bottom:max(15px,env(safe-area-inset-bottom));width:44px;height:44px}}
+.mm-open .to-top{opacity:0;pointer-events:none}
 /* Меню на телефоні і планшеті. Панель на весь екран виїжджає справа, пункти з'являються по черзі */
 .mm,.mm-scrim,.hdr-call{display:none}
 @media (max-width:860px){
@@ -422,20 +433,27 @@ a.chip-s:hover{color:#fff}
   .hdr-call{display:grid;place-items:center;width:50px;height:50px;margin-left:auto;background:var(--red);color:#fff;flex:none;transition:background-color .25s;-webkit-tap-highlight-color:transparent}
   .hdr-call:active{background:var(--red-hover)}
   .hdr-call svg{width:26px;height:26px}
-  .burger{width:50px;height:50px;background:#242424;flex:none;-webkit-tap-highlight-color:transparent}
   .hdr-call + .burger{margin-left:-14px}
-  .burger span{left:14px;right:14px}
-  .burger span:nth-child(1){top:17px}.burger span:nth-child(2){top:24px}.burger span:nth-child(3){top:31px}
+  /* Бургер. Сіра плитка з обводкою і двома рисками, при відкритті риски сходяться в хрестик */
+  .burger{width:50px;height:50px;background:#333;box-shadow:inset 0 0 0 1px #3f3f3f;flex:none;-webkit-tap-highlight-color:transparent}
+  .burger span{left:10px;right:10px;height:2px;background:#e2e2e2;transition:top .22s var(--ease) .22s,transform .22s var(--ease)}
+  .burger span:nth-child(1){top:20px}.burger span:nth-child(2){top:28px;opacity:1}
+  .mm-open .burger span{transition:top .22s var(--ease),transform .22s var(--ease) .22s}
+  .mm-open .burger span:nth-child(1),.mm-open .burger span:nth-child(2){top:24px}
+  .mm-open .burger span:nth-child(1){transform:rotate(45deg)}
+  .mm-open .burger span:nth-child(2){transform:rotate(-45deg)}
+  /* Відкрите меню виїжджає під шапкою. Логотип, дзвінок і бургер лишаються зверху */
+  .mm-open .hdr{background:#161616;-webkit-backdrop-filter:none;backdrop-filter:none;border-bottom-color:transparent}
   /* Пункти меню не стискаються, коли екран низький, меню тоді просто прокручується */
   .mm-in > *{flex-shrink:0}
-  .mm-scrim{display:block;position:fixed;inset:0;z-index:90;background:rgba(8,8,8,.62);opacity:0;pointer-events:none;transition:opacity .45s var(--ease)}
-  .mm{display:flex;flex-direction:column;position:fixed;top:0;right:0;bottom:0;z-index:91;width:100%;background:#161616;transform:translateX(100%);transition:transform .55s var(--ease),visibility 0s linear .55s;visibility:hidden}
+  .mm-scrim{display:block;position:fixed;inset:0;z-index:44;background:rgba(8,8,8,.62);opacity:0;pointer-events:none;transition:opacity .45s var(--ease)}
+  .mm{display:flex;flex-direction:column;position:fixed;top:0;right:0;bottom:0;z-index:45;width:100%;background:#161616;transform:translateX(100%);transition:transform .55s var(--ease),visibility 0s linear .55s;visibility:hidden}
   .mm::before{content:"";position:absolute;inset:0;background:url(/img/noise.png);opacity:.05;pointer-events:none}
   .mm-open .mm{transform:none;visibility:visible;transition:transform .55s var(--ease)}
   .mm-open .mm-scrim{opacity:1;pointer-events:auto}
   .mm-open,.mm-open body{overflow:hidden}
   .mm a{color:#fff;text-decoration:none}
-  .mm-in{position:relative;flex:1;overflow-y:auto;overscroll-behavior:contain;padding:max(19px,env(safe-area-inset-top)) 15px max(24px,env(safe-area-inset-bottom));display:flex;flex-direction:column}
+  .mm-in{position:relative;flex:1;overflow-y:auto;overscroll-behavior:contain;padding:calc(env(safe-area-inset-top) + 87px) 15px max(24px,env(safe-area-inset-bottom));display:flex;flex-direction:column}
   .mm svg{flex:none}
   .mm-top{display:flex;align-items:center;gap:10px;margin-bottom:25px}
   .mm-top .logo{margin-right:auto;font-size:24px;font-weight:500;line-height:1}
@@ -463,8 +481,6 @@ a.chip-s:hover{color:#fff}
   .mm-socs a.on{background:var(--red);color:#fff}
   .mm-socs svg{width:28px;height:28px}
   /* Пункти з'являються по черзі */
-  .mm-st{opacity:0;transform:translateX(24px);transition:opacity .45s var(--ease),transform .55s var(--ease),background-color .25s}
-  .mm-open .mm-st{opacity:1;transform:none}
   /* Варіант зі склом. Щоб повернути суцільний фон, у render.js став MM_VARIANT = 'solid' */
   .mm-glass{background:rgba(12,12,12,.5);-webkit-backdrop-filter:blur(60px) saturate(150%);backdrop-filter:blur(60px) saturate(150%)}
   .mm-glass::before{opacity:.04}
@@ -475,4 +491,3 @@ a.chip-s:hover{color:#fff}
   .mm-glass .mm-socs a:active{background:rgba(255,255,255,.13)}
   .mm-glass .mm-socs a.on{background:var(--red)}
 }
-@media (prefers-reduced-motion:reduce){.mm-st{transition:none}}
