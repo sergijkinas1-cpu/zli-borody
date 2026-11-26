@@ -309,16 +309,17 @@ a.chip-s:hover{color:#fff}
   .cta-c{margin-top:20px}
   .cta-c .btn,.team-foot .btn,.hero .btn{width:100%}
   .hero-in{display:grid;justify-items:start;width:max-content;max-width:100%}
-  .hero h1{font-size:48px}
+  .hero h1{font-size:48px;line-height:1.06}
   .hero p{font-size:13px;width:0;min-width:100%;max-width:none}
-  .hero .btn{width:calc(90% - 4px);min-width:max-content;padding:0 18px;height:49px}
-  .hero h1{margin-bottom:11px}
-  .hero p{margin-bottom:13px}
-  .hero-addr{gap:12px;margin-bottom:18px;padding:7px 23px 7px 7px}
-  .hero-addr i{width:39px;height:39px}
-  .hero-addr svg{width:13px;height:18px}
-  .hero-addr b{font-size:10px}
-  .hero-addr em{font-size:11px;margin-top:3px}
+  .hero .btn{width:calc(90% - 10px);min-width:max-content;padding:0 18px;height:47px;font-size:13px;gap:10px}
+  .hero .btn svg{width:17px;height:17px}
+  .hero h1{margin-bottom:12px}
+  .hero p{margin-bottom:15px}
+  .hero-addr{gap:11px;margin-bottom:18px;padding:6px 21px 6px 6px}
+  .hero-addr i{width:35px;height:35px}
+  .hero-addr svg{width:12px;height:16px}
+  .hero-addr b{font-size:9px}
+  .hero-addr em{font-size:10px;margin-top:3px}
   /* Стрічка за макетом. Висота 64, бородач 24 на 43, напис Oswald Medium 16, між ними 8, між повторами 35 */
   .mq{height:68px;min-height:0}
   .mq.in-why{position:absolute;left:0;right:0;top:0;margin:0;z-index:0}
