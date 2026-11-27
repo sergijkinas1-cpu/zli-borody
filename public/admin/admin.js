@@ -46,13 +46,6 @@ function undoToast(text, onUndo, ms = 7000) {
   $('#toasts').append(t);
   setTimeout(end, ms);
 }
-// Дія спрацює через кілька секунд, якщо не натиснути «Повернути». Для того, що не можна відновити
-function laterToast(text, run, onUndo, ms = 7000) {
-  let undone = false;
-  const timer = setTimeout(() => { if (!undone) run(); }, ms);
-  undoToast(text, () => { undone = true; clearTimeout(timer); onUndo(); }, ms);
-  addEventListener('beforeunload', () => { if (!undone) { clearTimeout(timer); undone = true; run(); } }, { once: true });
-}
 function modal(html, { wide } = {}) {
   const m = document.createElement('div');
   m.className = 'modal';
@@ -64,6 +57,14 @@ function modal(html, { wide } = {}) {
   m.addEventListener('mousedown', (e) => { if (e.target === m) close(); });
   setTimeout(() => { const f = $('input,textarea,button.btn-red', m); if (f) f.focus(); }, 30);
   return { el: m, close };
+}
+// Просте питання перед видаленням. Так або Ні
+function sure(what) {
+  return new Promise((res) => {
+    const { el, close } = modal(`<h3>Ви впевнені?</h3>${what ? `<p>${esc(what)}</p>` : ''}<div class="dlg-act"><button class="btn btn-line" data-x>Ні</button><button class="btn btn-red" data-ok>Так</button></div>`);
+    $('[data-x]', el).onclick = () => { close(); res(false); };
+    $('[data-ok]', el).onclick = () => { close(); res(true); };
+  });
 }
 function confirmBox(title, text, okLabel = 'Так', danger) {
   return new Promise((res) => {
@@ -424,14 +425,6 @@ async function removePostNow(id) {
   const di = S.content.posts.findIndex((x) => x.id === id), dp = S.content.posts[di];
   const pi = S.published.content.posts.findIndex((x) => x.id === id), pp = S.published.content.posts[pi];
   S.content.posts = S.content.posts.filter((x) => x.id !== id);
-  undoToast('Статтю видалено', async () => {
-    S.content.posts.splice(di < 0 ? 0 : Math.min(di, S.content.posts.length), 0, dp || clone(pp));
-    if (pp) {
-      const site = clone(S.published.content); site.posts.splice(Math.min(pi, site.posts.length), 0, pp);
-      try { const r = await api('/api/content', { method: 'POST', body: JSON.stringify({ content: site, note: 'Повернуто статтю ' + plain(pp.title || '') }) }); S.published = r.published; } catch (e) { toast(e.message, true); }
-    }
-    await saveDraft(); renderSide(); renderSection(); updateStatus(); refreshPreview(); toast('Статтю повернуто');
-  });
   if (pp) {
     const site = clone(S.published.content);
     const t = site.posts.find((x) => x.id === id);
@@ -439,6 +432,7 @@ async function removePostNow(id) {
     try {
       const r = await api('/api/content', { method: 'POST', body: JSON.stringify({ content: site, note: 'Видалено статтю ' + plain(t?.title || '') }) });
       S.published = r.published;
+      toast('Статтю видалено');
     } catch (e) { toast(e.message, true); }
   }
   await saveDraft();
@@ -719,7 +713,7 @@ function listField(f, root) {
         const a = e.target.closest('[data-a]')?.dataset.a;
         if (!a) { const o = !el.classList.contains('open'); S.open[key + ':' + i] = o; el.classList.toggle('open', o); if (o && !body.childNodes.length) renderBody(); return; }
         e.stopPropagation();
-        if (a === 'del') { items.splice(i, 1); undoToast('Видалено', () => { items.splice(Math.min(i, items.length), 0, it); draw(); changed({ now: true }); }); }
+        if (a === 'del') { if (!(await sure('Видалити «' + (f.title(it, i) || 'елемент') + '»?'))) return; items.splice(i, 1); }
         if (a === 'up' || a === 'down') { const j = a === 'up' ? i - 1 : i + 1; [items[i], items[j]] = [items[j], items[i]]; const o = S.open[key + ':' + i]; S.open[key + ':' + i] = S.open[key + ':' + j]; S.open[key + ':' + j] = o; }
         if (a === 'dup') items.splice(i + 1, 0, clone(it));
         draw(); changed({ now: true });
@@ -1078,7 +1072,7 @@ function renderPosts(box) {
       const r = document.createElement('div'); r.className = 'plan-row';
       r.innerHTML = `<div><span>${esc(plain(x.title) || 'Без назви')}</span></div><div class="acts"><button type="button" class="btn btn-sm btn-line" data-back>Повернути в адмінку</button><button type="button" class="btn btn-sm" data-rm>Прибрати з сайту</button></div>`;
       $('[data-back]', r).onclick = () => { const i = S.published.content.posts.findIndex((y) => y.id === x.id); posts.splice(Math.min(i, posts.length), 0, clone(x)); changed({ now: true }); renderSection(); toast('Статтю повернуто'); };
-      $('[data-rm]', r).onclick = async () => { await removePostNow(x.id); renderSection(); };
+      $('[data-rm]', r).onclick = async () => { if (!(await sure('Прибрати статтю «' + (plain(x.title) || 'Без назви') + '» з сайту?'))) return; await removePostNow(x.id); renderSection(); };
       lb.append(r);
     });
     box.append(lb);
@@ -1179,6 +1173,7 @@ function renderPost(box, p) {
   const del = document.createElement('button');
   del.className = 'btn btn-line'; del.style.cssText = 'justify-self:start;color:#ff7a84'; del.textContent = 'Видалити статтю';
   del.onclick = async () => {
+    if (!(await sure('Видалити статтю «' + (plain(p.title) || 'Без назви') + '»? Вона одразу зникне з сайту'))) return;
     go('posts'); await removePostNow(p.id); renderSection();
   };
   pub.append(del);
@@ -1241,8 +1236,8 @@ async function renderMedia(box) {
     $$('.mcell', g).forEach((c) => (c.onclick = async (e) => {
       const m = items[c.dataset.i];
       if (e.target.closest('[data-del]')) {
-        c.hidden = true;
-        laterToast('Файл видалено', async () => { try { await api('/api/media?url=' + encodeURIComponent(m.url), { method: 'DELETE' }); } catch (er) { toast(er.message, true); c.hidden = false; } }, () => { c.hidden = false; });
+        if (!(await sure('Видалити файл? Якщо він стоїть на сайті, там буде порожнє місце'))) return;
+        try { await api('/api/media?url=' + encodeURIComponent(m.url), { method: 'DELETE' }); draw(); toast('Файл видалено'); } catch (er) { toast(er.message, true); }
         return;
       }
       try { await navigator.clipboard.writeText(m.url); toast('Посилання на файл скопійовано'); } catch { toast(m.url); }
@@ -1266,8 +1261,8 @@ async function renderAdmins(box) {
       <div style="min-width:0"><b>${esc(a.name || a.email)}</b> ${a.owner ? '<span class="pill pub">Власник</span>' : ''} ${a.email === me ? '<span class="pill drf">Це ви</span>' : ''}<small>${esc(a.email)} · ${a.lastLogin ? 'останній вхід ' + esc(fmtDate(a.lastLogin)) : 'ще не входив'}</small></div>
       ${a.owner || a.email === me ? '<span></span>' : `<button class="icon-btn danger" data-rm="${esc(a.email)}" title="Забрати доступ">${ICON.del}</button>`}</div>`).join('');
     $$('[data-rm]', $('#adms')).forEach((b) => (b.onclick = async () => {
-      const row = b.closest('.arow'); row.hidden = true;
-      laterToast('Доступ забрано', async () => { try { const r = await api('/api/admins?email=' + encodeURIComponent(b.dataset.rm), { method: 'DELETE' }); draw(r.items, me); } catch (e) { toast(e.message, true); row.hidden = false; } }, () => { row.hidden = false; });
+      if (!(await sure('Забрати доступ до адмінки у ' + b.dataset.rm + '?'))) return;
+      try { const r = await api('/api/admins?email=' + encodeURIComponent(b.dataset.rm), { method: 'DELETE' }); draw(r.items, me); toast('Доступ забрано'); } catch (e) { toast(e.message, true); }
     }));
   };
   let me;
