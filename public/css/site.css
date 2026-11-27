@@ -542,3 +542,4 @@ a.chip-s:hover{color:#fff}
 .svc{gap:12px}
 .svc-n{margin-right:8px}
 @media (max-width:560px){.svc{gap:9px}.svc-n{margin-right:-1px}}
+@media (max-width:560px){.svc-p{font-size:12px}}
