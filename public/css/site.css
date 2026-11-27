@@ -536,3 +536,9 @@ a.chip-s:hover{color:#fff}
   .hero-scroll svg{width:10px;height:15px;animation:hsc 2.2s ease-in-out infinite}
   @keyframes hsc{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
 }
+/* Ціни послуг. «від» на одній вертикалі, місце розраховане на чотиризначну ціну */
+.svc-p{display:grid;justify-items:start;font-variant-numeric:tabular-nums}
+.svc-p::after{content:"від 0000 грн";height:0;overflow:hidden;visibility:hidden}
+.svc{gap:12px}
+.svc-n{margin-right:8px}
+@media (max-width:560px){.svc{gap:9px}.svc-n{margin-right:-1px}}
