@@ -371,3 +371,13 @@ a.perm-url:hover{text-decoration:underline}
 .perm-url b{color:#fff;font-weight:600}
 .perm .in{flex:1;min-width:160px;height:32px}
 .perm .btn-sm{height:28px}
+.pill.plan{background:rgba(242,201,76,.15);color:#f2c94c}
+/* Планування статей */
+.pub-acts{display:flex;gap:10px;flex-wrap:wrap}
+.plans{border:1px solid #2a2a2a;background:#151515;padding:14px 16px;margin:0 0 18px;display:grid;gap:10px}
+.plans h3{margin:0;font-size:15px;display:flex;gap:8px;align-items:center}
+.plan-row{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap;padding:10px 0;border-top:1px solid #242424}
+.plan-row b{color:#f2c94c;display:block;font-size:13px}
+.plan-row span{display:block;color:#fff;margin-top:2px}
+.plan-row small{display:block;color:#ff7a84;margin-top:4px;font-size:12px}
+.plan-row .acts{display:flex;gap:8px}

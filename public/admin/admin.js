@@ -385,6 +385,11 @@ async function saveDraft(manual) {
   } catch (e) { S.saveErr = true; if (manual) toast(e.message, true); }
   S.saving = false; updateStatus();
 }
+// Стаття виходить одразу. Дата і час стають теперішніми
+function publishNow(p) {
+  const n = kyivNow(); p.date = n.date; p.time = n.time; p.published = true;
+  changed({ now: true }); renderSection(); doPublish();
+}
 async function doPublish() {
   const { el, close } = modal(`<h3>Опублікувати зміни</h3><p>Зміни з'являться на сайті протягом кількох секунд. Попередня версія збережеться в історії, до неї можна буде повернутися</p>
     <div class="f"><label for="pubNote">Що змінилося</label><input class="in" id="pubNote" placeholder="Наприклад, новий барбер у команді" maxlength="200"><div class="hint">Необов'язково. Допоможе знайти версію в історії</div></div>
@@ -486,8 +491,8 @@ function renderField(f, root) {
   };
   switch (f.t) {
     case 'note': w.innerHTML = `<div class="hint">${esc(f.text)}</div>`; break;
-    case 'text': case 'url': case 'link': case 'number': case 'date': {
-      const type = f.t === 'number' ? 'number' : f.t === 'date' ? 'date' : 'text';
+    case 'text': case 'url': case 'link': case 'number': case 'date': case 'time': {
+      const type = f.t === 'number' ? 'number' : f.t === 'date' ? 'date' : f.t === 'time' ? 'time' : 'text';
       w.innerHTML = `<label for="${id}">${esc(f.label)}${count}</label><input class="in" id="${id}" type="${type}" value="${esc(val)}" placeholder="${esc(ph)}"${f.t === 'link' ? ' list="siteLinks"' : ''}${f.min ? ` min="${f.min}"` : ''}${f.max && f.t === 'number' ? ` max="${f.max}"` : ''}${f.t !== 'text' ? ' spellcheck="false"' : ''}>${hint}`;
       const i = $('input', w);
       if (lim) guard(i);
@@ -692,6 +697,27 @@ const RI = {
   clr: '<svg viewBox="0 0 20 20"><path d="M5 4h10M10 4 7 16M4 16l12-12" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',
   media: '<svg viewBox="0 0 20 20"><path d="M2 4h11v9H2z" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="6" cy="7.5" r="1.3"/><path d="M15 7v9H5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',
 };
+// Дата і час статті за Києвом
+function kyivOff(ms) {
+  const d = new Intl.DateTimeFormat('en-US', { timeZone: 'Europe/Kyiv', hourCycle: 'h23', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).formatToParts(new Date(ms));
+  const g = (t) => Number(d.find((x) => x.type === t).value);
+  return Date.UTC(g('year'), g('month') - 1, g('day'), g('hour'), g('minute'), g('second')) - Math.floor(ms / 1000) * 1000;
+}
+function kyivAt(p) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(p.date || ''); if (!m) return 0;
+  const t = /^(\d{1,2}):(\d{2})/.exec(p.time || '') || [0, 0, 0];
+  const local = Date.UTC(+m[1], +m[2] - 1, +m[3], +t[1], +t[2]);
+  return local - kyivOff(local - kyivOff(local));
+}
+function kyivNow() {
+  const d = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Europe/Kyiv', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(new Date());
+  const [date, time] = d.split(' ');
+  return { date, time };
+}
+function kyivLabel(p) {
+  const t = kyivAt(p); if (!t) return '';
+  return new Date(t).toLocaleString('uk-UA', { timeZone: 'Europe/Kyiv', day: 'numeric', month: 'long', year: 'numeric', ...(p.time ? { hour: '2-digit', minute: '2-digit' } : {}) });
+}
 const ART_IMG = { max: 1800, q: 0.8, heavy: 450 };
 const IMG_ALIGN = [['al-l', 'Ліворуч'], ['al-c', 'По центру'], ['al-r', 'Праворуч'], ['', 'Без вирівнювання']];
 const IMG_W = [['40', 'Малий'], ['70', 'Середній'], ['100', 'Великий']];
@@ -974,15 +1000,31 @@ function renderPosts(box) {
   if (S.postId) { const p = S.content.posts.find((x) => x.id === S.postId); if (p) return renderPost(box, p); S.postId = null; }
   const posts = S.content.posts;
   box.insertAdjacentHTML('beforeend', `<div class="ed-h"><h2>Статті</h2><button class="btn btn-red" id="newPost">+ Нова стаття</button></div><p class="ed-desc">Порядок тут такий самий, як у блозі. Нова стаття з'являється першою</p>`);
+  // Заплановані статті. Найближча зверху
+  const plans = posts.filter((p) => p.published !== false && kyivAt(p) > Date.now()).sort((x, y) => kyivAt(x) - kyivAt(y));
+  const pl = document.createElement('div'); pl.className = 'plans';
+  pl.innerHTML = `<h3>Заплановані${plans.length ? ` <span class="pill plan">${plans.length}</span>` : ''}</h3>` + (plans.length ? '' : '<div class="hint">Запланованих статей немає. Щоб запланувати, відкрийте статтю і в блоці «Публікація» поставте майбутню дату і час</div>');
+  plans.forEach((p) => {
+    const pubP = S.published.content.posts.find((x) => x.id === p.id);
+    const live = pubP && pubP.published !== false && kyivAt(pubP) === kyivAt(p);
+    const r = document.createElement('div'); r.className = 'plan-row';
+    r.innerHTML = `<div><b>${esc(kyivLabel(p))}</b><span>${esc(plain(p.title) || 'Без назви')}</span>${live ? '' : '<small>Ще не збережено на сайті. Відкрийте статтю і натисніть «Запланувати»</small>'}</div>
+      <div class="acts"><button type="button" class="btn btn-sm btn-line" data-open>Змінити час</button><button type="button" class="btn btn-sm" data-now>Опублікувати зараз</button></div>`;
+    $('[data-open]', r).onclick = () => go('posts', p.id);
+    $('[data-now]', r).onclick = () => publishNow(p);
+    pl.append(r);
+  });
+  box.append(pl);
   const list = document.createElement('div');
   list.className = 'posts';
   if (!posts.length) list.innerHTML = '<div class="empty">Статей поки немає</div>';
   posts.forEach((p, i) => {
     const pubP = S.published.content.posts.find((x) => x.id === p.id);
-    const state = p.published === false ? '<span class="pill drf">Чернетка</span>' : !pubP ? '<span class="pill red">Нова, не опублікована</span>' : '<span class="pill pub">На сайті</span>';
+    const when = kyivAt(p);
+    const state = p.published === false ? '<span class="pill drf">Чернетка</span>' : !pubP ? '<span class="pill red">Нова, не опублікована</span>' : when > Date.now() ? '<span class="pill plan">Заплановано</span>' : '<span class="pill pub">На сайті</span>';
     const el = document.createElement('div');
     el.className = 'pcard';
-    el.innerHTML = `<span class="pic" style="${p.cover ? `background-image:url('${esc(p.cover)}')` : ''}"></span><div><h4>${esc(plain(p.title) || 'Без назви')}</h4><small>${state}${p.date ? `<span>${esc(new Date(p.date).toLocaleDateString('uk-UA', { day: 'numeric', month: 'long', year: 'numeric' }))}</span>` : ''}</small></div>
+    el.innerHTML = `<span class="pic" style="${p.cover ? `background-image:url('${esc(p.cover)}')` : ''}"></span><div><h4>${esc(plain(p.title) || 'Без назви')}</h4><small>${state}${p.date ? `<span>${esc(kyivLabel(p))}</span>` : ''}</small></div>
       <div class="ord"><button type="button" class="icon-btn" data-a="up" title="Вище" ${i ? '' : 'disabled'}>${ICON.up}</button><button type="button" class="icon-btn" data-a="down" title="Нижче" ${i < posts.length - 1 ? '' : 'disabled'}>${ICON.down}</button></div>`;
     el.onclick = (e) => {
       const a = e.target.closest('[data-a]')?.dataset.a;
@@ -996,7 +1038,7 @@ function renderPosts(box) {
   box.append(list);
   $('#newPost').onclick = () => {
     const id = Math.random().toString(36).slice(2, 10);
-    posts.unshift({ id, slug: 'nova-stattia-' + id.slice(0, 4), published: true, date: new Date().toISOString().slice(0, 10), title: '', excerpt: '', cover: '', coverAlt: '', body: '', ctaLabel: '', ctaUrl: '', seoTitle: '', seoDescription: '' });
+    posts.unshift({ id, slug: 'nova-stattia-' + id.slice(0, 4), published: true, date: kyivNow().date, time: kyivNow().time, title: '', excerpt: '', cover: '', coverAlt: '', body: '', ctaLabel: '', ctaUrl: '', seoTitle: '', seoDescription: '' });
     changed({ now: true });
     go('posts', id);
   };
@@ -1038,8 +1080,34 @@ function renderPost(box, p) {
   // Публікація. Видимість, дата і видалення, як у правій колонці WordPress
   const pub = renderGroup({ group: 'Публікація', fields: [
     { t: 'toggle', k: 'published', label: 'Показувати на сайті', hint: 'Вимкніть, щоб сховати статтю з блогу', onInput: () => {} },
-    { t: 'date', k: 'date', label: 'Дата публікації', hint: 'Показується в картці і на сторінці статті' },
+    { row: [{ t: 'date', k: 'date', label: 'Дата публікації', onInput: () => planNote() }, { t: 'time', k: 'time', label: 'Час', onInput: () => planNote() }] },
   ] }, p);
+  // Планування як у WordPress. Майбутня дата означає, що стаття з'явиться на сайті сама в цей час
+  const plan = document.createElement('div'); plan.className = 'hint';
+  const planNote = () => {
+    const t = kyivAt(p);
+    plan.innerHTML = p.published === false ? 'Стаття вимкнена і на сайті не показується'
+      : t > Date.now() ? `<b style="color:#f2c94c">Заплановано на ${esc(kyivLabel(p))}</b>. Натисніть «Запланувати», і в цей час стаття з'явиться в блозі сама`
+      : 'Час за Києвом. Щоб запланувати статтю, поставте майбутню дату і час, тоді вона з\'явиться на сайті сама. Сама дата на сайті не показується, вона потрібна для порядку і для Google';
+  };
+  planNote(); pub.append(plan);
+  const acts = document.createElement('div'); acts.className = 'pub-acts';
+  acts.innerHTML = '<button type="button" class="btn btn-red" data-now>Опублікувати зараз</button><button type="button" class="btn btn-line" data-plan>Запланувати</button>';
+  $('[data-now]', acts).onclick = () => publishNow(p);
+  $('[data-plan]', acts).onclick = () => {
+    if (kyivAt(p) <= Date.now()) {
+      // Минула дата. Ставимо завтра на 10:00, далі можна змінити
+      const t = new Date(Date.now() + 864e5).toLocaleDateString('sv-SE', { timeZone: 'Europe/Kyiv' });
+      p.date = t; p.time = '10:00'; p.published = true; changed({ now: true }); renderSection();
+      toast('Оберіть дату і час виходу, потім ще раз натисніть «Запланувати»');
+      setTimeout(() => { const i = document.querySelector('.ed input[type=date]') || document.querySelector('input[type=date]'); if (i) { i.scrollIntoView({ block: 'center' }); i.focus(); } }, 50);
+      return;
+    }
+    p.published = true; changed({ now: true }); doPublish();
+  };
+  pub.append(acts);
+  pub.addEventListener('input', () => setTimeout(planNote));
+  pub.addEventListener('change', () => setTimeout(planNote));
   const del = document.createElement('button');
   del.className = 'btn btn-line'; del.style.cssText = 'justify-self:start;color:#ff7a84'; del.textContent = 'Видалити статтю';
   del.onclick = async () => {
