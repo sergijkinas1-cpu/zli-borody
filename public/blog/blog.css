@@ -285,5 +285,6 @@ button{font:inherit;color:inherit;cursor:pointer}
 .hdr .btn.btn,.hdr .btn.btn-red{background:transparent;box-shadow:inset 0 0 0 1px rgba(255,255,255,.55);color:#fff;transition:background-color .35s var(--ease),box-shadow .35s var(--ease)}
 @media (hover:hover){.hdr .btn.btn:hover{background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px #fff}}
 .hdr .btn.btn:active{background:rgba(255,255,255,.12)}
-/* Фото в статтях. Один формат 16 на 9, будь-яке фото обрізається автоматично */
-.art figure img,.art figure.sz-s img,.art figure.sz-m img,.art figure.sz-l img,.art p > img{width:100%;max-width:100%;max-height:none;height:auto;aspect-ratio:16/9;object-fit:cover;object-position:center}
+/* Роздільна лінія і вирівняні фото в статті */
+.art hr{border:0;border-top:1px solid #2c2c2c;margin:34px 0}
+.art p[style*=center] img,.art p[style*=right] img{display:inline-block}

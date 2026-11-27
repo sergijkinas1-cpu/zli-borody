@@ -635,28 +635,79 @@ function listField(f, root) {
   return box;
 }
 
-/* Текст статті */
+/* Текст статті. Редактор у стилі класичного WordPress */
+const RI = {
+  b: '<svg viewBox="0 0 20 20"><path d="M6 4h5a3 3 0 0 1 0 6H6zM6 10h6a3 3 0 0 1 0 6H6z" fill="none" stroke="currentColor" stroke-width="2.2"/></svg>',
+  i: '<svg viewBox="0 0 20 20"><path d="M9 4h6M5 16h6M12 4 8 16" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>',
+  ul: '<svg viewBox="0 0 20 20"><circle cx="4" cy="5" r="1.4"/><circle cx="4" cy="10" r="1.4"/><circle cx="4" cy="15" r="1.4"/><path d="M8 5h9M8 10h9M8 15h9" stroke="currentColor" stroke-width="1.6"/></svg>',
+  ol: '<svg viewBox="0 0 20 20"><text x="1.5" y="7" font-size="5.5" fill="currentColor">1</text><text x="1.5" y="12.5" font-size="5.5" fill="currentColor">2</text><text x="1.5" y="18" font-size="5.5" fill="currentColor">3</text><path d="M8 5h9M8 10h9M8 15h9" stroke="currentColor" stroke-width="1.6"/></svg>',
+  q: '<svg viewBox="0 0 20 20"><path d="M3 15V10.5C3 7.5 4.5 5.5 7.5 5v2C6 7.5 5.5 8.5 5.5 10H8v5zM11 15V10.5c0-3 1.5-5 4.5-5.5v2c-1.5.5-2 1.5-2 3H16v5z"/></svg>',
+  al: '<svg viewBox="0 0 20 20"><path d="M3 4h14M3 8h9M3 12h14M3 16h9" stroke="currentColor" stroke-width="1.6"/></svg>',
+  ac: '<svg viewBox="0 0 20 20"><path d="M3 4h14M5.5 8h9M3 12h14M5.5 16h9" stroke="currentColor" stroke-width="1.6"/></svg>',
+  ar: '<svg viewBox="0 0 20 20"><path d="M3 4h14M8 8h9M3 12h14M8 16h9" stroke="currentColor" stroke-width="1.6"/></svg>',
+  link: '<svg viewBox="0 0 20 20"><path d="M8.5 11.5l3-3M7 9.5 5 11.5a2.8 2.8 0 0 0 4 4l2-2M13 10.5l2-2a2.8 2.8 0 0 0-4-4l-2 2" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>',
+  more: '<svg viewBox="0 0 20 20"><path d="M2 5h16v3H2zM2 12h16v3H2z" fill="currentColor" opacity=".9"/><path d="M2 10h3M7 10h2M11 10h2M15 10h3" stroke="currentColor" stroke-width="1.2"/></svg>',
+  full: '<svg viewBox="0 0 20 20"><path d="M3 7V3h4M13 3h4v4M17 13v4h-4M7 17H3v-4M3 3l5 5M17 3l-5 5M17 17l-5-5M3 17l5-5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',
+  kit: '<svg viewBox="0 0 20 20"><path d="M2 4h16v12H2z" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M4 7h2M7 7h2M10 7h2M13 7h3M4 10h2M7 10h2M10 10h2M13 10h3M5 13h10" stroke="currentColor" stroke-width="1.4"/></svg>',
+  undo: '<svg viewBox="0 0 20 20"><path d="M7 5 3 9l4 4M3 9h9a5 5 0 0 1 0 10" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>',
+  redo: '<svg viewBox="0 0 20 20"><path d="M13 5l4 4-4 4M17 9H8a5 5 0 0 0 0 10" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>',
+  clr: '<svg viewBox="0 0 20 20"><path d="M5 4h10M10 4 7 16M4 16l12-12" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',
+  media: '<svg viewBox="0 0 20 20"><path d="M2 4h11v9H2z" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="6" cy="7.5" r="1.3"/><path d="M15 7v9H5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',
+};
+const IMG_SIZES = [['sz-s', 'Малий'], ['sz-m', 'Середній'], ['sz-l', 'Великий']];
 function richField(f, val, upd) {
   const box = document.createElement('div');
-  box.innerHTML = `<div class="lbl">${esc(f.label)}</div><div class="rte"><div class="rte-bar">
-    <button type="button" data-b="p" title="Звичайний текст">Текст</button><button type="button" data-b="h2" title="Заголовок розділу">H2</button><button type="button" data-b="h3" title="Підзаголовок">H3</button><span class="sep"></span>
-    <button type="button" data-c="bold" title="Жирний"><b>Ж</b></button><button type="button" data-c="italic" title="Курсив"><i>К</i></button><span class="sep"></span>
-    <button type="button" data-c="insertUnorderedList" title="Список">• Список</button><button type="button" data-c="insertOrderedList" title="Нумерований список">1. Список</button><button type="button" data-b="blockquote" title="Цитата">Цитата</button><span class="sep"></span>
-    <button type="button" data-x="link" title="Посилання">Посилання</button><button type="button" data-x="img" title="Фото">Фото</button><button type="button" data-x="imgdel" title="Клікніть на фото в тексті, потім видаліть">Видалити фото</button><button type="button" data-c="removeFormat" title="Прибрати форматування">Очистити</button>
-  </div><div class="rte-area" contenteditable="true" data-ph="Почніть писати статтю"></div></div><div class="hint" style="margin-top:6px">Розділи статті оформлюйте заголовками H2, а підрозділи H3. Так статтю краще бачить Google</div>`;
-  const area = $('.rte-area', box);
+  box.className = 'wpe-box';
+  box.innerHTML = `<div class="lbl">${esc(f.label)}</div>
+  <div class="wpe-top"><button type="button" class="wpe-media" data-x="img">${RI.media}<span>Додати медіа</span></button><div class="wpe-tabs"><button type="button" data-tab="vis" class="on">Візуальний</button><button type="button" data-tab="txt">Текст</button></div></div>
+  <div class="rte wpe"><div class="rte-bar wpe-bar">
+    <select class="wpe-fmt" title="Формат"><option value="p">Параграф</option><option value="h2">Заголовок 2</option><option value="h3">Заголовок 3</option><option value="blockquote">Цитата</option></select>
+    <button type="button" data-c="bold" title="Жирний (Ctrl+B)">${RI.b}</button><button type="button" data-c="italic" title="Курсив (Ctrl+I)">${RI.i}</button>
+    <button type="button" data-c="insertUnorderedList" title="Маркований список">${RI.ul}</button><button type="button" data-c="insertOrderedList" title="Нумерований список">${RI.ol}</button>
+    <button type="button" data-b="blockquote" title="Цитата">${RI.q}</button>
+    <button type="button" data-c="justifyLeft" title="Вирівняти ліворуч">${RI.al}</button><button type="button" data-c="justifyCenter" title="Вирівняти по центру">${RI.ac}</button><button type="button" data-c="justifyRight" title="Вирівняти праворуч">${RI.ar}</button>
+    <button type="button" data-x="link" title="Вставити посилання">${RI.link}</button><button type="button" data-x="more" title="Роздільна лінія">${RI.more}</button>
+    <button type="button" data-x="full" title="На весь екран">${RI.full}</button><button type="button" data-x="kit" title="Показати другий ряд кнопок">${RI.kit}</button>
+    <div class="wpe-row2"><button type="button" data-c="underline" title="Підкреслений"><u>U</u></button><button type="button" data-c="removeFormat" title="Очистити форматування">${RI.clr}</button><button type="button" data-c="outdent" title="Зменшити відступ">⇤</button><button type="button" data-c="indent" title="Збільшити відступ">⇥</button><button type="button" data-c="undo" title="Скасувати (Ctrl+Z)">${RI.undo}</button><button type="button" data-c="redo" title="Повторити (Ctrl+Y)">${RI.redo}</button></div>
+  </div><div class="rte-area" contenteditable="true" data-ph="Почніть писати статтю"></div><textarea class="wpe-code" spellcheck="false"></textarea>
+  <div class="wpe-imgbar">${IMG_SIZES.map(([k, l]) => `<button type="button" data-sz="${k}">${l}</button>`).join('')}<button type="button" data-x="imgalt">Опис</button><button type="button" data-x="imgdel" class="danger">Видалити</button></div></div>
+  <div class="hint" style="margin-top:6px">Розділи статті оформлюйте як «Заголовок 2», а підрозділи як «Заголовок 3». Щоб змінити фото, клікніть на нього</div>`;
+  const wrap = $('.rte', box), area = $('.rte-area', box), code = $('.wpe-code', box), fmt = $('.wpe-fmt', box), ib = $('.wpe-imgbar', box);
   area.innerHTML = val || '';
   try { document.execCommand('defaultParagraphSeparator', false, 'p'); } catch {}
-  const emit = () => upd(cleanHtml(area.innerHTML));
+  let mode = 'vis';
+  const emit = () => upd(cleanHtml(mode === 'txt' ? code.value : area.innerHTML));
   area.addEventListener('focus', () => { if (!area.innerHTML.trim()) { area.innerHTML = '<p><br></p>'; const r = document.createRange(); r.setStart(area.firstChild, 0); r.collapse(true); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); } });
   area.addEventListener('input', emit);
+  code.addEventListener('input', emit);
+  // Візуальний і Текст
+  const pretty = (h) => h.replace(/(<\/(p|h2|h3|ul|ol|li|blockquote|figure)>|<hr>)/g, '$1\n').replace(/\n{2,}/g, '\n').trim();
+  $$('[data-tab]', box).forEach((t) => (t.onclick = () => {
+    const m = t.dataset.tab; if (m === mode) return;
+    if (m === 'txt') { code.value = pretty(cleanHtml(area.innerHTML)); code.style.height = Math.max(360, area.offsetHeight) + 'px'; }
+    else { area.innerHTML = cleanHtml(code.value); }
+    mode = m; wrap.classList.toggle('code', m === 'txt'); $$('[data-tab]', box).forEach((x) => x.classList.toggle('on', x === t)); selImg(null); emit();
+  }));
+  // Фото. Клік показує панель розміру, опису і видалення
   let curImg = null;
-  area.addEventListener('click', (e) => { area.querySelectorAll('img.sel').forEach((i) => i.classList.remove('sel')); curImg = e.target.tagName === 'IMG' ? e.target : null; if (curImg) curImg.classList.add('sel'); });
-  const delImg = () => { if (!curImg) return false; const fig = curImg.closest('figure') || curImg; const next = fig.nextElementSibling; fig.remove(); curImg = null; if (next && next.tagName === 'P' && !next.textContent.trim() && !next.querySelector('img')) next.remove(); emit(); return true; };
-  $('[data-x="imgdel"]', box).onmousedown = (e) => e.preventDefault();
-  $('[data-x="imgdel"]', box).onclick = () => { if (!delImg()) alert('Спочатку клікніть на фото в тексті'); };
-  area.addEventListener('keydown', (e) => { if (curImg && (e.key === 'Backspace' || e.key === 'Delete')) { e.preventDefault(); delImg(); } });
-  box.querySelectorAll('[data-sz]').forEach((b) => { b.onmousedown = (e) => e.preventDefault(); b.onclick = () => { const img = curImg || area.querySelector('img'); if (!img) return alert('Спочатку клікніть на фото в тексті'); let fig = img.closest('figure'); if (!fig) { fig = document.createElement('figure'); img.replaceWith(fig); fig.append(img); } fig.className = b.dataset.sz; emit(); }; });
+  const selImg = (img) => {
+    area.querySelectorAll('img.sel').forEach((i) => i.classList.remove('sel'));
+    curImg = img; ib.classList.toggle('on', !!img);
+    if (!img) return;
+    img.classList.add('sel');
+    const r = img.getBoundingClientRect(), w = wrap.getBoundingClientRect();
+    ib.style.top = (r.top - w.top + 8) + 'px'; ib.style.left = (r.left - w.left + 8) + 'px';
+    const k = (img.closest('figure') || {}).className || 'sz-m';
+    $$('[data-sz]', ib).forEach((b) => b.classList.toggle('on', b.dataset.sz === (k || 'sz-m')));
+  };
+  area.addEventListener('click', (e) => selImg(e.target.tagName === 'IMG' ? e.target : null));
+  area.addEventListener('scroll', () => selImg(null));
+  const delImg = () => { if (!curImg) return false; const fig = curImg.closest('figure') || curImg; const next = fig.nextElementSibling; fig.remove(); selImg(null); if (next && next.tagName === 'P' && !next.textContent.trim() && !next.querySelector('img')) next.remove(); emit(); return true; };
+  area.addEventListener('keydown', (e) => { if (curImg && (e.key === 'Backspace' || e.key === 'Delete')) { e.preventDefault(); delImg(); } else if (curImg) selImg(null); });
+  $$('button', ib).forEach((b) => b.addEventListener('mousedown', (e) => e.preventDefault()));
+  $$('[data-sz]', ib).forEach((b) => (b.onclick = () => { if (!curImg) return; let fig = curImg.closest('figure'); if (!fig) { fig = document.createElement('figure'); curImg.replaceWith(fig); fig.append(curImg); } fig.className = b.dataset.sz; emit(); selImg(curImg); }));
+  $('[data-x="imgdel"]', ib).onclick = delImg;
+  $('[data-x="imgalt"]', ib).onclick = async () => { const img = curImg; if (!img) return; const v = await askFields('Опис фото', [{ label: 'Що на фото', value: img.getAttribute('alt') || '', hint: 'Потрібно для Google і незрячих читачів' }], 'Зберегти'); if (v) { img.setAttribute('alt', v[0]); emit(); } };
   area.addEventListener('paste', (e) => {
     e.preventDefault();
     const html = e.clipboardData.getData('text/html');
@@ -666,12 +717,20 @@ function richField(f, val, upd) {
   });
   let saved = null;
   const keep = () => { const s = getSelection(); if (s.rangeCount && area.contains(s.anchorNode)) saved = s.getRangeAt(0).cloneRange(); };
-  area.addEventListener('keyup', keep); area.addEventListener('mouseup', keep); area.addEventListener('blur', keep);
-  const restore = () => { area.focus(); if (saved) { const s = getSelection(); s.removeAllRanges(); s.addRange(saved); } };
-  $$('.rte-bar button', box).forEach((b) => b.addEventListener('mousedown', (e) => e.preventDefault()));
-  $$('[data-b]', box).forEach((b) => (b.onclick = () => { restore(); document.execCommand('formatBlock', false, b.dataset.b); emit(); }));
-  $$('[data-c]', box).forEach((b) => (b.onclick = () => { restore(); document.execCommand(b.dataset.c, false, null); emit(); }));
+  // Список «Параграф» показує формат блоку під курсором
+  const sync = () => { keep(); const s = getSelection(); let n = s.anchorNode; if (!n || !area.contains(n)) return; n = n.nodeType === 3 ? n.parentNode : n; const b = n.closest('h2,h3,blockquote,p,li'); const t = b ? b.tagName.toLowerCase() : 'p'; fmt.value = ['h2', 'h3', 'blockquote'].includes(t) ? t : 'p'; };
+  area.addEventListener('keyup', sync); area.addEventListener('mouseup', sync); area.addEventListener('blur', keep);
+  const restore = () => { if (mode === 'txt') return false; area.focus(); if (saved) { const s = getSelection(); s.removeAllRanges(); s.addRange(saved); } return true; };
+  $$('.wpe-bar button, .wpe-top button', box).forEach((b) => b.addEventListener('mousedown', (e) => e.preventDefault()));
+  fmt.onchange = () => { if (!restore()) return; document.execCommand('formatBlock', false, fmt.value); emit(); };
+  $$('[data-b]', box).forEach((b) => (b.onclick = () => { if (!restore()) return; document.execCommand('formatBlock', false, b.dataset.b); emit(); sync(); }));
+  $$('.wpe-bar [data-c]', box).forEach((b) => (b.onclick = () => { if (!restore()) return; document.execCommand(b.dataset.c, false, null); emit(); }));
+  $('[data-x="more"]', box).onclick = () => { if (!restore()) return; document.execCommand('insertHTML', false, '<hr><p><br></p>'); emit(); };
+  $('[data-x="kit"]', box).onclick = (e) => { wrap.classList.toggle('kit'); e.currentTarget.classList.toggle('on'); };
+  $('[data-x="full"]', box).onclick = (e) => { const on = wrap.classList.toggle('full'); e.currentTarget.classList.toggle('on', on); document.body.classList.toggle('wpe-lock', on); selImg(null); };
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && wrap.classList.contains('full')) $('[data-x="full"]', box).click(); });
   $('[data-x="link"]', box).onclick = async () => {
+    if (mode === 'txt') return;
     keep();
     const r = saved; const txt = r ? r.toString() : '';
     const v = await askFields('Посилання', [{ label: 'Адреса', placeholder: 'https://', list: true, value: '' }, ...(txt ? [] : [{ label: 'Текст посилання', value: '' }])], 'Вставити');
@@ -682,21 +741,33 @@ function richField(f, val, upd) {
     else document.execCommand('insertHTML', false, `<a href="${esc(href)}">${esc(v[1] || href)}</a>`);
     emit();
   };
+  // Додати медіа. Вибір фото, опис і розмір, як у WordPress
   $('[data-x="img"]', box).onclick = async () => {
     keep();
     const u = await pickMedia('image');
     if (!u) return;
-    const alt = await askFields('Опис фото', [{ label: 'Що на фото', hint: 'Потрібно для Google і незрячих читачів' }], 'Вставити');
+    const v = await askImage();
+    if (!v) return;
+    const html = `<figure class="${v.size}"><img src="${esc(u)}" alt="${esc(v.alt)}"></figure>`;
+    if (mode === 'txt') { const p = code.selectionStart ?? code.value.length; code.value = code.value.slice(0, p) + '\n' + html + '\n' + code.value.slice(p); emit(); return; }
     restore();
-    document.execCommand('insertHTML', false, `<figure><img src="${esc(u)}" alt="${esc(alt ? alt[0] : '')}"></figure><p><br></p>`);
+    document.execCommand('insertHTML', false, html + '<p><br></p>');
     emit();
   };
   return box;
 }
+// Налаштування фото перед вставкою
+function askImage() {
+  return new Promise((res) => {
+    const { el, close } = modal(`<h3>Параметри фото</h3><div class="f"><label for="imA">Опис фото</label><input class="in" id="imA" placeholder="Що на фото"><div class="hint">Потрібно для Google і незрячих читачів</div></div><div class="f"><label>Розмір</label><div class="wpe-sizes">${IMG_SIZES.map(([k, l], i) => `<label><input type="radio" name="imS" value="${k}"${i === 1 ? ' checked' : ''}> ${l}</label>`).join('')}</div><div class="hint">Малий і середній займають частину ширини, великий на всю ширину тексту. На телефоні фото завжди на всю ширину</div></div><div class="dlg-act"><button type="button" class="btn btn-line" data-x>Скасувати</button><button type="button" class="btn btn-red" data-ok>Вставити в статтю</button></div>`);
+    $('[data-x]', el).onclick = () => { close(); res(null); };
+    $('[data-ok]', el).onclick = () => { const v = { alt: $('#imA', el).value.trim(), size: ($('input[name="imS"]:checked', el) || {}).value || 'sz-m' }; close(); res(v); };
+  });
+}
 // Чистимо вставлений текст до простої розмітки
 function cleanHtml(html) {
   const doc = new DOMParser().parseFromString(`<div>${html}</div>`, 'text/html');
-  const ok = { P: 1, H2: 1, H3: 1, STRONG: 1, B: 1, EM: 1, I: 1, UL: 1, OL: 1, LI: 1, A: 1, BR: 1, FIGURE: 1, IMG: 1, BLOCKQUOTE: 1, FIGCAPTION: 1 };
+  const ok = { P: 1, H2: 1, H3: 1, STRONG: 1, B: 1, EM: 1, I: 1, UL: 1, OL: 1, LI: 1, A: 1, BR: 1, FIGURE: 1, IMG: 1, BLOCKQUOTE: 1, FIGCAPTION: 1, HR: 1, U: 1 };
   const map = { H1: 'H2', H4: 'H3', H5: 'H3', H6: 'H3', DIV: 'P' };
   const walk = (node) => {
     [...node.childNodes].forEach((n) => {
@@ -707,7 +778,9 @@ function cleanHtml(html) {
       if (['SCRIPT', 'STYLE', 'META', 'LINK', 'IFRAME', 'OBJECT'].includes(tag)) return n.remove();
       if (!ok[tag]) { n.replaceWith(...n.childNodes); return; }
       if (tag !== n.tagName) { const r = doc.createElement(tag); r.append(...n.childNodes); n.replaceWith(r); n = r; }
+      const ta = /^(P|H2|H3|LI|BLOCKQUOTE)$/.test(tag) ? ((n.getAttribute('style') || '').match(/text-align:\s*(left|center|right)/) || [])[1] || (n.getAttribute('align') || '').match(/^(center|right)$/)?.[0] : null;
       [...n.attributes].forEach((a) => { if (!((tag === 'A' && a.name === 'href') || (tag === 'IMG' && (a.name === 'src' || a.name === 'alt')) || (tag === 'FIGURE' && a.name === 'class'))) n.removeAttribute(a.name); });
+      if (ta && ta !== 'left') n.setAttribute('style', 'text-align:' + ta);
       if (tag === 'FIGURE' && n.getAttribute('class')) { const k = n.getAttribute('class').split(/\s+/).filter((x) => /^sz-[sml]$/.test(x))[0]; if (k) n.setAttribute('class', k); else n.removeAttribute('class'); }
       if (tag === 'A' && /^\s*javascript:/i.test(n.getAttribute('href') || '')) n.removeAttribute('href');
     });
