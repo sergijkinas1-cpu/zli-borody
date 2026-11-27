@@ -35,6 +35,24 @@ function toast(text, err) {
   $('#toasts').append(t);
   setTimeout(() => t.remove(), err ? 5000 : 2600);
 }
+// Дія вже виконана, кілька секунд її можна повернути
+function undoToast(text, onUndo, ms = 7000) {
+  const t = document.createElement('div');
+  t.className = 'toast undo';
+  t.innerHTML = `<span>${esc(text)}</span><button type="button">Повернути</button>`;
+  let done = false;
+  const end = () => { if (!done) { done = true; t.remove(); } };
+  $('button', t).onclick = () => { if (done) return; end(); onUndo(); };
+  $('#toasts').append(t);
+  setTimeout(end, ms);
+}
+// Дія спрацює через кілька секунд, якщо не натиснути «Повернути». Для того, що не можна відновити
+function laterToast(text, run, onUndo, ms = 7000) {
+  let undone = false;
+  const timer = setTimeout(() => { if (!undone) run(); }, ms);
+  undoToast(text, () => { undone = true; clearTimeout(timer); onUndo(); }, ms);
+  addEventListener('beforeunload', () => { if (!undone) { clearTimeout(timer); undone = true; run(); } }, { once: true });
+}
 function modal(html, { wide } = {}) {
   const m = document.createElement('div');
   m.className = 'modal';
@@ -403,15 +421,24 @@ async function saveDraft(manual) {
 // Так не буває стану «стаття на сайті, а в адмінці її нема»
 async function removePostNow(id) {
   clearTimeout(saveTimer); saveTimer = null;
+  const di = S.content.posts.findIndex((x) => x.id === id), dp = S.content.posts[di];
+  const pi = S.published.content.posts.findIndex((x) => x.id === id), pp = S.published.content.posts[pi];
   S.content.posts = S.content.posts.filter((x) => x.id !== id);
-  if (S.published.content.posts.some((x) => x.id === id)) {
+  undoToast('Статтю видалено', async () => {
+    S.content.posts.splice(di < 0 ? 0 : Math.min(di, S.content.posts.length), 0, dp || clone(pp));
+    if (pp) {
+      const site = clone(S.published.content); site.posts.splice(Math.min(pi, site.posts.length), 0, pp);
+      try { const r = await api('/api/content', { method: 'POST', body: JSON.stringify({ content: site, note: 'Повернуто статтю ' + plain(pp.title || '') }) }); S.published = r.published; } catch (e) { toast(e.message, true); }
+    }
+    await saveDraft(); renderSide(); renderSection(); updateStatus(); refreshPreview(); toast('Статтю повернуто');
+  });
+  if (pp) {
     const site = clone(S.published.content);
     const t = site.posts.find((x) => x.id === id);
     site.posts = site.posts.filter((x) => x.id !== id);
     try {
       const r = await api('/api/content', { method: 'POST', body: JSON.stringify({ content: site, note: 'Видалено статтю ' + plain(t?.title || '') }) });
       S.published = r.published;
-      toast('Статтю видалено з сайту');
     } catch (e) { toast(e.message, true); }
   }
   await saveDraft();
@@ -438,14 +465,14 @@ async function doPublish() {
   S.publishing = false; b.textContent = label; updateStatus();
 }
 async function doDiscard() {
-  if (!(await confirmBox('Скасувати всі зміни?', 'Усе, що ще не опубліковано, буде видалено. Сайт залишиться як зараз', 'Скасувати зміни'))) return;
+  const prev = clone(S.content), prevPost = S.postId;
   clearTimeout(saveTimer); saveTimer = null;
   S.content = clone(S.published.content);
   try { await api('/api/content', { method: 'DELETE' }); } catch (e) { toast(e.message, true); }
   S.draftAt = null;
   if (S.postId && !S.content.posts.find((p) => p.id === S.postId)) S.postId = null;
   renderSide(); renderSection(); updateStatus(); refreshPreview();
-  toast('Зміни скасовано');
+  undoToast('Зміни скасовано', () => { S.content = prev; S.postId = prevPost; changed({ now: true }); renderSection(); });
 }
 
 /* ---------------- Поля форми ---------------- */
@@ -692,7 +719,7 @@ function listField(f, root) {
         const a = e.target.closest('[data-a]')?.dataset.a;
         if (!a) { const o = !el.classList.contains('open'); S.open[key + ':' + i] = o; el.classList.toggle('open', o); if (o && !body.childNodes.length) renderBody(); return; }
         e.stopPropagation();
-        if (a === 'del') { if (!(await confirmBox('Видалити елемент?', esc(f.title(it, i) || '') + '<br>Зникне з сайту, коли натиснете «Опублікувати». До того можна скасувати зміни', 'Видалити'))) return; items.splice(i, 1); }
+        if (a === 'del') { items.splice(i, 1); undoToast('Видалено', () => { items.splice(Math.min(i, items.length), 0, it); draw(); changed({ now: true }); }); }
         if (a === 'up' || a === 'down') { const j = a === 'up' ? i - 1 : i + 1; [items[i], items[j]] = [items[j], items[i]]; const o = S.open[key + ':' + i]; S.open[key + ':' + i] = S.open[key + ':' + j]; S.open[key + ':' + j] = o; }
         if (a === 'dup') items.splice(i + 1, 0, clone(it));
         draw(); changed({ now: true });
@@ -1051,7 +1078,7 @@ function renderPosts(box) {
       const r = document.createElement('div'); r.className = 'plan-row';
       r.innerHTML = `<div><span>${esc(plain(x.title) || 'Без назви')}</span></div><div class="acts"><button type="button" class="btn btn-sm btn-line" data-back>Повернути в адмінку</button><button type="button" class="btn btn-sm" data-rm>Прибрати з сайту</button></div>`;
       $('[data-back]', r).onclick = () => { const i = S.published.content.posts.findIndex((y) => y.id === x.id); posts.splice(Math.min(i, posts.length), 0, clone(x)); changed({ now: true }); renderSection(); toast('Статтю повернуто'); };
-      $('[data-rm]', r).onclick = async () => { if (await confirmBox('Прибрати статтю з сайту?', esc(plain(x.title)) + '<br>Вона одразу зникне з блогу. Повернути можна через «Історію змін»', 'Прибрати')) { await removePostNow(x.id); renderSection(); } };
+      $('[data-rm]', r).onclick = async () => { await removePostNow(x.id); renderSection(); };
       lb.append(r);
     });
     box.append(lb);
@@ -1152,9 +1179,7 @@ function renderPost(box, p) {
   const del = document.createElement('button');
   del.className = 'btn btn-line'; del.style.cssText = 'justify-self:start;color:#ff7a84'; del.textContent = 'Видалити статтю';
   del.onclick = async () => {
-    const onSite = S.published.content.posts.some((x) => x.id === p.id);
-    if (!(await confirmBox('Видалити статтю?', esc(plain(p.title)) + (onSite ? '<br>Стаття одразу зникне з сайту. Повернути її можна через «Історію змін»' : '<br>Її ще немає на сайті, тому вона просто зникне з чернетки'), 'Видалити'))) return;
-    await removePostNow(p.id); go('posts');
+    go('posts'); await removePostNow(p.id); renderSection();
   };
   pub.append(del);
   box.append(pub);
@@ -1189,14 +1214,16 @@ async function viewVersion(it) {
 }
 function closeVersion() { S.viewVersion = null; $('#pvBanner').hidden = true; refreshPreview(true); }
 async function restoreVersion(it) {
-  const extra = isDirty() ? '<br><br>Ваші неопубліковані зміни буде скасовано.' : '';
-  if (!(await confirmBox('Повернути цю версію?', `Сайт стане таким, яким був ${esc(fmtDate(it.at, true))}. Поточна версія залишиться в історії${extra}`, 'Повернути'))) return;
+  const prevSite = clone(S.published.content), prevDraft = clone(S.content);
   try {
     const r = await api('/api/history', { method: 'POST', body: JSON.stringify({ id: it.id }) });
     clearTimeout(saveTimer); saveTimer = null;
     S.published = r.published; S.content = clone(r.published.content); S.draftAt = null;
     S.viewVersion = null; $('#pvBanner').hidden = true;
-    toast('Версію повернуто на сайт');
+    undoToast('Версію від ' + fmtDate(it.at, true) + ' повернуто на сайт', async () => {
+      try { const r2 = await api('/api/content', { method: 'POST', body: JSON.stringify({ content: prevSite, note: 'Скасовано повернення версії' }) }); S.published = r2.published; } catch (e) { toast(e.message, true); return; }
+      S.content = prevDraft; await saveDraft(); renderSide(); renderSection(); updateStatus(); refreshPreview(true);
+    });
     renderSide(); renderSection(); updateStatus(); refreshPreview(true);
   } catch (e) { toast(e.message, true); }
 }
@@ -1214,8 +1241,8 @@ async function renderMedia(box) {
     $$('.mcell', g).forEach((c) => (c.onclick = async (e) => {
       const m = items[c.dataset.i];
       if (e.target.closest('[data-del]')) {
-        if (!(await confirmBox('Видалити файл?', 'Якщо файл використовується на сайті, там залишиться порожнє місце', 'Видалити'))) return;
-        try { await api('/api/media?url=' + encodeURIComponent(m.url), { method: 'DELETE' }); draw(); } catch (er) { toast(er.message, true); }
+        c.hidden = true;
+        laterToast('Файл видалено', async () => { try { await api('/api/media?url=' + encodeURIComponent(m.url), { method: 'DELETE' }); } catch (er) { toast(er.message, true); c.hidden = false; } }, () => { c.hidden = false; });
         return;
       }
       try { await navigator.clipboard.writeText(m.url); toast('Посилання на файл скопійовано'); } catch { toast(m.url); }
@@ -1239,8 +1266,8 @@ async function renderAdmins(box) {
       <div style="min-width:0"><b>${esc(a.name || a.email)}</b> ${a.owner ? '<span class="pill pub">Власник</span>' : ''} ${a.email === me ? '<span class="pill drf">Це ви</span>' : ''}<small>${esc(a.email)} · ${a.lastLogin ? 'останній вхід ' + esc(fmtDate(a.lastLogin)) : 'ще не входив'}</small></div>
       ${a.owner || a.email === me ? '<span></span>' : `<button class="icon-btn danger" data-rm="${esc(a.email)}" title="Забрати доступ">${ICON.del}</button>`}</div>`).join('');
     $$('[data-rm]', $('#adms')).forEach((b) => (b.onclick = async () => {
-      if (!(await confirmBox('Забрати доступ?', `${esc(b.dataset.rm)} більше не зможе входити в адмінку`, 'Забрати доступ'))) return;
-      try { const r = await api('/api/admins?email=' + encodeURIComponent(b.dataset.rm), { method: 'DELETE' }); draw(r.items, me); toast('Доступ забрано'); } catch (e) { toast(e.message, true); }
+      const row = b.closest('.arow'); row.hidden = true;
+      laterToast('Доступ забрано', async () => { try { const r = await api('/api/admins?email=' + encodeURIComponent(b.dataset.rm), { method: 'DELETE' }); draw(r.items, me); } catch (e) { toast(e.message, true); row.hidden = false; } }, () => { row.hidden = false; });
     }));
   };
   let me;
