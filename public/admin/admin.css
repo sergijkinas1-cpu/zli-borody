@@ -356,3 +356,10 @@ body.wpe-lock{overflow:hidden}
 .rte-area h2:first-child,.rte-area h3:first-child{margin-top:4px}
 .rte-area li{margin:0 0 6px}
 .wpe-fmt{min-width:140px;font-weight:600}
+/* Згорнутий блок налаштувань */
+.group.fold{padding-top:0;padding-bottom:0}
+.fold-h{display:flex;align-items:center;justify-content:space-between;width:100%;padding:18px 0;border:0;background:none;color:var(--muted,#9a9a9a);font-size:13px;letter-spacing:.06em;text-transform:uppercase;text-align:left}
+.fold-h svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;transition:transform .2s}
+.group.fold.open .fold-h svg{transform:rotate(180deg)}
+.fold-b{display:none;gap:16px;padding-bottom:20px}
+.group.fold.open .fold-b{display:grid}

@@ -141,7 +141,7 @@ const SECTIONS = [
     { fields: [{ t: 'heading', k: 'works.title', label: 'Заголовок', max: 30, lines: 2, line: 18, hint: HEAD_HINT }, { t: 'textarea', k: 'works.lead', label: 'Підзаголовок', max: 110, lines: 2, cls: 'short' }] },
     { fields: [{ t: 'list', k: 'works.items', label: 'Фото робіт', pic: 'image', title: (it, i) => it.alt || `Фото ${i + 1}`, add: 'Додати фото', blank: { image: '', alt: '' }, fields: [
       { t: 'image', k: 'image', label: 'Фото', ratio: '335/480', px: [335, 480], hint: 'На сайті 335 на 480 пікселів, на телефоні 315 на 480. Фото обріжеться автоматично по центру' },
-      { t: 'text', k: 'alt', label: 'Опис фото', hint: 'Коротко, що на фото. Потрібно для Google і незрячих відвідувачів' },
+      { t: 'text', k: 'alt', label: 'Опис фото', hint: 'Необов\'язково. Кілька слів про фото, щоб Google краще знаходив сайт' },
     ] }] },
     btnFields('works'),
   ] },
@@ -429,6 +429,16 @@ function renderSection() {
 function renderGroup(g, root) {
   const el = document.createElement('div');
   el.className = 'group';
+  // Згорнутий блок, як налаштування SEO у WordPress. Відкривається кліком по заголовку
+  if (g.fold) {
+    el.classList.add('fold');
+    el.innerHTML = `<button type="button" class="fold-h"><span>${esc(g.group)}</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button><div class="fold-b"></div>`;
+    const b = $('.fold-b', el);
+    if (g.hint) b.insertAdjacentHTML('beforeend', `<div class="hint">${esc(g.hint)}</div>`);
+    for (const f of g.fields) b.append(renderField(f, root));
+    $('.fold-h', el).onclick = () => el.classList.toggle('open');
+    return el;
+  }
   if (g.group) el.insertAdjacentHTML('beforeend', `<h3>${esc(g.group)}</h3>`);
   if (g.hint) el.insertAdjacentHTML('beforeend', `<div class="hint" style="margin-top:-8px">${esc(g.hint)}</div>`);
   for (const f of g.fields) el.append(renderField(f, root));
@@ -873,7 +883,7 @@ function askImage(o) {
   return new Promise((res) => {
     let src = o.src;
     const { el, close } = modal(`<h3>${o.edit ? 'Редагувати фото' : 'Параметри фото'}</h3><div class="wpe-dlg"><div class="wpe-dlg-pic" style="background-image:url('${esc(src)}')"></div><div>
-      <div class="f"><label for="imA">Опис фото</label><input class="in" id="imA" placeholder="Що на фото" value="${esc(o.alt)}"><div class="hint">Потрібно для Google і незрячих читачів</div></div>
+      <div class="f"><label for="imA">Опис фото</label><input class="in" id="imA" placeholder="Що на фото" value="${esc(o.alt)}"><div class="hint">Необов\'язково. Кілька слів про фото для пошуку Google</div></div>
       <div class="f"><label>Вирівнювання</label><div class="wpe-sizes">${IMG_ALIGN.map(([k, l]) => `<label><input type="radio" name="imL" value="${k}"${k === o.align ? ' checked' : ''}> ${l}</label>`).join('')}</div></div>
       <div class="f"><label>Розмір</label><div class="wpe-sizes">${IMG_W.map(([k, l]) => `<label><input type="radio" name="imS" value="${k}"${Number(k) === Math.round(o.width) ? ' checked' : ''}> ${l}</label>`).join('')}<label><input type="radio" name="imS" value="${o.width}"${IMG_W.some(([k]) => Number(k) === Math.round(o.width)) ? '' : ' checked'}> Свій, ${Math.round(o.width)}%</label></div><div class="hint">Розмір також можна змінити в тексті, якщо потягнути за кутик фото. На телефоні фото завжди на всю ширину</div></div>
       ${o.edit ? '<button type="button" class="btn btn-sm btn-line" data-rep>Замінити фото</button>' : ''}
@@ -1001,11 +1011,10 @@ function renderPost(box, p) {
     ] },
     { group: 'Картка в блозі', fields: [
       { t: 'image', k: 'cover', label: 'Обкладинка', ratio: '335/370', px: [335, 370], q: 0.8, hint: 'У списку статей 335 на 370 пікселів, на телефоні 335 на 310. Фото обріжеться автоматично по центру' },
-      { t: 'text', k: 'coverAlt', label: 'Що на фото обкладинки', ph: plain(p.title), hint: 'Необов\'язково. Коротко, що на фото. Його читає Google і програми для незрячих. Якщо залишити порожнім, візьметься заголовок статті' },
       { t: 'textarea', k: 'excerpt', label: 'Короткий опис', max: 320, hint: 'Два чотири речення під заголовком у картці статті в блозі' },
     ] },
     { group: 'Текст', fields: [{ t: 'rich', k: 'body', label: 'Текст статті' }] },
-    { group: 'Як стаття виглядає в Google', hint: 'Необов\'язково. Якщо поля порожні, Google покаже заголовок статті і короткий опис. Заповнюйте, лише коли хочете інший текст саме для пошуку', fields: [
+    { group: 'Пошук Google (необов\'язково)', fold: true, hint: 'Необов\'язково. Якщо поля порожні, Google покаже заголовок статті і короткий опис. Заповнюйте, лише коли хочете інший текст саме для пошуку', fields: [
       { t: 'text', k: 'seoTitle', label: 'Заголовок у пошуку Google', max: 60, soft: true, ph: plain(p.title), hint: 'Синій рядок у результатах пошуку. До 60 символів' },
       { t: 'textarea', k: 'seoDescription', label: 'Опис у пошуку Google', max: 160, soft: true, cls: 'short', ph: plain(p.excerpt || ''), hint: 'Сірий текст під заголовком у пошуку. До 160 символів' },
     ] },
