@@ -701,7 +701,7 @@ function richField(f, val, upd) {
   <div class="wpe-imgbar">${IMG_ALIGN.map(([k, l]) => `<button type="button" data-al="${k}" title="${l}">${AL_ICON[k]}</button>`).join('')}<span class="sep"></span><button type="button" data-x="imgedit" title="Редагувати">${PEN}</button><button type="button" data-x="imgdel" title="Видалити">${XX}</button></div><div class="wpe-hd"><i data-h="nw"></i><i data-h="ne"></i><i data-h="sw"></i><i data-h="se"></i></div></div></div>
   <div class="hint" style="margin-top:6px">Розділи статті оформлюйте як «Заголовок 2», а підрозділи як «Заголовок 3». Клікніть на фото, щоб вирівняти, редагувати або видалити його. Тягніть за кутики, щоб змінити розмір</div>`;
   const wrap = $('.rte', box), area = $('.rte-area', box), code = $('.wpe-code', box), fmt = $('.wpe-fmt', box), ib = $('.wpe-imgbar', box);
-  area.innerHTML = val || '';
+  area.innerHTML = cleanHtml(val || '');
   try { document.execCommand('defaultParagraphSeparator', false, 'p'); } catch {}
   let mode = 'vis';
   const emit = () => upd(cleanHtml(mode === 'txt' ? code.value : area.innerHTML));
@@ -788,21 +788,53 @@ function richField(f, val, upd) {
     const up = () => { h.removeEventListener('pointermove', move); h.removeEventListener('pointerup', up); emit(); place(); };
     h.addEventListener('pointermove', move); h.addEventListener('pointerup', up);
   }));
+  // Вставка тексту. У заголовок іде лише один рядок, решта стає звичайними абзацами під ним
   area.addEventListener('paste', (e) => {
     e.preventDefault();
     const html = e.clipboardData.getData('text/html');
     const text = e.clipboardData.getData('text/plain');
+    const s = getSelection();
+    const at = s.anchorNode && (s.anchorNode.nodeType === 3 ? s.anchorNode.parentNode : s.anchorNode);
+    const head = at && at.closest && at.closest('h2,h3');
+    if (head && area.contains(head)) {
+      const lines = (text || '').split(/\n+/).map((x, i) => (i ? x.trim() : x.replace(/\s+$/, ''))).filter((x) => x.trim());
+      if (lines.length <= 1) { document.execCommand('insertText', false, lines[0] || ''); emit(); return; }
+      document.execCommand('insertText', false, lines.shift());
+      const after = lines.map((l) => { const p = document.createElement('p'); p.textContent = l; return p; });
+      head.after(...after);
+      const r = document.createRange(); r.selectNodeContents(after[after.length - 1]); r.collapse(false); s.removeAllRanges(); s.addRange(r);
+      emit(); sync(); return;
+    }
     const ins = html ? cleanHtml(html) : esc(text).split(/\n{2,}/).map((p) => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
     document.execCommand('insertHTML', false, ins);
+    fixBlocksDom(area, false);
+    emit(); sync();
   });
+  // Enter у кінці заголовка завжди починає звичайний абзац. Після вводу лагодимо вкладені блоки
+  area.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' || e.shiftKey) return;
+    const s = getSelection(); if (!s.rangeCount) return;
+    const at = s.anchorNode.nodeType === 3 ? s.anchorNode.parentNode : s.anchorNode;
+    const head = at.closest && at.closest('h2,h3');
+    if (!head || !area.contains(head)) return;
+    const r = s.getRangeAt(0).cloneRange(); r.selectNodeContents(head); r.setStart(s.anchorNode, s.anchorOffset);
+    if (r.toString().length) return;
+    e.preventDefault();
+    const p = document.createElement('p'); p.innerHTML = '<br>'; head.after(p);
+    const nr = document.createRange(); nr.setStart(p, 0); nr.collapse(true); s.removeAllRanges(); s.addRange(nr);
+    emit(); sync();
+  });
+  area.addEventListener('input', () => { if (fixBlocksDom(area, false)) emit(); });
+
   let saved = null;
   const keep = () => { const s = getSelection(); if (s.rangeCount && area.contains(s.anchorNode)) saved = s.getRangeAt(0).cloneRange(); };
   // Список «Параграф» показує формат блоку під курсором
   const sync = () => { keep(); const s = getSelection(); let n = s.anchorNode; if (!n || !area.contains(n)) return; n = n.nodeType === 3 ? n.parentNode : n; const b = n.closest('h2,h3,blockquote,p,li'); const t = b ? b.tagName.toLowerCase() : 'p'; fmt.value = ['h2', 'h3', 'blockquote'].includes(t) ? t : 'p'; };
   area.addEventListener('keyup', sync); area.addEventListener('mouseup', sync); area.addEventListener('blur', keep);
+  document.addEventListener('selectionchange', () => { const s = getSelection(); if (s.anchorNode && area.contains(s.anchorNode)) sync(); });
   const restore = () => { if (mode === 'txt') return false; area.focus(); if (saved) { const s = getSelection(); s.removeAllRanges(); s.addRange(saved); } return true; };
   $$('.wpe-bar button, .wpe-top button', box).forEach((b) => b.addEventListener('mousedown', (e) => e.preventDefault()));
-  fmt.onchange = () => { if (!restore()) return; document.execCommand('formatBlock', false, fmt.value); emit(); };
+  fmt.onchange = () => { if (!restore()) return; document.execCommand('formatBlock', false, fmt.value); fixBlocksDom(area, false); emit(); sync(); };
   $$('[data-b]', box).forEach((b) => (b.onclick = () => { if (!restore()) return; document.execCommand('formatBlock', false, b.dataset.b); emit(); sync(); }));
   $$('.wpe-bar [data-c]', box).forEach((b) => (b.onclick = () => { if (!restore()) return; document.execCommand(b.dataset.c, false, null); emit(); }));
   $('[data-x="more"]', box).onclick = () => { if (!restore()) return; document.execCommand('insertHTML', false, '<hr><p><br></p>'); emit(); };
@@ -852,6 +884,40 @@ function askImage(o) {
     $('[data-ok]', el).onclick = () => { const v = { src, alt: $('#imA', el).value.trim(), align: ($('input[name="imL"]:checked', el) || {}).value || '', width: Number(($('input[name="imS"]:checked', el) || {}).value) || 100 }; close(); res(v); };
   });
 }
+// Абзаци, що опинились всередині заголовка чи абзацу, виносимо назовні. Працює і в редакторі, і перед збереженням
+function fixBlocksDom(root, splitBr) {
+  const BL = /^(P|H2|H3|UL|OL|FIGURE|BLOCKQUOTE|HR|DIV)$/;
+  const isBr = (n) => n && n.nodeName === 'BR';
+  const blank = (n) => n && n.nodeType === 3 && !n.textContent.trim();
+  let changed = false;
+  const split = (el) => {
+    const out = []; let cur = [];
+    const flush = () => {
+      while (cur.length && (isBr(cur[cur.length - 1]) || blank(cur[cur.length - 1]))) cur.pop();
+      while (cur.length && (isBr(cur[0]) || blank(cur[0]))) cur.shift();
+      if (cur.length) { const e = el.cloneNode(false); cur.forEach((c) => e.append(c)); out.push(e); }
+      cur = [];
+    };
+    const kids = [...el.childNodes];
+    for (let i = 0; i < kids.length; i++) {
+      const k = kids[i];
+      if (k.nodeType === 1 && BL.test(k.nodeName)) { changed = true; flush(); if (/^(P|H2|H3|DIV)$/.test(k.nodeName)) { const t = k.nodeName === 'DIV' ? document.createElement(el.nodeName === 'P' ? 'p' : 'p') : null; if (t) { [...k.childNodes].forEach((c) => t.append(c)); out.push(...split(t)); } else out.push(...split(k)); } else out.push(k); continue; }
+      if (splitBr && el.nodeName === 'P' && isBr(k)) { let j = i + 1; while (j < kids.length && blank(kids[j])) j++; if (isBr(kids[j])) { changed = true; flush(); i = j; continue; } }
+      cur.push(k);
+    }
+    flush();
+    return out;
+  };
+  [...root.children].forEach((el) => {
+    if (!/^(P|H2|H3)$/.test(el.nodeName)) return;
+    const hasBlock = [...el.children].some((c) => BL.test(c.nodeName));
+    if (!hasBlock && !(splitBr && el.nodeName === 'P' && /<br>\s*<br>/i.test(el.innerHTML))) return;
+    const parts = split(el);
+    if (!parts.length) parts.push(Object.assign(el.cloneNode(false), { innerHTML: '<br>' }));
+    el.replaceWith(...parts);
+  });
+  return changed;
+}
 // Чистимо вставлений текст до простої розмітки
 function cleanHtml(html) {
   const doc = new DOMParser().parseFromString(`<div>${html}</div>`, 'text/html');
@@ -875,6 +941,7 @@ function cleanHtml(html) {
   };
   const root = doc.body.firstChild;
   walk(root);
+  fixBlocksDom(root, true);
   // Текст без абзацу загортаємо в абзац
   let buf = [];
   const flush = (before) => { if (!buf.length) return; const p = doc.createElement('p'); root.insertBefore(p, before); buf.forEach((n) => p.append(n)); buf = []; };
@@ -930,20 +997,17 @@ function renderPost(box, p) {
         $('.ed-h h2', box).textContent = plain(v) || 'Нова стаття';
         if (autoSlug) { p.slug = slugify(v) || p.slug; const si = $('#slugIn'); if (si) si.value = p.slug; $('.ed-desc', box).textContent = 'Стаття відкриється за адресою /blog/' + p.slug; S.previewPath = '/blog/' + p.slug; }
       } },
-      { row: [{ t: 'date', k: 'date', label: 'Дата' }, { t: 'text', k: 'slug', label: 'Адреса статті', onInput: (v) => { S.previewPath = '/blog/' + slugify(v); $('.ed-desc', box).textContent = 'Стаття відкриється за адресою /blog/' + slugify(v); } }] },
+      { row: [{ t: 'date', k: 'date', label: 'Дата', hint: 'Показується в картці і на сторінці статті' }, { t: 'text', k: 'slug', label: 'Адреса статті', hint: 'Частина посилання. Складається сама із заголовка', onInput: (v) => { S.previewPath = '/blog/' + slugify(v); $('.ed-desc', box).textContent = 'Стаття відкриється за адресою /blog/' + slugify(v); } }] },
     ] },
     { group: 'Картка в блозі', fields: [
       { t: 'image', k: 'cover', label: 'Обкладинка', ratio: '335/370', px: [335, 370], q: 0.8, hint: 'У списку статей 335 на 370 пікселів, на телефоні 335 на 310. Фото обріжеться автоматично по центру' },
-      { t: 'text', k: 'coverAlt', label: 'Опис обкладинки' },
-      { t: 'textarea', k: 'excerpt', label: 'Короткий опис', max: 320, hint: 'Два чотири речення під заголовком у списку статей' },
+      { t: 'text', k: 'coverAlt', label: 'Що на фото обкладинки', ph: plain(p.title), hint: 'Необов\'язково. Коротко, що на фото. Його читає Google і програми для незрячих. Якщо залишити порожнім, візьметься заголовок статті' },
+      { t: 'textarea', k: 'excerpt', label: 'Короткий опис', max: 320, hint: 'Два чотири речення під заголовком у картці статті в блозі' },
     ] },
     { group: 'Текст', fields: [{ t: 'rich', k: 'body', label: 'Текст статті' }] },
-    { group: 'Кнопка в кінці статті', hint: 'Порожні поля беруть текст і посилання з розділу «Контакти і запис»', fields: [
-      { t: 'text', k: 'ctaLabel', label: 'Текст кнопки', ph: S.content.settings.bookingLabel }, { t: 'link', k: 'ctaUrl', label: 'Посилання кнопки', ph: S.content.settings.bookingUrl },
-    ] },
-    { group: 'SEO', fields: [
-      { t: 'text', k: 'seoTitle', label: 'Заголовок для Google', max: 60, soft: true, ph: plain(p.title) },
-      { t: 'textarea', k: 'seoDescription', label: 'Опис для Google', max: 160, soft: true, cls: 'short' },
+    { group: 'Як стаття виглядає в Google', hint: 'Необов\'язково. Якщо поля порожні, Google покаже заголовок статті і короткий опис. Заповнюйте, лише коли хочете інший текст саме для пошуку', fields: [
+      { t: 'text', k: 'seoTitle', label: 'Заголовок у пошуку Google', max: 60, soft: true, ph: plain(p.title), hint: 'Синій рядок у результатах пошуку. До 60 символів' },
+      { t: 'textarea', k: 'seoDescription', label: 'Опис у пошуку Google', max: 160, soft: true, cls: 'short', ph: plain(p.excerpt || ''), hint: 'Сірий текст під заголовком у пошуку. До 160 символів' },
     ] },
   ];
   for (const g of groups) box.append(renderGroup(g, p));

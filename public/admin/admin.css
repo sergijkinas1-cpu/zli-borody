@@ -348,3 +348,11 @@ body.wpe-lock{overflow:hidden}
 .shr{font-size:12px;line-height:1.4;padding:6px 9px;border-radius:3px}
 .shr.ok{color:#8fd19e;background:rgba(60,160,90,.12)}
 .shr.warn{color:#fff;background:#b3121d}
+/* Текст у редакторі виглядає як на сайті. Абзац звичайний, заголовки помітно більші */
+.rte-area{font-size:16px;line-height:1.6;color:#d6d6d6}
+.rte-area p{margin:0 0 16px}
+.rte-area h2{font-size:24px;font-weight:600;line-height:1.25;margin:32px 0 12px;color:#fff;padding-left:12px;border-left:3px solid var(--red)}
+.rte-area h3{font-size:19px;font-weight:600;line-height:1.3;margin:24px 0 10px;color:#fff}
+.rte-area h2:first-child,.rte-area h3:first-child{margin-top:4px}
+.rte-area li{margin:0 0 6px}
+.wpe-fmt{min-width:140px;font-weight:600}
