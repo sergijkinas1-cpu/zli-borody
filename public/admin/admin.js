@@ -424,7 +424,6 @@ function publishNow(p) {
 }
 async function doPublish() {
   const { el, close } = modal(`<h3>Опублікувати зміни</h3><p>Зміни з'являться на сайті протягом кількох секунд. Попередня версія збережеться в історії, до неї можна буде повернутися</p>
-    <div class="f"><label for="pubNote">Що змінилося</label><input class="in" id="pubNote" placeholder="Наприклад, новий барбер у команді" maxlength="200"><div class="hint">Необов'язково. Допоможе знайти версію в історії</div></div>
     <div class="dlg-act"><button class="btn btn-line" data-x>Скасувати</button><button class="btn btn-red" data-ok>Опублікувати</button></div>`);
   $('[data-x]', el).onclick = close;
   const ok = $('[data-ok]', el);
@@ -432,14 +431,13 @@ async function doPublish() {
     ok.disabled = true; ok.textContent = 'Публікую';
     try {
       clearTimeout(saveTimer); saveTimer = null;
-      const r = await api('/api/content', { method: 'POST', body: JSON.stringify({ content: S.content, note: $('#pubNote', el).value }) });
+      const r = await api('/api/content', { method: 'POST', body: JSON.stringify({ content: S.content, note: SECTIONS.filter((s) => s.keys && changedKeys(s.keys)).map((s) => s.title).join(', ').slice(0, 200) }) });
       S.published = r.published; S.content = clone(r.published.content); S.draftAt = null;
       close(); toast('Опубліковано. Зміни вже на сайті');
       renderSide(); renderSection(); updateStatus(); refreshPreview();
     } catch (e) { ok.disabled = false; ok.textContent = 'Опублікувати'; toast(e.message, true); }
   };
   ok.onclick = run;
-  $('#pubNote', el).addEventListener('keydown', (e) => { if (e.key === 'Enter') run(); });
 }
 async function doDiscard() {
   if (!(await confirmBox('Скасувати всі зміни?', 'Усе, що ще не опубліковано, буде видалено. Сайт залишиться як зараз', 'Скасувати зміни'))) return;
