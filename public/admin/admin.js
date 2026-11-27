@@ -126,13 +126,6 @@ const SECTIONS = [
       { t: 'text', k: 'label', label: 'Назва', max: 14 }, { t: 'link', k: 'href', label: 'Куди веде', hint: 'Оберіть блок або сторінку зі списку чи вставте будь-яке посилання' },
     ] }] },
   ] },
-  { id: 'seo', title: 'SEO і соцмережі', desc: 'Як головна сторінка виглядає в Google і коли нею діляться в месенджерах', path: '/', keys: ['settings.seoTitle', 'settings.seoDescription', 'settings.ogImage'], groups: [
-    { fields: [
-      { t: 'text', k: 'settings.seoTitle', label: 'Заголовок сторінки', max: 60, soft: true },
-      { t: 'textarea', k: 'settings.seoDescription', label: 'Опис для пошуку', max: 160, soft: true, cls: 'short' },
-      { t: 'image', k: 'settings.ogImage', label: 'Картинка для соцмереж', px: [600, 315], hint: 'Найкраще 1200 на 630 пікселів' },
-    ] },
-  ] },
   { h: 'Головна сторінка' },
   { id: 'hero', title: 'Перший екран', desc: 'Відео на фоні, головний заголовок і кнопка', path: '/', anchor: 'top', keys: ['hero'], groups: [
     { fields: [
@@ -153,7 +146,6 @@ const SECTIONS = [
     { fields: [{ t: 'list', k: 'why.cards', label: 'Картки', fixed: true, title: (it) => plain(it.title), fields: (it, i) => [
       { t: 'heading', k: 'title', label: 'Заголовок картки', max: 44, lines: 2, line: 24, noColor: true, hint: 'Enter переносить рядок' },
       { t: 'textarea', k: 'text', label: 'Текст', max: 120, lines: 1, cls: 'short' },
-      { t: 'note', text: `У ряду ця картка стоїть ${['третьою', 'першою', 'четвертою', 'другою'][i]}` },
       ...(i < 2 ? [{ t: 'image', k: 'image', label: 'Фото', hint: 'На сайті фото стає чорно-білим' }] : [{ t: 'note', text: 'У цій картці анімований малюнок, він не змінюється' }]),
     ] }] },
   ] },
@@ -167,9 +159,8 @@ const SECTIONS = [
   ] },
   { id: 'works', title: 'Наші роботи', desc: 'Карусель з фото стрижок', path: '/', anchor: 'works', keys: ['works'], groups: [
     { fields: [{ t: 'heading', k: 'works.title', label: 'Заголовок', max: 30, lines: 2, line: 18, hint: HEAD_HINT }, { t: 'textarea', k: 'works.lead', label: 'Підзаголовок', max: 110, lines: 2, cls: 'short' }] },
-    { fields: [{ t: 'list', k: 'works.items', label: 'Фото робіт', pic: 'image', title: (it, i) => it.alt || `Фото ${i + 1}`, add: 'Додати фото', blank: { image: '', alt: '' }, fields: [
+    { fields: [{ t: 'list', k: 'works.items', label: 'Фото робіт', pic: 'image', title: (it, i) => `Фото ${i + 1}`, add: 'Додати фото', blank: { image: '', alt: '' }, fields: [
       { t: 'image', k: 'image', label: 'Фото', ratio: '335/480', px: [335, 480], hint: 'На сайті 335 на 480 пікселів, на телефоні 315 на 480. Фото обріжеться автоматично по центру' },
-      { t: 'text', k: 'alt', label: 'Опис фото', hint: 'Необов\'язково. Кілька слів про фото, щоб Google краще знаходив сайт' },
     ] }] },
     btnFields('works'),
   ] },
@@ -184,11 +175,7 @@ const SECTIONS = [
     { fields: [{ t: 'heading', k: 'findUs.title', label: 'Заголовок', max: 20, lines: 2, line: 10, hint: HEAD_HINT }, { t: 'textarea', k: 'findUs.text', label: 'Текст унизу зліва', max: 160, lines: 1, cls: 'short' }] },
     { group: 'Плашка з містом і контактами', fields: [
       { t: 'text', k: 'findUs.city', label: 'Червона плашка з містом', max: 10 },
-      { row: [{ t: 'text', k: 'findUs.addressLabel', label: 'Підпис адреси', max: 12 }, { t: 'text', k: 'findUs.phoneLabel', label: 'Підпис телефону', max: 12 }] },
       { t: 'note', text: 'Саму адресу, телефон і посилання на карту змінюйте в розділі «Контакти і запис». Вони одразу оновляться тут і всюди на сайті' },
-    ] },
-    { group: 'Мітка на карті', hint: 'Положення мітки у відсотках від лівого і верхнього краю карти. Мітка змінюється одночасно тут і на карті у футері', fields: [
-      { row: [{ t: 'number', k: 'findUs.pinX', label: 'Зліва, %', min: 0, max: 100 }, { t: 'number', k: 'findUs.pinY', label: 'Згори, %', min: 0, max: 100 }] },
     ] },
     btnFields('findUs'),
   ] },
@@ -199,24 +186,16 @@ const SECTIONS = [
       { t: 'image', k: 'about.inlineImage', label: 'Маленьке фото в заголовку' },
     ] },
     { group: 'Низ блоку', fields: [{ t: 'text', k: 'about.subtitle', label: 'Підзаголовок', max: 30 }, { t: 'textarea', k: 'about.text', label: 'Текст', max: 300, cls: 'tall', hint: 'Порожній рядок між абзацами починає новий абзац' }] },
-    { fields: [{ t: 'image', k: 'about.photo', label: 'Велике фото', hint: 'На сайті фото стає чорно-білим' }, { t: 'text', k: 'about.photoAlt', label: 'Опис великого фото' }] },
+    { fields: [{ t: 'image', k: 'about.photo', label: 'Велике фото', hint: 'На сайті фото стає чорно-білим' }] },
   ] },
   { id: 'footer', title: 'Футер', desc: 'Нижній блок з навігацією, контактами, соцмережами і юридичними посиланнями', path: '/', anchor: 'footer', keys: ['footer'], groups: [
     { fields: [{ row: [{ t: 'text', k: 'footer.brand', label: 'Назва зліва', max: 14 }, { t: 'text', k: 'footer.city', label: 'Напис на силуеті карти', max: 8 }] }] },
     { group: 'Навігація', fields: [
-      { t: 'text', k: 'footer.navTitle', label: 'Заголовок', max: 12 },
       { t: 'list', k: 'footer.nav', label: 'Пункти', max: 8, title: (it) => it.label, add: 'Додати пункт', blank: { label: 'Новий пункт', href: '/' }, fields: [
         { t: 'text', k: 'label', label: 'Назва', max: 16 }, { t: 'link', k: 'href', label: 'Куди веде' },
       ] },
     ] },
-    { group: 'Адреса і контакти', fields: [
-      { row: [{ t: 'text', k: 'footer.addressTitle', label: 'Заголовок адреси', max: 10 }, { t: 'text', k: 'footer.contactsTitle', label: 'Заголовок контактів', max: 10 }] },
-      { t: 'note', text: 'Адресу, графік, телефон і пошту змінюйте в розділі «Контакти і запис». Вони одразу оновляться тут і всюди на сайті' },
-    ] },
-    { group: 'Соцмережі', fields: [
-      { t: 'text', k: 'footer.socialTitle', label: 'Заголовок', max: 12 },
-      { t: 'note', text: 'Посилання на соцмережі змінюйте в розділі «Контакти і запис»' },
-    ] },
+    { fields: [{ t: 'note', text: 'Адресу, графік, телефон, пошту і соцмережі у футері змінюйте в розділі «Контакти і запис»' }] },
     { group: 'Нижній рядок', fields: [
       { t: 'text', k: 'footer.copyright', label: 'Копірайт', max: 40 },
       { t: 'list', k: 'footer.links', label: 'Плашки з посиланнями', max: 5, title: (it) => it.label, add: 'Додати плашку', blank: { label: 'Нова плашка', href: '' }, fields: [
@@ -227,12 +206,10 @@ const SECTIONS = [
   ] },
   { h: 'Блог' },
   { id: 'posts', title: 'Статті', desc: 'Створюйте, редагуйте і публікуйте статті', path: '/blog', keys: ['posts'], custom: renderPosts },
-  { id: 'blog', title: 'Сторінка блогу', desc: 'Заголовок і налаштування сторінки зі списком статей', path: '/blog', keys: ['blog'], groups: [
+  { id: 'blog', title: 'Сторінка блогу', desc: 'Заголовок сторінки зі списком статей', path: '/blog', keys: ['blog'], groups: [
     { fields: [
       { t: 'heading', k: 'blog.title', label: 'Заголовок', max: 34, lines: 2, line: 22, hint: HEAD_HINT },
-      { t: 'number', k: 'blog.perPage', label: 'Статей на одній сторінці', min: 1, max: 48 },
     ] },
-    { group: 'SEO', fields: [{ t: 'text', k: 'blog.seoTitle', label: 'Заголовок сторінки', max: 60, soft: true }, { t: 'textarea', k: 'blog.seoDescription', label: 'Опис для пошуку', max: 160, soft: true, cls: 'short' }] },
   ] },
   { h: 'Юридичні сторінки' },
   { id: 'privacy', title: 'Політика конфіденційності', desc: 'Сторінка /privacy, посилання на неї стоїть у футері', path: '/privacy', keys: ['legal.privacyTitle', 'legal.privacyBody'], groups: [
