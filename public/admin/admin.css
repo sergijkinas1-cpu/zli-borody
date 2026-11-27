@@ -315,3 +315,30 @@ body.wpe-lock{overflow:hidden}
 .wpe-imgbar button.danger{color:#ff6b6b}
 .wpe-sizes{display:flex;gap:16px;flex-wrap:wrap;font-size:14px}
 .wpe-sizes label{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+/* Фото в редакторі як у WordPress */
+.rte-area figure[style*="width"] img{width:100%;max-height:none}
+.rte-area figure.al-c{margin-left:auto;margin-right:auto}
+.rte-area figure.al-l{float:left;margin:4px 20px 12px 0}
+.rte-area figure.al-r{float:right;margin:4px 0 12px 20px}
+.rte-area h2,.rte-area h3,.rte-area hr{clear:both}
+.rte-area::after{content:"";display:block;clear:both}
+.wpe-imgbar{align-items:center;padding:4px 5px}
+.wpe-imgbar::after{content:"";position:absolute;left:50%;bottom:-7px;width:12px;height:12px;background:#111;border-right:1px solid #3a3a3a;border-bottom:1px solid #3a3a3a;transform:translateX(-50%) rotate(45deg)}
+.wpe-imgbar button{width:34px;height:32px;padding:0;display:grid;place-items:center;color:#d8d8d8}
+.wpe-imgbar button svg{width:19px;height:19px}
+.wpe-imgbar button.on{background:#2d2d2d;box-shadow:inset 0 0 0 1px #6a6a6a}
+.wpe-imgbar .sep{width:1px;height:22px;background:#3a3a3a;margin:0 4px}
+.wpe-imgbar button[data-x="imgdel"]:hover{color:#ff6b6b}
+.wpe-hd{display:none;position:absolute;z-index:3;pointer-events:none;outline:1px solid #8a8a8a}
+.wpe-hd.on{display:block}
+.wpe-hd i{position:absolute;width:11px;height:11px;background:#fff;border:1px solid #555;pointer-events:auto;touch-action:none}
+.wpe-hd i[data-h="nw"]{left:-6px;top:-6px;cursor:nwse-resize}.wpe-hd i[data-h="ne"]{right:-6px;top:-6px;cursor:nesw-resize}
+.wpe-hd i[data-h="sw"]{left:-6px;bottom:-6px;cursor:nesw-resize}.wpe-hd i[data-h="se"]{right:-6px;bottom:-6px;cursor:nwse-resize}
+.rte-area img.sel{outline:0}
+.wpe-dlg{display:grid;grid-template-columns:200px minmax(0,1fr);gap:18px}
+.wpe-dlg-pic{aspect-ratio:1;background:#111 center/contain no-repeat;border:1px solid var(--line)}
+@media (max-width:640px){.wpe-dlg{grid-template-columns:1fr}.wpe-dlg-pic{aspect-ratio:16/9}}
+/* Мініатюри фото у форматі блоку і вільне місце в списку барберів */
+.thumb.crop{height:auto}
+.item-h .pic.ph{background-size:70%;background-repeat:no-repeat;background-color:#1b1b1b;opacity:.55}
+.rte-area.drop{outline:2px dashed #8a8a8a;outline-offset:-6px}

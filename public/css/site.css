@@ -543,3 +543,10 @@ a.chip-s:hover{color:#fff}
 .svc-n{margin-right:8px}
 @media (max-width:560px){.svc{gap:9px}.svc-n{margin-right:-1px}}
 @media (max-width:560px){.svc-p{font-size:12px}}
+/* Розміри карток за макетом. Плашка з іменем 84, на телефоні картка 316 на 490, роботи 315 на 480 */
+.barber .cap{height:84px}
+@media (max-width:560px){
+  .work img{aspect-ratio:315/480}
+  .barber{aspect-ratio:316/490}
+  .barber .cap{height:84px}
+}

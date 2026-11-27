@@ -288,3 +288,11 @@ button{font:inherit;color:inherit;cursor:pointer}
 /* Роздільна лінія і вирівняні фото в статті */
 .art hr{border:0;border-top:1px solid #2c2c2c;margin:34px 0}
 .art p[style*=center] img,.art p[style*=right] img{display:inline-block}
+/* Фото з редактора. Ширина у відсотках і вирівнювання як у WordPress */
+.art figure[style*="width"] img{width:100%;max-height:none}
+.art figure.al-c{margin-left:auto;margin-right:auto}
+.art figure.al-l{float:left;margin:6px 28px 16px 0}
+.art figure.al-r{float:right;margin:6px 0 16px 28px}
+.art h2,.art h3,.art hr,.art blockquote{clear:both}
+.art::after{content:"";display:block;clear:both}
+@media (max-width:860px){.art figure[style*="width"],.art figure.al-l,.art figure.al-r{width:100%!important;float:none;margin:26px 0}}
