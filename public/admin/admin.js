@@ -88,9 +88,18 @@ const HEAD_HINT = 'Виділіть слово і натисніть «Черв�
 
 const SECTIONS = [
   { h: 'Загальне' },
-  { id: 'settings', title: 'Контакти і запис', desc: 'Логотип, телефон і головна кнопка запису, яка стоїть у шапці і в усіх блоках', path: '/', anchor: 'hdr', keys: ['settings.brand1', 'settings.brand2', 'settings.phone', 'settings.bookingLabel', 'settings.bookingUrl'], groups: [
+  { id: 'settings', title: 'Контакти і запис', desc: 'Телефон, адреса, соцмережі і кнопка запису. Змінюєте тут, і вони змінюються всюди на сайті', path: '/', anchor: 'hdr', keys: ['settings.brand1', 'settings.brand2', 'settings.phone', 'settings.address', 'settings.mapUrl', 'settings.hours', 'settings.email', 'settings.instagram', 'settings.telegram', 'settings.viber', 'settings.tiktok', 'settings.facebook', 'settings.bookingLabel', 'settings.bookingUrl'], groups: [
     { group: 'Логотип', fields: [{ row: [{ t: 'text', k: 'settings.brand1', label: 'Перше слово', max: 8 }, { t: 'text', k: 'settings.brand2', label: 'Червоне слово', max: 10 }] }] },
-    { group: 'Контакти', fields: [{ t: 'text', k: 'settings.phone', label: 'Телефон у шапці', max: 20, hint: 'Відвідувач натискає на номер, і він копіюється' }] },
+    { group: 'Контакти', hint: 'Одне місце для всього сайту. Змінюються в шапці, меню, на головній, у блоці «Де нас знайти» і у футері', fields: [
+      { row: [{ t: 'text', k: 'settings.phone', label: 'Телефон', max: 20, hint: 'Наприклад, +380 50 132 27 22' }, { t: 'text', k: 'settings.email', label: 'Пошта', max: 40 }] },
+      { row: [{ t: 'text', k: 'settings.address', label: 'Адреса', max: 40, hint: 'Наприклад, м. Львів, вул. Мельника 2' }, { t: 'text', k: 'settings.hours', label: 'Графік роботи', max: 24, hint: 'Наприклад, Пн–Нд 10:00–20:00' }] },
+      { t: 'url', k: 'settings.mapUrl', label: 'Посилання на Google Карти', hint: 'Відкривається, коли натискають на адресу або карту' },
+    ] },
+    { group: 'Соцмережі', hint: 'Можна вписати просто нік, посилання сайт складе сам', fields: [
+      { row: [{ t: 'text', k: 'settings.instagram', label: 'Instagram', ph: '@angrybeards.lviv', hint: 'Нік або посилання на сторінку' }, { t: 'text', k: 'settings.telegram', label: 'Telegram', ph: '@angrybeards', hint: 'Псевдонім, наприклад @angrybeards' }] },
+      { row: [{ t: 'text', k: 'settings.viber', label: 'Viber', ph: '+380 50 132 27 22', hint: 'Номер телефону, прив\'язаний до Viber' }, { t: 'text', k: 'settings.tiktok', label: 'TikTok', ph: '@angrybeards', hint: 'Нік або посилання' }] },
+      { t: 'text', k: 'settings.facebook', label: 'Facebook', ph: 'https://facebook.com/…', hint: 'Посилання на сторінку' },
+    ] },
     { group: 'Запис онлайн', fields: [{ t: 'text', k: 'settings.bookingLabel', label: 'Текст кнопки', max: 24 }, { t: 'url', k: 'settings.bookingUrl', label: 'Посилання на сервіс запису' }] },
   ] },
   { id: 'menu', title: 'Меню', desc: 'Пункти навігації в шапці сайту', path: '/', anchor: 'hdr', keys: ['settings.nav'], groups: [
@@ -156,9 +165,8 @@ const SECTIONS = [
     { fields: [{ t: 'heading', k: 'findUs.title', label: 'Заголовок', max: 20, lines: 2, line: 10, hint: HEAD_HINT }, { t: 'textarea', k: 'findUs.text', label: 'Текст унизу зліва', max: 160, lines: 1, cls: 'short' }] },
     { group: 'Плашка з містом і контактами', fields: [
       { t: 'text', k: 'findUs.city', label: 'Червона плашка з містом', max: 10 },
-      { row: [{ t: 'text', k: 'findUs.addressLabel', label: 'Підпис адреси', max: 12 }, { t: 'text', k: 'findUs.address', label: 'Адреса', max: 32 }] },
-      { row: [{ t: 'text', k: 'findUs.phoneLabel', label: 'Підпис телефону', max: 12 }, { t: 'text', k: 'findUs.phone', label: 'Телефон', max: 20 }] },
-      { t: 'url', k: 'findUs.mapUrl', label: 'Посилання на Google Карти', hint: 'Відкривається, коли натискають на карту або адресу' },
+      { row: [{ t: 'text', k: 'findUs.addressLabel', label: 'Підпис адреси', max: 12 }, { t: 'text', k: 'findUs.phoneLabel', label: 'Підпис телефону', max: 12 }] },
+      { t: 'note', text: 'Саму адресу, телефон і посилання на карту змінюйте в розділі «Контакти і запис». Вони одразу оновляться тут і всюди на сайті' },
     ] },
     { group: 'Мітка на карті', hint: 'Положення мітки у відсотках від лівого і верхнього краю карти. Мітка змінюється одночасно тут і на карті у футері', fields: [
       { row: [{ t: 'number', k: 'findUs.pinX', label: 'Зліва, %', min: 0, max: 100 }, { t: 'number', k: 'findUs.pinY', label: 'Згори, %', min: 0, max: 100 }] },
@@ -184,14 +192,11 @@ const SECTIONS = [
     ] },
     { group: 'Адреса і контакти', fields: [
       { row: [{ t: 'text', k: 'footer.addressTitle', label: 'Заголовок адреси', max: 10 }, { t: 'text', k: 'footer.contactsTitle', label: 'Заголовок контактів', max: 10 }] },
-      { row: [{ t: 'text', k: 'footer.address', label: 'Адреса', max: 32 }, { t: 'text', k: 'footer.hours', label: 'Графік роботи', max: 24 }] },
-      { row: [{ t: 'text', k: 'footer.phone', label: 'Телефон', max: 20 }, { t: 'text', k: 'footer.email', label: 'Пошта', max: 32 }] },
+      { t: 'note', text: 'Адресу, графік, телефон і пошту змінюйте в розділі «Контакти і запис». Вони одразу оновляться тут і всюди на сайті' },
     ] },
-    { group: 'Соцмережі', hint: 'Вставте посилання на сторінки. Порожня кнопка нікуди не веде', fields: [
+    { group: 'Соцмережі', fields: [
       { t: 'text', k: 'footer.socialTitle', label: 'Заголовок', max: 12 },
-      { row: [{ t: 'url', k: 'footer.instagram', label: 'Instagram' }, { t: 'url', k: 'footer.telegram', label: 'Telegram' }] },
-      { row: [{ t: 'url', k: 'footer.viber', label: 'Viber' }, { t: 'url', k: 'footer.tiktok', label: 'TikTok' }] },
-      { t: 'url', k: 'footer.facebook', label: 'Facebook' },
+      { t: 'note', text: 'Посилання на соцмережі змінюйте в розділі «Контакти і запис»' },
     ] },
     { group: 'Нижній рядок', fields: [
       { t: 'text', k: 'footer.copyright', label: 'Копірайт', max: 40 },
