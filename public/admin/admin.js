@@ -297,13 +297,27 @@ async function start(user) {
   updateStatus();
   setDevice(S.device);
   refreshPreview(true);
+  if (S.draftAt && isDirty()) setTimeout(remindDraft, 300);
+}
+// Нагадування при вході. Зміни, яких ще немає на сайті, і що з ними зробити
+function remindDraft() {
+  const secs = SECTIONS.filter((s) => s.keys && changedKeys(s.keys)).map((s) => s.title);
+  const { el, close } = modal(`<h3>Є неопубліковані зміни</h3><p>Ви змінили сайт ${esc(fmtDate(S.draftAt, true))}, але не натиснули «Опублікувати». Цих змін ще немає на сайті${secs.length ? `:<br><b>${secs.map(esc).join(', ')}</b>` : ''}</p>
+    <div class="dlg-act"><button class="btn btn-line" data-drop>Скасувати зміни</button><button class="btn btn-line" data-x>Переглянути</button><button class="btn btn-red" data-ok>Опублікувати</button></div>`);
+  $('[data-x]', el).onclick = close;
+  $('[data-ok]', el).onclick = () => { close(); doPublish(); };
+  $('[data-drop]', el).onclick = () => { close(); doDiscard(); };
 }
 
 function bindChrome() {
   $('#meBtn').onclick = (e) => { e.stopPropagation(); $('#meMenu').hidden = !$('#meMenu').hidden; };
   document.addEventListener('click', () => { $('#meMenu').hidden = true; });
   $$('#meMenu [data-go]').forEach((b) => (b.onclick = () => go(b.dataset.go)));
-  $('#logout').onclick = async () => { await fetch('/api/auth', { method: 'DELETE', credentials: 'same-origin' }); location.reload(); };
+  $('#logout').onclick = async () => {
+    if (isDirty() && !(await confirmBox('Вийти без публікації?', 'Є зміни, яких ще немає на сайті. Вони збережуться як чернетка, і при наступному вході адмінка про них нагадає', 'Вийти'))) return;
+    await saveDraft(); S.leaving = true;
+    await fetch('/api/auth', { method: 'DELETE', credentials: 'same-origin' }); location.reload();
+  };
   $('#publish').onclick = doPublish;
   $('#discard').onclick = doDiscard;
   $$('.seg button').forEach((b) => (b.onclick = () => setDevice(b.dataset.dev)));
@@ -314,7 +328,7 @@ function bindChrome() {
   new ResizeObserver(layoutPreview).observe($('#pvStage'));
   addEventListener('message', onFrameMessage);
   addEventListener('keydown', (e) => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's') { e.preventDefault(); saveDraft(true); } });
-  addEventListener('beforeunload', (e) => { if (saveTimer || S.saving) { e.preventDefault(); e.returnValue = ''; } });
+  addEventListener('beforeunload', (e) => { if (!S.leaving && (saveTimer || S.saving || isDirty())) { e.preventDefault(); e.returnValue = 'Є неопубліковані зміни'; } });
   addEventListener('hashchange', () => {
     const h = location.hash.slice(1).split('/');
     if (SEC[h[0]] && (h[0] !== S.section || (h[1] || null) !== S.postId)) { S.section = h[0]; S.postId = h[0] === 'posts' ? h[1] || null : null; renderSide(); renderSection(); syncPreviewTarget(); }
@@ -384,6 +398,24 @@ async function saveDraft(manual) {
     if (manual) toast('Чернетку збережено');
   } catch (e) { S.saveErr = true; if (manual) toast(e.message, true); }
   S.saving = false; updateStatus();
+}
+// Видалення статті. Зі сайту знімаємо одразу, решту неопублікованих змін не чіпаємо.
+// Так не буває стану «стаття на сайті, а в адмінці її нема»
+async function removePostNow(id) {
+  clearTimeout(saveTimer); saveTimer = null;
+  S.content.posts = S.content.posts.filter((x) => x.id !== id);
+  if (S.published.content.posts.some((x) => x.id === id)) {
+    const site = clone(S.published.content);
+    const t = site.posts.find((x) => x.id === id);
+    site.posts = site.posts.filter((x) => x.id !== id);
+    try {
+      const r = await api('/api/content', { method: 'POST', body: JSON.stringify({ content: site, note: 'Видалено статтю ' + plain(t?.title || '') }) });
+      S.published = r.published;
+      toast('Статтю видалено з сайту');
+    } catch (e) { toast(e.message, true); }
+  }
+  await saveDraft();
+  renderSide(); updateStatus(); refreshPreview();
 }
 // Стаття виходить одразу. Дата і час стають теперішніми
 function publishNow(p) {
@@ -664,7 +696,7 @@ function listField(f, root) {
         const a = e.target.closest('[data-a]')?.dataset.a;
         if (!a) { const o = !el.classList.contains('open'); S.open[key + ':' + i] = o; el.classList.toggle('open', o); if (o && !body.childNodes.length) renderBody(); return; }
         e.stopPropagation();
-        if (a === 'del') { if (!(await confirmBox('Видалити елемент?', esc(f.title(it, i) || ''), 'Видалити'))) return; items.splice(i, 1); }
+        if (a === 'del') { if (!(await confirmBox('Видалити елемент?', esc(f.title(it, i) || '') + '<br>Зникне з сайту, коли натиснете «Опублікувати». До того можна скасувати зміни', 'Видалити'))) return; items.splice(i, 1); }
         if (a === 'up' || a === 'down') { const j = a === 'up' ? i - 1 : i + 1; [items[i], items[j]] = [items[j], items[i]]; const o = S.open[key + ':' + i]; S.open[key + ':' + i] = S.open[key + ':' + j]; S.open[key + ':' + j] = o; }
         if (a === 'dup') items.splice(i + 1, 0, clone(it));
         draw(); changed({ now: true });
@@ -1015,6 +1047,19 @@ function renderPosts(box) {
     pl.append(r);
   });
   box.append(pl);
+  const lost = S.published.content.posts.filter((x) => !posts.some((y) => y.id === x.id));
+  if (lost.length) {
+    const lb = document.createElement('div'); lb.className = 'plans lost';
+    lb.innerHTML = '<h3>Видалені тут, але ще є на сайті</h3><div class="hint">Ці статті прибрали в адмінці, але зміну не опублікували. Поверніть статтю, щоб редагувати її, або приберіть із сайту</div>';
+    lost.forEach((x) => {
+      const r = document.createElement('div'); r.className = 'plan-row';
+      r.innerHTML = `<div><span>${esc(plain(x.title) || 'Без назви')}</span></div><div class="acts"><button type="button" class="btn btn-sm btn-line" data-back>Повернути в адмінку</button><button type="button" class="btn btn-sm" data-rm>Прибрати з сайту</button></div>`;
+      $('[data-back]', r).onclick = () => { const i = S.published.content.posts.findIndex((y) => y.id === x.id); posts.splice(Math.min(i, posts.length), 0, clone(x)); changed({ now: true }); renderSection(); toast('Статтю повернуто'); };
+      $('[data-rm]', r).onclick = async () => { if (await confirmBox('Прибрати статтю з сайту?', esc(plain(x.title)) + '<br>Вона одразу зникне з блогу. Повернути можна через «Історію змін»', 'Прибрати')) { await removePostNow(x.id); renderSection(); } };
+      lb.append(r);
+    });
+    box.append(lb);
+  }
   const list = document.createElement('div');
   list.className = 'posts';
   if (!posts.length) list.innerHTML = '<div class="empty">Статей поки немає</div>';
@@ -1111,9 +1156,9 @@ function renderPost(box, p) {
   const del = document.createElement('button');
   del.className = 'btn btn-line'; del.style.cssText = 'justify-self:start;color:#ff7a84'; del.textContent = 'Видалити статтю';
   del.onclick = async () => {
-    if (!(await confirmBox('Видалити статтю?', esc(plain(p.title)) + '<br>Стаття зникне з сайту після публікації. Повернути її можна через історію змін', 'Видалити'))) return;
-    S.content.posts = S.content.posts.filter((x) => x.id !== p.id);
-    changed({ now: true }); go('posts');
+    const onSite = S.published.content.posts.some((x) => x.id === p.id);
+    if (!(await confirmBox('Видалити статтю?', esc(plain(p.title)) + (onSite ? '<br>Стаття одразу зникне з сайту. Повернути її можна через «Історію змін»' : '<br>Її ще немає на сайті, тому вона просто зникне з чернетки'), 'Видалити'))) return;
+    await removePostNow(p.id); go('posts');
   };
   pub.append(del);
   box.append(pub);
