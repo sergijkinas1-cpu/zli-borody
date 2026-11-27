@@ -111,6 +111,14 @@ http.createServer(async (req, res) => {
     try { p = decodeURIComponent(u.pathname); } catch { res.writeHead(400); return res.end('Bad request'); }
 
     if (req.method === 'GET' || req.method === 'HEAD') {
+      // Сторінка адмінки. До скриптів і стилів додаємо версію за часом зміни файлу, щоб після оновлення браузер одразу брав нові
+      if (p === '/admin' || p === '/admin/' || p === '/admin/index.html') {
+        const dir = path.join(PUBLIC, 'admin');
+        const ver = async (n) => Math.round((await fsp.stat(path.join(dir, n))).mtimeMs).toString(36);
+        const html = (await fsp.readFile(path.join(dir, 'index.html'), 'utf8')).replace('/admin/admin.js"', `/admin/admin.js?v=${await ver('admin.js')}"`).replace('/admin/admin.css"', `/admin/admin.css?v=${await ver('admin.css')}"`);
+        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' });
+        return res.end(req.method === 'HEAD' ? undefined : html);
+      }
       // Фото і відео, завантажені через адмінку
       if (p.startsWith('/uploads/')) {
         const f = inside(path.join(DATA_DIR, 'uploads'), p.slice('/uploads/'.length));
