@@ -363,3 +363,11 @@ body.wpe-lock{overflow:hidden}
 .group.fold.open .fold-h svg{transform:rotate(180deg)}
 .fold-b{display:none;gap:16px;padding-bottom:20px}
 .group.fold.open .fold-b{display:grid}
+/* Форма статті як у WordPress */
+.post-main > :first-child textarea{font-size:20px;font-weight:600;line-height:1.35}
+.perm{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;font-size:13px;color:var(--muted,#9a9a9a);margin:-6px 0 2px}
+.perm-url{color:#d6d6d6;text-decoration:none;word-break:break-all}
+a.perm-url:hover{text-decoration:underline}
+.perm-url b{color:#fff;font-weight:600}
+.perm .in{flex:1;min-width:160px;height:32px}
+.perm .btn-sm{height:28px}

@@ -997,40 +997,53 @@ function renderPosts(box) {
   };
 }
 function renderPost(box, p) {
-  box.insertAdjacentHTML('beforeend', `<a href="#posts" class="back ul" id="toPosts">${ICON.back}<span>Усі статті</span></a><div class="ed-h"><h2>${esc(plain(p.title) || 'Нова стаття')}</h2></div><p class="ed-desc">Стаття відкриється за адресою /blog/${esc(p.slug)}</p>`);
+  // Форма як у WordPress. Заголовок, посилання, короткий опис, головне фото, повний опис і публікація
+  box.insertAdjacentHTML('beforeend', `<a href="#posts" class="back ul" id="toPosts">${ICON.back}<span>Усі статті</span></a><div class="ed-h"><h2>${esc(plain(p.title) || 'Нова стаття')}</h2></div>`);
   $('#toPosts').onclick = (e) => { e.preventDefault(); go('posts'); };
-  const autoSlug = !p.title || p.slug === slugify(p.title) || /^nova-stattia-/.test(p.slug);
+  let autoSlug = !p.title || p.slug === slugify(p.title) || /^nova-stattia-/.test(p.slug);
+  const host = location.host.replace(/^www\./, '');
+  const perm = document.createElement('div');
+  perm.className = 'perm';
+  const drawPerm = (edit) => {
+    perm.innerHTML = edit
+      ? `<span>Постійне посилання</span><span class="perm-url">${esc(host)}/blog/</span><input class="in" value="${esc(p.slug)}" spellcheck="false"><button type="button" class="btn btn-sm" data-ok>Готово</button><button type="button" class="btn btn-sm btn-line" data-x>Скасувати</button>`
+      : `<span>Постійне посилання</span><a class="perm-url" href="/blog/${esc(p.slug)}" target="_blank" rel="noopener">${esc(host)}/blog/<b>${esc(p.slug)}</b>/</a><button type="button" class="btn btn-sm btn-line" data-ed>Редагувати</button>`;
+    if (edit) {
+      const inp = $('input', perm); inp.focus(); inp.select();
+      const ok = () => { const v = slugify(inp.value) || p.slug; if (v !== p.slug) { p.slug = v; autoSlug = false; S.previewPath = '/blog/' + v; changed(); } drawPerm(false); };
+      $('[data-ok]', perm).onclick = ok; $('[data-x]', perm).onclick = () => drawPerm(false);
+      inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); ok(); } if (e.key === 'Escape') drawPerm(false); });
+    } else $('[data-ed]', perm).onclick = () => drawPerm(true);
+  };
+  drawPerm(false);
   const groups = [
-    { fields: [
-      { t: 'toggle', k: 'published', label: 'Показувати на сайті', hint: 'Вимкніть, щоб стаття була чернеткою і не з\'являлась у блозі', onInput: () => {} },
-      { t: 'heading', k: 'title', label: 'Заголовок', noColor: true, hint: 'Enter переносить рядок у картці статті', onInput: (v) => {
+    { cls: 'post-main', fields: [
+      { t: 'heading', k: 'title', label: 'Заголовок', noColor: true, hint: 'Показується і в картці в блозі, і на сторінці статті. Enter переносить рядок у картці', onInput: (v) => {
         $('.ed-h h2', box).textContent = plain(v) || 'Нова стаття';
-        if (autoSlug) { p.slug = slugify(v) || p.slug; const si = $('#slugIn'); if (si) si.value = p.slug; $('.ed-desc', box).textContent = 'Стаття відкриється за адресою /blog/' + p.slug; S.previewPath = '/blog/' + p.slug; }
+        if (autoSlug) { p.slug = slugify(v) || p.slug; S.previewPath = '/blog/' + p.slug; drawPerm(false); }
       } },
-      { row: [{ t: 'date', k: 'date', label: 'Дата', hint: 'Показується в картці і на сторінці статті' }, { t: 'text', k: 'slug', label: 'Адреса статті', hint: 'Частина посилання. Складається сама із заголовка', onInput: (v) => { S.previewPath = '/blog/' + slugify(v); $('.ed-desc', box).textContent = 'Стаття відкриється за адресою /blog/' + slugify(v); } }] },
+      { t: 'textarea', k: 'excerpt', label: 'Короткий опис', max: 320, cls: 'short', hint: 'Показується лише в картці статті у списку блогу, під заголовком' },
     ] },
-    { group: 'Картка в блозі', fields: [
-      { t: 'image', k: 'cover', label: 'Обкладинка', ratio: '335/370', px: [335, 370], q: 0.8, hint: 'У списку статей 335 на 370 пікселів, на телефоні 335 на 310. Фото обріжеться автоматично по центру' },
-      { t: 'textarea', k: 'excerpt', label: 'Короткий опис', max: 320, hint: 'Два чотири речення під заголовком у картці статті в блозі' },
+    { fields: [
+      { t: 'image', k: 'cover', label: 'Головне зображення', ratio: '335/370', px: [335, 370], q: 0.8, hint: 'Фото на картці статті у списку блогу. 335 на 370 пікселів, на телефоні 335 на 310. Обріжеться автоматично по центру' },
     ] },
-    { group: 'Текст', fields: [{ t: 'rich', k: 'body', label: 'Текст статті' }] },
-    { group: 'Пошук Google (необов\'язково)', fold: true, hint: 'Необов\'язково. Якщо поля порожні, Google покаже заголовок статті і короткий опис. Заповнюйте, лише коли хочете інший текст саме для пошуку', fields: [
-      { t: 'text', k: 'seoTitle', label: 'Заголовок у пошуку Google', max: 60, soft: true, ph: plain(p.title), hint: 'Синій рядок у результатах пошуку. До 60 символів' },
-      { t: 'textarea', k: 'seoDescription', label: 'Опис у пошуку Google', max: 160, soft: true, cls: 'short', ph: plain(p.excerpt || ''), hint: 'Сірий текст під заголовком у пошуку. До 160 символів' },
-    ] },
+    { fields: [{ t: 'rich', k: 'body', label: 'Повний опис' }] },
   ];
-  for (const g of groups) box.append(renderGroup(g, p));
-  const slugInput = $$('input', box).find((i) => i.value === p.slug && i.type === 'text');
-  if (slugInput) { slugInput.id = 'slugIn'; slugInput.addEventListener('change', () => { p.slug = slugify(slugInput.value) || p.slug; slugInput.value = p.slug; changed(); }); }
-  const danger = document.createElement('div');
-  danger.className = 'group';
-  danger.innerHTML = `<h3>Видалення</h3><div class="hint" style="margin-top:-8px">Стаття зникне з сайту після публікації. Повернути її можна через історію змін</div><button class="btn btn-line" style="justify-self:start;color:#ff7a84">Видалити статтю</button>`;
-  $('button', danger).onclick = async () => {
-    if (!(await confirmBox('Видалити статтю?', esc(plain(p.title)), 'Видалити'))) return;
+  groups.forEach((g, i) => { const el = renderGroup(g, p); if (g.cls) el.classList.add(g.cls); box.append(el); if (i === 0) $('.f, .fld, div', el) && el.children[0].after(perm); });
+  // Публікація. Видимість, дата і видалення, як у правій колонці WordPress
+  const pub = renderGroup({ group: 'Публікація', fields: [
+    { t: 'toggle', k: 'published', label: 'Показувати на сайті', hint: 'Вимкніть, щоб сховати статтю з блогу', onInput: () => {} },
+    { t: 'date', k: 'date', label: 'Дата публікації', hint: 'Показується в картці і на сторінці статті' },
+  ] }, p);
+  const del = document.createElement('button');
+  del.className = 'btn btn-line'; del.style.cssText = 'justify-self:start;color:#ff7a84'; del.textContent = 'Видалити статтю';
+  del.onclick = async () => {
+    if (!(await confirmBox('Видалити статтю?', esc(plain(p.title)) + '<br>Стаття зникне з сайту після публікації. Повернути її можна через історію змін', 'Видалити'))) return;
     S.content.posts = S.content.posts.filter((x) => x.id !== p.id);
     changed({ now: true }); go('posts');
   };
-  box.append(danger);
+  pub.append(del);
+  box.append(pub);
 }
 
 /* ---------------- Історія ---------------- */
