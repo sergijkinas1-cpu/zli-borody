@@ -342,3 +342,9 @@ body.wpe-lock{overflow:hidden}
 .thumb.crop{height:auto}
 .item-h .pic.ph{background-size:70%;background-repeat:no-repeat;background-color:#1b1b1b;opacity:.55}
 .rte-area.drop{outline:2px dashed #8a8a8a;outline-offset:-6px}
+/* Підпис про стиснення фото */
+.shr-box:empty{display:none}
+.shr-box{margin-top:8px;display:grid;gap:6px}
+.shr{font-size:12px;line-height:1.4;padding:6px 9px;border-radius:3px}
+.shr.ok{color:#8fd19e;background:rgba(60,160,90,.12)}
+.shr.warn{color:#fff;background:#b3121d}

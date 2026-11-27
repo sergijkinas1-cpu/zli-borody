@@ -102,7 +102,7 @@ const SECTIONS = [
     { fields: [
       { t: 'text', k: 'settings.seoTitle', label: 'Заголовок сторінки', max: 60, soft: true },
       { t: 'textarea', k: 'settings.seoDescription', label: 'Опис для пошуку', max: 160, soft: true, cls: 'short' },
-      { t: 'image', k: 'settings.ogImage', label: 'Картинка для соцмереж', hint: 'Найкраще 1200 на 630 пікселів' },
+      { t: 'image', k: 'settings.ogImage', label: 'Картинка для соцмереж', px: [600, 315], hint: 'Найкраще 1200 на 630 пікселів' },
     ] },
   ] },
   { h: 'Головна сторінка' },
@@ -114,7 +114,7 @@ const SECTIONS = [
     btnFields('hero'),
     { group: 'Фон', fields: [
       { t: 'video', k: 'hero.video', label: 'Відео на фоні', hint: 'MP4 до 30 МБ, без звуку. Порожнє поле залишить лише фото' },
-      { t: 'image', k: 'hero.poster', label: 'Фото на фоні', hint: 'Показується, поки вантажиться відео, і на телефонах в режимі економії' },
+      { t: 'image', k: 'hero.poster', label: 'Фото на фоні', maxPx: 2560, hint: 'Показується, поки вантажиться відео, і на телефонах в режимі економії' },
     ] },
   ] },
   { id: 'marquee', title: 'Бігуча стрічка', desc: 'Червона стрічка під першим екраном', path: '/', anchor: 'mq', keys: ['marquee'], groups: [
@@ -140,7 +140,7 @@ const SECTIONS = [
   { id: 'works', title: 'Наші роботи', desc: 'Карусель з фото стрижок', path: '/', anchor: 'works', keys: ['works'], groups: [
     { fields: [{ t: 'heading', k: 'works.title', label: 'Заголовок', max: 30, lines: 2, line: 18, hint: HEAD_HINT }, { t: 'textarea', k: 'works.lead', label: 'Підзаголовок', max: 110, lines: 2, cls: 'short' }] },
     { fields: [{ t: 'list', k: 'works.items', label: 'Фото робіт', pic: 'image', title: (it, i) => it.alt || `Фото ${i + 1}`, add: 'Додати фото', blank: { image: '', alt: '' }, fields: [
-      { t: 'image', k: 'image', label: 'Фото', ratio: '335/480', hint: 'На сайті 335 на 480 пікселів, на телефоні 315 на 480. Фото обріжеться автоматично по центру' },
+      { t: 'image', k: 'image', label: 'Фото', ratio: '335/480', px: [335, 480], hint: 'На сайті 335 на 480 пікселів, на телефоні 315 на 480. Фото обріжеться автоматично по центру' },
       { t: 'text', k: 'alt', label: 'Опис фото', hint: 'Коротко, що на фото. Потрібно для Google і незрячих відвідувачів' },
     ] }] },
     btnFields('works'),
@@ -148,7 +148,7 @@ const SECTIONS = [
   { id: 'team', title: 'Команда', desc: 'Карусель з барберами', path: '/', anchor: 'team', keys: ['team'], groups: [
     { fields: [{ t: 'heading', k: 'team.title', label: 'Заголовок', max: 44, lines: 2, line: 26, hint: HEAD_HINT }, { t: 'textarea', k: 'team.lead', label: 'Підзаголовок', max: 110, lines: 2, cls: 'short' }] },
     { fields: [{ t: 'list', k: 'team.items', label: 'Барбери', hint: 'Картка без фото показується на сайті як «Місце для майстра»', pic: 'photo', picEmpty: '/img/marquee-face.webp', title: (it) => (it.photo ? it.name || 'Новий барбер' : 'Місце для майстра'), add: 'Додати барбера', blank: { photo: '', name: '', role: '' }, fields: [
-      { t: 'image', k: 'photo', label: 'Фото', ratio: '335/406', hint: 'На сайті картка 335 на 490 пікселів, з них фото 335 на 406, а плашка з іменем 335 на 84. Фото обріжеться автоматично. Без фото картка стане «Місцем для майстра»' },
+      { t: 'image', k: 'photo', label: 'Фото', ratio: '335/406', px: [335, 406], hint: 'На сайті картка 335 на 490 пікселів, з них фото 335 на 406, а плашка з іменем 335 на 84. Фото обріжеться автоматично. Без фото картка стане «Місцем для майстра»' },
       { row: [{ t: 'text', k: 'name', label: 'Ім\'я', max: 22 }, { t: 'text', k: 'role', label: 'Посада', max: 18 }] },
     ] }] },
   ] },
@@ -513,9 +513,11 @@ function renderField(f, root) {
 function mediaField(f, val, upd, hint) {
   const box = document.createElement('div');
   const isVid = f.t === 'video';
-  if (!isVid) hint += '<div class="hint">Будь-яке фото (JPG, PNG, HEIC) сайт сам переведе у WebP і стисне</div>';
+  if (!isVid) hint += '<div class="hint">Можна завантажувати будь-яке фото (JPG, PNG, HEIC з телефона). Сайт сам переведе його у WebP і стисне під цей блок</div>';
   box.innerHTML = `<div class="lbl">${esc(f.label)}</div><div class="img-f"><div class="thumb"></div><div class="img-side"><div class="img-btns"><button type="button" class="btn btn-sm" data-up>Завантажити</button><button type="button" class="btn btn-sm btn-line" data-lib>З медіатеки</button><button type="button" class="btn btn-sm btn-line" data-rm>Прибрати</button></div><input class="in" spellcheck="false" placeholder="або вставте посилання" value="${esc(val)}">${hint}</div></div>`;
   const th = $('.thumb', box), inp = $('input', box);
+  const note = document.createElement('div'); note.className = 'shr-box'; $('.img-side', box).append(note);
+  const upOpts = { px: f.px, q: f.q, max: f.maxPx };
   if (f.ratio) { th.style.aspectRatio = f.ratio; th.classList.add('crop'); }
   const show = (v) => {
     th.classList.toggle('empty', !v);
@@ -527,11 +529,12 @@ function mediaField(f, val, upd, hint) {
   show(val);
   inp.addEventListener('change', () => apply(inp.value.trim()));
   $('[data-rm]', box).onclick = () => apply('');
-  $('[data-lib]', box).onclick = async () => { const u = await pickMedia(isVid ? 'video' : 'image'); if (u) apply(u); };
+  $('[data-lib]', box).onclick = async () => { const u = await pickMedia(isVid ? 'video' : 'image', upOpts, note); if (u) { apply(u); } };
+  $('[data-rm]', box).addEventListener('click', () => { note.innerHTML = ''; });
   const doUpload = async (file) => {
     if (!file) return;
     th.insertAdjacentHTML('beforeend', '<div class="busy">Вантажу</div>');
-    try { const m = await uploadFile(file); apply(m.url); toast('Файл завантажено'); }
+    try { const m = await uploadFile(file, upOpts); apply(m.url); note.innerHTML = shrinkNote(m.info); shrinkToast(m.info); }
     catch (e) { toast(e.message, true); show(inp.value); }
   };
   $('[data-up]', box).onclick = () => chooseFile(isVid ? 'video/mp4,video/webm' : 'image/*', doUpload);
@@ -549,38 +552,56 @@ function dropTarget(el, cb) {
   el.addEventListener('dragleave', () => el.classList.remove('drag'));
   el.addEventListener('drop', (e) => { e.preventDefault(); el.classList.remove('drag'); if (e.dataTransfer.files.length) cb([...e.dataTransfer.files]); });
 }
-// Усі фото перед завантаженням переводимо у WebP і зменшуємо до 2400px. JPG, PNG і HEIC з телефона теж
-async function shrink(file) {
+// Усі фото перед завантаженням переводимо у WebP. Розмір під свій блок з запасом удвічі для чітких екранів
+// o.px це розмір фото на сайті [ширина, висота], o.q якість. Без o.px фото зменшується до 2400px по довшій стороні
+const KB = (n) => (n >= 1024 * 1024 ? (n / 1024 / 1024).toFixed(1).replace('.', ',') + ' МБ' : Math.max(1, Math.round(n / 1024)) + ' КБ');
+async function shrink(file, o = {}) {
   const isImg = /^image\//.test(file.type) || /\.(heic|heif)$/i.test(file.name);
-  if (!isImg || /svg|gif/.test(file.type)) return file;
-  const MAXD = 2400;
+  if (!isImg || /svg|gif/.test(file.type)) return { file, info: null };
   const bmp = await createImageBitmap(file).catch(() => null);
   if (!bmp) {
     if (/heic|heif/i.test(file.type + file.name)) throw new Error('Цей браузер не відкриває HEIC. Збережіть фото як JPG або завантажте з iPhone через Safari');
-    return file;
+    return { file, info: null };
   }
-  if (file.type === 'image/webp' && Math.max(bmp.width, bmp.height) <= MAXD && file.size < 1.5 * 1024 * 1024) return file;
-  const k = Math.min(1, MAXD / Math.max(bmp.width, bmp.height));
+  const W = bmp.width, H = bmp.height;
+  const k = o.px ? Math.min(1, Math.max((o.px[0] * 2) / W, (o.px[1] * 2) / H)) : Math.min(1, (o.max || 2400) / Math.max(W, H));
   const c = document.createElement('canvas');
-  c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
-  c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
-  let blob = await new Promise((r) => c.toBlob(r, 'image/webp', 0.82));
+  c.width = Math.round(W * k); c.height = Math.round(H * k);
+  const ctx = c.getContext('2d');
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(bmp, 0, 0, c.width, c.height);
+  let blob = await new Promise((r) => c.toBlob(r, 'image/webp', o.q || 0.85));
   // Старий браузер без WebP. Тоді хоча б стиснутий JPG
   if (!blob || blob.type !== 'image/webp') blob = await new Promise((r) => c.toBlob(r, 'image/jpeg', 0.86));
-  if (!blob) return file;
-  const ext = blob.type === 'image/webp' ? '.webp' : '.jpg';
-  return new File([blob], file.name.replace(/\.[a-z0-9]{2,5}$/i, '') + ext, { type: blob.type });
+  let out = file;
+  if (blob && (blob.size < file.size || file.type !== 'image/webp')) out = new File([blob], file.name.replace(/\.[a-z0-9]{2,5}$/i, '') + (blob.type === 'image/webp' ? '.webp' : '.jpg'), { type: blob.type });
+  const info = { from: file.size, to: out.size, fromType: (file.type.split('/')[1] || file.name.split('.').pop() || '').toUpperCase().replace('JPEG', 'JPG'), w: c.width, h: c.height, warn: [] };
+  if (o.px && (W < o.px[0] || H < o.px[1])) info.warn.push(`Фото замале для цього блоку (${W} на ${H}). На сайті воно буде розмитим. Найкраще від ${o.px[0] * 2} на ${o.px[1] * 2} пікселів`);
+  if (out.size > (o.heavy || 600) * 1024) info.warn.push(`Фото важке навіть після стиснення (${KB(out.size)}). Сторінка може вантажитись довше. Спробуйте інше фото або обріжте зайве`);
+  return { file: out, info };
 }
-async function uploadFile(file) {
-  const f = await shrink(file);
+async function uploadFile(file, o) {
+  const { file: f, info } = await shrink(file, o);
   if (f.size > 30 * 1024 * 1024) throw new Error(`Файл ${file.name} завеликий. Максимум 30 МБ`);
-  return api('/api/media', { method: 'POST', body: f, headers: { 'Content-Type': f.type || 'application/octet-stream', 'X-Filename': encodeURIComponent(f.name) } });
+  const m = await api('/api/media', { method: 'POST', body: f, headers: { 'Content-Type': f.type || 'application/octet-stream', 'X-Filename': encodeURIComponent(f.name) } });
+  return { ...m, info };
+}
+// Підпис під фото після завантаження. Зелений коли все добре, червона плашка коли є проблема
+function shrinkNote(info) {
+  if (!info) return '';
+  const head = info.from > info.to ? `Стиснуто з ${KB(info.from)} до ${KB(info.to)}, WebP, ${info.w} на ${info.h}` : `Фото вже легке, ${KB(info.to)}, ${info.w} на ${info.h}`;
+  return `<div class="shr ok">${head}</div>${info.warn.map((w) => `<div class="shr warn">${esc(w)}</div>`).join('')}`;
+}
+function shrinkToast(info) {
+  if (!info) return toast('Файл завантажено');
+  if (info.warn.length) toast(info.warn[0], true);
+  else toast(info.from > info.to ? `Фото стиснуто з ${KB(info.from)} до ${KB(info.to)}` : 'Фото завантажено');
 }
 
 // Фото, що вже є на сайті, теж доступні для вибору
 const BUILTIN = ['/hero-poster.jpg', '/img/about.jpg', '/img/about-inline.jpg', '/img/card-result.jpg', '/img/card-service.jpg', '/img/work-1.jpg', '/img/work-2.jpg', '/img/work-3.jpg', '/img/work-4.jpg', '/img/team-1.jpg', '/img/marquee-unit.png', '/blog/img/post-1.jpg', '/blog/img/post-2.jpg', '/blog/img/post-3.jpg', '/blog/img/post-4.jpg', '/blog/img/article-hall.jpg'].map((url) => ({ url, name: url.split('/').pop(), type: 'image/' + (url.endsWith('png') ? 'png' : 'jpeg'), builtin: true }));
 const BUILTIN_VID = [{ url: '/hero.mp4', name: 'hero.mp4', type: 'video/mp4', builtin: true }];
-async function pickMedia(kind) {
+async function pickMedia(kind, upOpts, note) {
   let items = [];
   try { items = (await api('/api/media')).items; } catch (e) { toast(e.message, true); }
   const all = [...items, ...(kind === 'video' ? BUILTIN_VID : BUILTIN)].filter((m) => m.type.startsWith(kind));
@@ -592,7 +613,7 @@ async function pickMedia(kind) {
     $$('.mcell', el).forEach((c) => (c.onclick = () => { close(); res(all[c.dataset.i].url); }));
     $('[data-up]', el).onclick = () => chooseFile(kind === 'video' ? 'video/mp4,video/webm' : 'image/*', async (f) => {
       if (!f) return;
-      try { const m = await uploadFile(f); close(); res(m.url); toast('Файл завантажено'); } catch (e) { toast(e.message, true); }
+      try { const m = await uploadFile(f, upOpts); close(); res(m.url); if (note) note.innerHTML = shrinkNote(m.info); shrinkToast(m.info); } catch (e) { toast(e.message, true); }
     });
   });
 }
@@ -656,6 +677,7 @@ const RI = {
   clr: '<svg viewBox="0 0 20 20"><path d="M5 4h10M10 4 7 16M4 16l12-12" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',
   media: '<svg viewBox="0 0 20 20"><path d="M2 4h11v9H2z" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="6" cy="7.5" r="1.3"/><path d="M15 7v9H5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',
 };
+const ART_IMG = { max: 1800, q: 0.8, heavy: 450 };
 const IMG_ALIGN = [['al-l', 'Ліворуч'], ['al-c', 'По центру'], ['al-r', 'Праворуч'], ['', 'Без вирівнювання']];
 const IMG_W = [['40', 'Малий'], ['70', 'Середній'], ['100', 'Великий']];
 const AL_ICON = { 'al-l': '<svg viewBox="0 0 20 20"><path d="M2 4h7v7H2z" fill="currentColor"/><path d="M11 5h7M11 9h7M2 14h16M2 17h16" stroke="currentColor" stroke-width="1.5"/></svg>', 'al-c': '<svg viewBox="0 0 20 20"><path d="M6 4h8v8H6z" fill="currentColor"/><path d="M2 15h16M4 18h12" stroke="currentColor" stroke-width="1.5"/></svg>', 'al-r': '<svg viewBox="0 0 20 20"><path d="M11 4h7v7h-7z" fill="currentColor"/><path d="M2 5h7M2 9h7M2 14h16M2 17h16" stroke="currentColor" stroke-width="1.5"/></svg>', '': '<svg viewBox="0 0 20 20"><path d="M2 3h11v9H2z" fill="currentColor"/><path d="M2 15h16M2 18h16" stroke="currentColor" stroke-width="1.5"/></svg>' };
@@ -750,7 +772,7 @@ function richField(f, val, upd) {
     const r = document.caretRangeFromPoint ? document.caretRangeFromPoint(e.clientX, e.clientY) : null;
     if (r) { const s = getSelection(); s.removeAllRanges(); s.addRange(r); keep(); }
     for (const file of files) {
-      try { toast('Завантажую фото'); const m = await uploadFile(file); restore(); document.execCommand('insertHTML', false, `<figure style="width:100%"><img src="${esc(m.url)}" alt=""></figure><p><br></p>`); emit(); }
+      try { toast('Завантажую фото'); const m = await uploadFile(file, ART_IMG); shrinkToast(m.info); restore(); document.execCommand('insertHTML', false, `<figure style="width:100%"><img src="${esc(m.url)}" alt=""></figure><p><br></p>`); emit(); }
       catch (err) { toast(err.message, true); }
     }
   });
@@ -802,7 +824,7 @@ function richField(f, val, upd) {
   // Додати медіа. Вибір фото, опис і розмір, як у WordPress
   $('[data-x="img"]', box).onclick = async () => {
     keep();
-    const u = await pickMedia('image');
+    const u = await pickMedia('image', ART_IMG);
     if (!u) return;
     const v = await askImage({ src: u, alt: '', align: '', width: 100 });
     if (!v) return;
@@ -825,7 +847,7 @@ function askImage(o) {
       ${o.edit ? '<button type="button" class="btn btn-sm btn-line" data-rep>Замінити фото</button>' : ''}
     </div></div><div class="dlg-act"><button type="button" class="btn btn-line" data-x>Скасувати</button><button type="button" class="btn btn-red" data-ok>${o.edit ? 'Зберегти' : 'Вставити в статтю'}</button></div>`, { wide: true });
     const rep = $('[data-rep]', el);
-    if (rep) rep.onclick = async () => { const u = await pickMedia('image'); if (u) { src = u; $('.wpe-dlg-pic', el).style.backgroundImage = `url('${u}')`; } };
+    if (rep) rep.onclick = async () => { const u = await pickMedia('image', ART_IMG); if (u) { src = u; $('.wpe-dlg-pic', el).style.backgroundImage = `url('${u}')`; } };
     $('[data-x]', el).onclick = () => { close(); res(null); };
     $('[data-ok]', el).onclick = () => { const v = { src, alt: $('#imA', el).value.trim(), align: ($('input[name="imL"]:checked', el) || {}).value || '', width: Number(($('input[name="imS"]:checked', el) || {}).value) || 100 }; close(); res(v); };
   });
@@ -911,7 +933,7 @@ function renderPost(box, p) {
       { row: [{ t: 'date', k: 'date', label: 'Дата' }, { t: 'text', k: 'slug', label: 'Адреса статті', onInput: (v) => { S.previewPath = '/blog/' + slugify(v); $('.ed-desc', box).textContent = 'Стаття відкриється за адресою /blog/' + slugify(v); } }] },
     ] },
     { group: 'Картка в блозі', fields: [
-      { t: 'image', k: 'cover', label: 'Обкладинка', ratio: '335/370', hint: 'У списку статей 335 на 370 пікселів, на телефоні 335 на 310. Фото обріжеться автоматично по центру' },
+      { t: 'image', k: 'cover', label: 'Обкладинка', ratio: '335/370', px: [335, 370], q: 0.8, hint: 'У списку статей 335 на 370 пікселів, на телефоні 335 на 310. Фото обріжеться автоматично по центру' },
       { t: 'text', k: 'coverAlt', label: 'Опис обкладинки' },
       { t: 'textarea', k: 'excerpt', label: 'Короткий опис', max: 320, hint: 'Два чотири речення під заголовком у списку статей' },
     ] },
