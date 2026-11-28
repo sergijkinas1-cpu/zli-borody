@@ -550,6 +550,3 @@ a.chip-s:hover{color:#fff}
   .barber{aspect-ratio:316/490}
   .barber .cap{height:84px}
 }
-/* Усі картки вміщаються в ряд. Стрілки ховаємо */
-.car.fits .arrows{display:none}
-.car.fits .team-foot.center{display:none}
