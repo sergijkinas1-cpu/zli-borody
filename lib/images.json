@@ -1,0 +1,111 @@
+{
+"/blog/img/article-hall.jpg": {
+"w": 892,
+"h": 408,
+"webp": 1
+},
+"/blog/img/post-1.jpg": {
+"w": 700,
+"h": 778,
+"webp": 1
+},
+"/blog/img/post-2.jpg": {
+"w": 700,
+"h": 774,
+"webp": 1
+},
+"/blog/img/post-3.jpg": {
+"w": 700,
+"h": 774,
+"webp": 1
+},
+"/blog/img/post-4.jpg": {
+"w": 700,
+"h": 774,
+"webp": 1
+},
+"/hero-poster.jpg": {
+"w": 1280,
+"h": 720,
+"webp": 1,
+"sm": 800
+},
+"/img/about-inline.jpg": {
+"w": 498,
+"h": 168,
+"webp": 1
+},
+"/img/about.jpg": {
+"w": 1380,
+"h": 1340,
+"webp": 1,
+"sm": 800
+},
+"/img/card-result.jpg": {
+"w": 944,
+"h": 746,
+"webp": 1,
+"sm": 800
+},
+"/img/card-service.jpg": {
+"w": 944,
+"h": 746,
+"webp": 1,
+"sm": 800
+},
+"/img/draw-face-end.jpg": {
+"w": 560,
+"h": 560,
+"webp": 1
+},
+"/img/draw-scissors-end.jpg": {
+"w": 560,
+"h": 560,
+"webp": 1
+},
+"/img/logo-face-red.png": {
+"w": 201,
+"h": 363
+},
+"/img/marquee-face.png": {
+"w": 201,
+"h": 363
+},
+"/img/marquee-unit-m.png": {
+"w": 931,
+"h": 363
+},
+"/img/marquee-unit.png": {
+"w": 868,
+"h": 363
+},
+"/img/noise.png": {
+"w": 128,
+"h": 128
+},
+"/img/team-1.jpg": {
+"w": 666,
+"h": 809,
+"webp": 1
+},
+"/img/work-1.jpg": {
+"w": 666,
+"h": 956,
+"webp": 1
+},
+"/img/work-2.jpg": {
+"w": 666,
+"h": 956,
+"webp": 1
+},
+"/img/work-3.jpg": {
+"w": 666,
+"h": 956,
+"webp": 1
+},
+"/img/work-4.jpg": {
+"w": 666,
+"h": 956,
+"webp": 1
+}
+}

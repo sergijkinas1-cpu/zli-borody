@@ -3,12 +3,17 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node dev-server.js"
+    "start": "node server.js",
+    "dev": "node server.js --dev"
   },
   "dependencies": {
     "@vercel/blob": "^2.9.0",
     "@vercel/functions": "^3.11.1",
     "jose": "^6.2.17",
     "sanitize-html": "2.13.1"
+  },
+  "main": "app.cjs",
+  "engines": {
+    "node": ">=20"
   }
 }
