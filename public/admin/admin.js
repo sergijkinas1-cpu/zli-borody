@@ -166,7 +166,7 @@ const SECTIONS = [
   ] },
   { id: 'team', title: 'Команда', desc: 'Карусель з барберами', path: '/', anchor: 'team', keys: ['team'], groups: [
     { fields: [{ t: 'heading', k: 'team.title', label: 'Заголовок', max: 44, lines: 2, line: 26, hint: HEAD_HINT }, { t: 'textarea', k: 'team.lead', label: 'Підзаголовок', max: 110, lines: 2, cls: 'short' }] },
-    { fields: [{ t: 'list', k: 'team.items', label: 'Барбери', hint: 'Картка без фото показується на сайті як «Місце для майстра»', pic: 'photo', picEmpty: '/img/marquee-face.webp', title: (it) => (it.photo ? it.name || 'Новий барбер' : 'Місце для майстра'), add: 'Додати барбера', blank: { photo: '', name: '', role: '' }, fields: [
+    { fields: [{ t: 'list', k: 'team.items', label: 'Барбери', min: 5, hint: 'Щонайменше 5 карток. Картка без фото показується на сайті як «Місце для майстра»', pic: 'photo', picEmpty: '/img/marquee-face.webp', title: (it) => (it.photo ? it.name || 'Новий барбер' : 'Місце для майстра'), add: 'Додати барбера', blank: { photo: '', name: '', role: '' }, fields: [
       { t: 'image', k: 'photo', label: 'Фото', ratio: '335/406', px: [335, 406], hint: 'На сайті картка 335 на 490 пікселів, з них фото 335 на 406, а плашка з іменем 335 на 84. Фото обріжеться автоматично. Без фото картка стане «Місцем для майстра»' },
       { row: [{ t: 'text', k: 'name', label: 'Ім\'я', max: 22 }, { t: 'text', k: 'role', label: 'Посада', max: 18 }] },
     ] }] },
@@ -690,7 +690,7 @@ function listField(f, root) {
         const a = e.target.closest('[data-a]')?.dataset.a;
         if (!a) { const o = !el.classList.contains('open'); S.open[key + ':' + i] = o; el.classList.toggle('open', o); if (o && !body.childNodes.length) renderBody(); return; }
         e.stopPropagation();
-        if (a === 'del') { if (!(await sure('Видалити «' + (f.title(it, i) || 'елемент') + '»?'))) return; items.splice(i, 1); }
+        if (a === 'del') { if (f.min && items.length <= f.min) { toast(`Тут має бути щонайменше ${f.min} карток. Замість видалення приберіть фото, і картка стане «Місцем для майстра»`, true); return; } if (!(await sure('Видалити «' + (f.title(it, i) || 'елемент') + '»?'))) return; items.splice(i, 1); }
         if (a === 'up' || a === 'down') { const j = a === 'up' ? i - 1 : i + 1; [items[i], items[j]] = [items[j], items[i]]; const o = S.open[key + ':' + i]; S.open[key + ':' + i] = S.open[key + ':' + j]; S.open[key + ':' + j] = o; }
         if (a === 'dup') items.splice(i + 1, 0, clone(it));
         draw(); changed({ now: true });
